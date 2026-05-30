@@ -54,8 +54,6 @@ cd LAPAK
 # 2. Setup backend
 cd backend
 npm install
-cp .env.example .env
-# isi nilai di .env
 
 # 3. Jalankan
 npm run dev
