@@ -1,0 +1,16 @@
+{
+  "name": "lapak",
+  "version": "1.0.0",
+  "description": "Aplikasi POS berbasis web untuk manajemen warung dan toko kelontong — penjualan, stok, keuangan, dan laporan harian.",
+  "main": "server.js",
+  "author": "Aang Solihin, Budiansyah, Neiza Aurellya Putri, Puspa Ratnawulan, Rizki Maulana",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

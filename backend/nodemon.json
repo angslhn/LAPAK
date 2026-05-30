@@ -1,0 +1,7 @@
+{
+  "watch": ["."],
+  "ext": "js,json",
+  "ignore": ["node_modules", ".git", "database"],
+  "exec": "node server.js",
+  "verbose": true
+}
