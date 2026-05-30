@@ -1,0 +1,49 @@
+#  Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+#  Environment & Secrets
+.env
+.env.local
+.env.development
+.env.staging
+.env.production
+
+#  Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+#  OS & Editor
+.DS_Store
+Thumbs.db
+desktop.ini
+
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+
+#  Build / Output
+dist/
+build/
+out/
+
+#  Upload & Storage
+backend/uploads/
+backend/storage/
+public/uploads/
+
+#  Database
+*.sqlite
+*.sqlite3
+*.db
+
+#  Misc
+.cache/
+coverage/
+*.tgz
+*.zip
