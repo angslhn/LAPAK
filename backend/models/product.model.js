@@ -1,0 +1,136 @@
+const { getPool } = require('../lib/mysql');
+
+const ALLOWED_FIELDS = [
+  'category_id',
+  'name',
+  'purchase_price',
+  'selling_price',
+  'stock',
+  'minimum_stock',
+  'unit',
+];
+
+const pool = getPool();
+
+const findById = async (id) => {
+  try {
+    const sql = 'SELECT * FROM products WHERE id = ?';
+
+    const [rows] = await pool.execute(sql, [id]);
+
+    return rows[0] ?? null;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const findAll = async () => {
+  try {
+    const sql = 'SELECT * FROM products';
+
+    const [rows] = await pool.execute(sql);
+
+    return rows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const findAllWithCategory = async () => {
+  try {
+    const sql = `
+                SELECT 
+                  p.*, 
+                  c.name AS category_name
+                FROM products p
+                LEFT JOIN categories c
+                  ON p.category_id = c.id
+                `;
+
+    const [rows] = await pool.execute(sql);
+
+    return rows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const findLowStock = async () => {
+  try {
+    const sql = 'SELECT * FROM products WHERE stock <= minimum_stock';
+
+    const [rows] = await pool.execute(sql);
+
+    return rows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const create = async (data) => {
+  const fields = Object.keys(data).filter((field) =>
+    ALLOWED_FIELDS.includes(field)
+  );
+
+  if (fields.length === 0) throw new Error('No valid fields provided');
+
+  const values = fields.map((field) => data[field]);
+
+  try {
+    const sql = `INSERT INTO products (${fields.join(', ')}) VALUES (${fields.map(() => '?').join(', ')})`;
+
+    const [result] = await pool.execute(sql, values);
+
+    return result.insertId;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const update = async (data) => {
+  const { id, ...newData } = data;
+
+  const fields = Object.keys(newData).filter((field) =>
+    ALLOWED_FIELDS.includes(field)
+  );
+
+  if (fields.length === 0) throw new Error('No valid fields provided');
+
+  const values = fields.map((field) => newData[field]);
+
+  const placeholder = fields.map((field) => `${field} = ?`).join(', ');
+
+  try {
+    const sql = `UPDATE products SET ${placeholder} WHERE id = ?`;
+
+    const [result] = await pool.execute(sql, [...values, id]);
+
+    return result.affectedRows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const updateStock = async (id, quantity) => {
+  try {
+    const sql = 'UPDATE products SET stock = stock + ? WHERE id = ?';
+
+    const [result] = await pool.execute(sql, [quantity, id]);
+
+    return result.affectedRows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const remove = async (id) => {
+  try {
+    const sql = 'DELETE FROM products WHERE id = ?';
+
+    const [result] = await pool.execute(sql, [id]);
+
+    return result.affectedRows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
