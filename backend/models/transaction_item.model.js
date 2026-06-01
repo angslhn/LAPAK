@@ -87,9 +87,30 @@ const create = async (data) => {
   }
 };
 
+const sumTodayHPP = async () => {
+  try {
+    const sql = `
+                SELECT
+                  SUM(ti.quantity * p.purchase_price) AS total
+                FROM transaction_items ti
+                JOIN transactions t ON ti.transaction_id = t.id
+                JOIN products p ON ti.product_id = p.id
+                WHERE DATE(t.date) = CURDATE()
+                AND t.status = 'paid'
+                `;
+
+    const [rows] = await pool.execute(sql);
+
+    return rows[0].total ?? 0;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
 module.exports = {
   findByTransaction,
   findTopProducts,
   findRevenueByCategory,
   create,
+  sumTodayHPP,
 };
