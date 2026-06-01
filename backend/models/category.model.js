@@ -16,6 +16,18 @@ const findById = async (id) => {
   }
 };
 
+const findByName = async (name) => {
+  try {
+    const sql = 'SELECT * FROM categories WHERE name = ?';
+
+    const [rows] = await pool.execute(sql, [name]);
+
+    return rows[0] ?? null;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
 const findAll = async () => {
   try {
     const sql = 'SELECT * FROM categories';
@@ -72,4 +84,4 @@ const update = async (data) => {
   }
 };
 
-module.exports = { findById, findAll, create, update };
+module.exports = { findById, findByName, findAll, create, update };
