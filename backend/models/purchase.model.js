@@ -34,6 +34,26 @@ const findAll = async () => {
   }
 };
 
+const findAllUnpaid = async () => {
+  try {
+    const sql = `
+                SELECT 
+                  p.*, 
+                  s.name AS supplier_name
+                FROM purchases p
+                LEFT JOIN suppliers s ON p.supplier_id = s.id
+                WHERE p.status = 'unpaid'
+                ORDER BY p.created_at DESC
+                `;
+
+    const [rows] = await pool.execute(sql);
+
+    return rows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
 const findAllWithSupplier = async () => {
   try {
     const sql = `
@@ -110,4 +130,14 @@ const updateStatus = async (id, status) => {
   } catch (err) {
     throw new Error(`[DATABASE] ${err.message}`);
   }
+};
+
+module.exports = {
+  findById,
+  findAll,
+  findAllUnpaid,
+  findAllWithSupplier,
+  findWithItems,
+  create,
+  updateStatus,
 };
