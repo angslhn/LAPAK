@@ -134,3 +134,14 @@ const remove = async (id) => {
     throw new Error(`[DATABASE] ${err.message}`);
   }
 };
+
+module.exports = {
+  findById,
+  findAll,
+  findAllWithCategory,
+  findLowStock,
+  create,
+  update,
+  updateStock,
+  remove,
+};
