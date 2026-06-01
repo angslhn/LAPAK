@@ -14,10 +14,9 @@ const pool = getPool();
 
 const findById = async (id) => {
   try {
-    const [rows] = await pool.execute(
-      'SELECT * FROM transactions WHERE id = ?',
-      [id]
-    );
+    const sql = 'SELECT * FROM transactions WHERE id = ?';
+
+    const [rows] = await pool.execute(sql, [id]);
 
     return rows[0] ?? null;
   } catch (err) {
@@ -27,9 +26,9 @@ const findById = async (id) => {
 
 const findAll = async () => {
   try {
-    const [rows] = await pool.execute(
-      'SELECT * FROM transactions ORDER BY created_at DESC'
-    );
+    const sql = 'SELECT * FROM transactions ORDER BY created_at DESC';
+
+    const [rows] = await pool.execute(sql);
 
     return rows;
   } catch (err) {
@@ -77,6 +76,64 @@ const findWithItems = async (id) => {
   }
 };
 
+const findUnpaidByCustomer = async (id) => {
+  try {
+    const sql = `
+                SELECT * FROM transactions
+                WHERE customer_id = ?
+                AND status = 'unpaid'
+                ORDER BY created_at DESC
+                `;
+
+    const [rows] = await pool.execute(sql, [id]);
+
+    return rows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const findAllUnpaid = async () => {
+  try {
+    const sql = `
+                SELECT
+                  t.*,
+                  c.name AS customer_name
+                FROM transactions t
+                LEFT JOIN customers c ON t.customer_id = c.id
+                WHERE t.status = 'unpaid'
+                ORDER BY t.created_at DESC
+                `;
+
+    const [rows] = await pool.execute(sql);
+
+    return rows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const findRevenueByRange = async (from, to) => {
+  try {
+    const sql = `
+                SELECT
+                  DATE(date) AS label,
+                  SUM(total) AS revenue
+                FROM transactions
+                WHERE DATE(date) BETWEEN ? AND ?
+                AND status = 'paid'
+                GROUP BY DATE(date)
+                ORDER BY DATE(date) ASC
+                `;
+
+    const [rows] = await pool.execute(sql, [from, to]);
+
+    return rows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
 const create = async (data) => {
   const fields = Object.keys(data).filter((field) =>
     ALLOWED_FIELDS.includes(field)
@@ -98,6 +155,40 @@ const create = async (data) => {
   }
 };
 
+const sumTodayRevenue = async () => {
+  try {
+    const sql = `
+      SELECT SUM(total) AS total
+      FROM transactions
+      WHERE DATE(date) = CURDATE()
+      AND status = 'paid'
+    `;
+
+    const [rows] = await pool.execute(sql);
+
+    return rows[0].total ?? 0;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const countToday = async () => {
+  try {
+    const sql = `
+      SELECT COUNT(id) AS total
+      FROM transactions
+      WHERE DATE(date) = CURDATE()
+      AND status = 'paid'
+    `;
+
+    const [rows] = await pool.execute(sql);
+
+    return rows[0].total ?? 0;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
 const updateStatus = async (id, status) => {
   const VALID_STATUS = ['paid', 'unpaid'];
 
@@ -113,4 +204,18 @@ const updateStatus = async (id, status) => {
   } catch (err) {
     throw new Error(`[DATABASE] ${err.message}`);
   }
+};
+
+module.exports = {
+  findById,
+  findAll,
+  findAllUnpaid,
+  findWithItems,
+  findUnpaidByCustomer,
+  findAllWithCustomer,
+  findRevenueByRange,
+  create,
+  sumTodayRevenue,
+  countToday,
+  updateStatus,
 };
