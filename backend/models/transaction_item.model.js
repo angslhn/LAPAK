@@ -10,6 +10,63 @@ const ALLOWED_FIELDS = [
 
 const pool = getPool();
 
+const findByTransaction = async (id) => {
+  try {
+    const sql = 'SELECT * FROM transaction_items WHERE transaction_id = ?';
+
+    const [rows] = await pool.execute(sql, [id]);
+
+    return rows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const findTopProducts = async (limit) => {
+  try {
+    const sql = `
+                SELECT
+                  p.id,
+                  p.name,
+                  SUM(ti.quantity) AS total_qty,
+                  SUM(ti.subtotal) AS total_revenue
+                FROM transaction_items ti
+                JOIN products p ON ti.product_id = p.id
+                GROUP BY p.id, p.name
+                ORDER BY total_qty DESC
+                LIMIT ?
+                `;
+
+    const [rows] = await pool.execute(sql, [limit]);
+
+    return rows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const findRevenueByCategory = async () => {
+  try {
+    const sql = `
+                SELECT
+                  c.id,
+                  c.name AS category_name,
+                  SUM(ti.subtotal) AS total_revenue
+                FROM transaction_items ti
+                JOIN products p ON ti.product_id = p.id
+                JOIN categories c ON p.category_id = c.id
+                GROUP BY c.id, c.name
+                ORDER BY total_revenue DESC
+                `;
+
+    const [rows] = await pool.execute(sql);
+
+    return rows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
 const create = async (data) => {
   const fields = Object.keys(data).filter((field) =>
     ALLOWED_FIELDS.includes(field)
@@ -30,14 +87,9 @@ const create = async (data) => {
   }
 };
 
-const findByTransaction = async (id) => {
-  try {
-    const sql = 'SELECT * FROM transaction_items WHERE transaction_id = ?';
-
-    const [rows] = await pool.execute(sql, [id]);
-
-    return rows;
-  } catch (err) {
-    throw new Error(`[DATABASE] ${err.message}`);
-  }
+module.exports = {
+  findByTransaction,
+  findTopProducts,
+  findRevenueByCategory,
+  create,
 };
