@@ -111,11 +111,13 @@ const update = async (data) => {
   }
 };
 
-const updateStock = async (id, quantity) => {
+const updateStock = async ({ id, quantity }, conn = null) => {
+  const db = conn || pool;
+
   try {
     const sql = 'UPDATE products SET stock = stock + ? WHERE id = ?';
 
-    const [result] = await pool.execute(sql, [quantity, id]);
+    const [result] = await db.execute(sql, [quantity, id]);
 
     return result.affectedRows;
   } catch (err) {
