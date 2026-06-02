@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS transactions (
   invoice_number VARCHAR(50) NOT NULL UNIQUE,
   date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   total DECIMAL(15, 2) NOT NULL,
-  payment_method ENUM('cash', 'qris', 'transfer', 'credit') NOT NULL,
+  payment_method ENUM('cash', 'qris', 'transfer', 'credit', 'debit') NOT NULL,
   status ENUM('paid', 'unpaid', 'cancelled') NOT NULL DEFAULT 'paid',
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
