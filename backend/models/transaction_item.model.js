@@ -101,7 +101,7 @@ const sumTodayHPP = async () => {
 
     const [rows] = await pool.execute(sql);
 
-    return rows[0].total ?? 0;
+    return Number(rows[0].total ?? 0);
   } catch (err) {
     throw new Error(`[DATABASE] ${err.message}`);
   }
