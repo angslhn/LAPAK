@@ -71,3 +71,5 @@ const update = async (data) => {
     throw new Error(`[DATABASE] ${err.message}`);
   }
 };
+
+module.exports = { findById, findAll, create, update };
