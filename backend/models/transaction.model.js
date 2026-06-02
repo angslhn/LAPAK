@@ -117,11 +117,12 @@ const findRevenueByRange = async (from, to) => {
   try {
     const sql = `
                 SELECT
-                  DATE(date) AS label,
+                  DATE(date) AS date,
                   SUM(total) AS revenue
                 FROM transactions
-                WHERE DATE(date) BETWEEN ? AND ?
-                AND status = 'paid'
+                WHERE date >= ? 
+                  AND date < ? + INTERVAL 1 DAY
+                  AND status = 'paid'
                 GROUP BY DATE(date)
                 ORDER BY DATE(date) ASC
                 `;
@@ -134,7 +135,9 @@ const findRevenueByRange = async (from, to) => {
   }
 };
 
-const create = async (data) => {
+const create = async (data, conn = null) => {
+  const db = conn || pool;
+
   const fields = Object.keys(data).filter((field) =>
     ALLOWED_FIELDS.includes(field)
   );
@@ -144,12 +147,29 @@ const create = async (data) => {
   const values = fields.map((field) => data[field]);
 
   try {
-    const [result] = await pool.execute(
-      `INSERT INTO transactions (${fields.join(', ')}) VALUES (${fields.map(() => '?').join(', ')})`,
-      values
-    );
+    const sql = `INSERT INTO transactions (${fields.join(', ')}) VALUES (${fields.map(() => '?').join(', ')})`;
+
+    const [result] = await db.execute(sql, values);
 
     return result.insertId;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const sumRevenueByDate = async (date) => {
+  try {
+    const sql = `
+                SELECT SUM(total) AS total
+                FROM transactions
+                WHERE date >= ? 
+                  AND date < ? + INTERVAL 1 DAY
+                  AND status = 'paid'
+                `;
+
+    const [rows] = await pool.execute(sql, [date, date]);
+
+    return Number(rows[0]?.total || 0);
   } catch (err) {
     throw new Error(`[DATABASE] ${err.message}`);
   }
@@ -158,13 +178,32 @@ const create = async (data) => {
 const sumTodayRevenue = async () => {
   try {
     const sql = `
-      SELECT SUM(total) AS total
-      FROM transactions
-      WHERE DATE(date) = CURDATE()
-      AND status = 'paid'
-    `;
+                SELECT SUM(total) AS total
+                FROM transactions
+                WHERE t.date >= CURDATE() 
+                  AND t.date < CURDATE() + INTERVAL 1 DAY
+                  AND t.status = 'paid'
+                `;
 
     const [rows] = await pool.execute(sql);
+
+    return Number(rows[0].total) || 0;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const countByDate = async (date) => {
+  try {
+    const sql = `
+                SELECT COUNT(id) AS total
+                FROM transactions
+                WHERE t.date >= ? 
+                  AND t.date < ? + INTERVAL 1 DAY
+                  AND t.status = 'paid'
+                `;
+
+    const [rows] = await pool.execute(sql, [date, date]);
 
     return Number(rows[0].total) || 0;
   } catch (err) {
@@ -175,11 +214,12 @@ const sumTodayRevenue = async () => {
 const countToday = async () => {
   try {
     const sql = `
-      SELECT COUNT(id) AS total
-      FROM transactions
-      WHERE DATE(date) = CURDATE()
-      AND status = 'paid'
-    `;
+                SELECT COUNT(id) AS total
+                FROM transactions
+                WHERE t.date >= CURDATE() 
+                  AND t.date < CURDATE() + INTERVAL 1 DAY
+                  AND t.status = 'paid'
+                `;
 
     const [rows] = await pool.execute(sql);
 
@@ -189,7 +229,26 @@ const countToday = async () => {
   }
 };
 
-const updateStatus = async (id, status) => {
+const getNextInvoiceSequence = async (conn) => {
+  try {
+    const sql = `
+                SELECT COUNT(id) + 1 AS next_seq
+                FROM transactions
+                WHERE DATE(date) = CURDATE()
+                FOR UPDATE
+                `;
+
+    const [rows] = await conn.execute(sql);
+
+    return Number(rows[0].next_seq) || 1;
+  } catch (err) {
+    throw new Error(`[INVOICE_SEQUENCE] ${err.message}`);
+  }
+};
+
+const updateStatus = async ({ id, status }, conn = null) => {
+  const db = conn || pool;
+
   const VALID_STATUS = ['paid', 'unpaid'];
 
   if (!VALID_STATUS.includes(status))
@@ -198,7 +257,7 @@ const updateStatus = async (id, status) => {
   try {
     const sql = 'UPDATE transactions SET status = ? WHERE id = ?';
 
-    const [result] = await pool.execute(sql, [status, id]);
+    const [result] = await db.execute(sql, [status, id]);
 
     return result.affectedRows;
   } catch (err) {
@@ -216,6 +275,9 @@ module.exports = {
   findRevenueByRange,
   create,
   sumTodayRevenue,
+  sumRevenueByDate,
   countToday,
+  countByDate,
+  getNextInvoiceSequence,
   updateStatus,
 };
