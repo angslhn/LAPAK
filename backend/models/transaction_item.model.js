@@ -22,18 +22,24 @@ const findByTransaction = async (id) => {
   }
 };
 
-const findTopProducts = async (limit) => {
+const findTopProductsToday = async (limit = 5) => {
   try {
     const sql = `
                 SELECT
                   p.id,
                   p.name,
-                  SUM(ti.quantity) AS total_qty,
+                  c.name AS category,
+                  SUM(ti.quantity) AS qty_sold,
                   SUM(ti.subtotal) AS total_revenue
                 FROM transaction_items ti
                 JOIN products p ON ti.product_id = p.id
-                GROUP BY p.id, p.name
-                ORDER BY total_qty DESC
+                JOIN categories c ON p.category_id = c.id
+                JOIN transactions t ON ti.transaction_id = t.id
+                WHERE t.date >= CURDATE() 
+                  AND t.date < CURDATE() + INTERVAL 1 DAY
+                  AND t.status = 'paid'
+                GROUP BY p.id, p.name, c.name
+                ORDER BY qty_sold DESC
                 LIMIT ?
                 `;
 
@@ -67,7 +73,9 @@ const findRevenueByCategory = async () => {
   }
 };
 
-const create = async (data) => {
+const create = async (data, conn = null) => {
+  const db = conn || pool;
+
   const fields = Object.keys(data).filter((field) =>
     ALLOWED_FIELDS.includes(field)
   );
@@ -79,9 +87,49 @@ const create = async (data) => {
   try {
     const sql = `INSERT INTO transaction_items (${fields.join(', ')}) VALUES (${fields.map(() => '?').join(', ')})`;
 
-    const [result] = await pool.execute(sql, values);
+    const [result] = await db.execute(sql, values);
 
     return result.insertId;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const sumQuantityByDate = async (date) => {
+  try {
+    const sql = `
+                SELECT 
+                  SUM(ti.quantity) AS total 
+                FROM transaction_items ti
+                JOIN transactions t ON ti.transaction_id = t.id 
+                WHERE t.date >= ? 
+                  AND t.date < ? + INTERVAL 1 DAY
+                  AND t.status = 'paid'
+                `;
+
+    const [rows] = await pool.execute(sql, [date, date]);
+
+    return Number(rows[0]?.total || 0);
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const sumTodayQuantity = async () => {
+  try {
+    const sql = `
+                SELECT 
+                  SUM(ti.quantity) AS total 
+                FROM transaction_items ti
+                JOIN transactions t ON ti.transaction_id = t.id 
+                WHERE t.date >= CURDATE() 
+                  AND t.date < CURDATE() + INTERVAL 1 DAY
+                  AND t.status = 'paid'
+                `;
+
+    const [rows] = await pool.execute(sql);
+
+    return Number(rows[0]?.total || 0);
   } catch (err) {
     throw new Error(`[DATABASE] ${err.message}`);
   }
@@ -95,8 +143,9 @@ const sumTodayHPP = async () => {
                 FROM transaction_items ti
                 JOIN transactions t ON ti.transaction_id = t.id
                 JOIN products p ON ti.product_id = p.id
-                WHERE DATE(t.date) = CURDATE()
-                AND t.status = 'paid'
+                WHERE t.date >= CURDATE() 
+                  AND t.date < CURDATE() + INTERVAL 1 DAY
+                  AND t.status = 'paid'
                 `;
 
     const [rows] = await pool.execute(sql);
@@ -109,8 +158,10 @@ const sumTodayHPP = async () => {
 
 module.exports = {
   findByTransaction,
-  findTopProducts,
+  findTopProductsToday,
   findRevenueByCategory,
   create,
   sumTodayHPP,
+  sumTodayQuantity,
+  sumQuantityByDate,
 };
