@@ -69,3 +69,5 @@ const create = async (data) => {
     throw new Error(`[DATABASE] ${err.message}`);
   }
 };
+
+module.exports = { findById, findAll, findByProduct, create };
