@@ -44,7 +44,7 @@ const findByProduct = async (id) => {
 
     const [rows] = await pool.execute(sql, [id]);
 
-    return rows[0] ?? null;
+    return rows;
   } catch (err) {
     throw new Error(`[DATABASE] ${err.message}`);
   }
