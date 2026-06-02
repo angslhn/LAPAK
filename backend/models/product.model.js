@@ -12,6 +12,18 @@ const ALLOWED_FIELDS = [
 
 const pool = getPool();
 
+const findBySKU = async (sku) => {
+  try {
+    const sql = 'SELECT * FROM products WHERE sku = ?';
+
+    const [rows] = await pool.execute(sql, [sku]);
+
+    return rows[0] ?? null;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
 const findById = async (id) => {
   try {
     const sql = 'SELECT * FROM products WHERE id = ?';
@@ -138,6 +150,7 @@ const remove = async (id) => {
 };
 
 module.exports = {
+  findBySKU,
   findById,
   findAll,
   findAllWithCategory,
