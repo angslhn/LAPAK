@@ -41,3 +41,5 @@ const findByPurchase = async (id) => {
     throw new Error(`[DATABASE] ${err.message}`);
   }
 };
+
+module.exports = { create, findByPurchase };
