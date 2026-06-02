@@ -1,0 +1,42 @@
+const getLocalDate = () => {
+  return new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Jakarta' });
+};
+
+const getLocalPastDate = (day = 0) => {
+  const time = Date.now() - day * 86400000;
+
+  return new Date(time).toLocaleDateString('sv-SE', {
+    timeZone: 'Asia/Jakarta',
+  });
+};
+
+const getLocalTime = () => {
+  return new Date().toLocaleTimeString('sv-SE', { timeZone: 'Asia/Jakarta' });
+};
+
+const getLocalDateTime = () => {
+  const now = new Date();
+
+  const datePart = now.toLocaleDateString('sv-SE', {
+    timeZone: 'Asia/Jakarta',
+  });
+  const timePart = now.toLocaleTimeString('sv-SE', {
+    timeZone: 'Asia/Jakarta',
+  });
+
+  return `${datePart} ${timePart}`;
+};
+
+const isDayName = (date) => {
+  const index = new Date(date).getDay();
+
+  return ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'][index];
+};
+
+const isDayName = (module.exports = {
+  getLocalDate,
+  getLocalPastDate,
+  getLocalTime,
+  getLocalDateTime,
+  isDayName,
+});
