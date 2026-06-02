@@ -83,3 +83,5 @@ const remove = async (id) => {
     throw new Error(`[DATABASE] ${err.message}`);
   }
 };
+
+module.exports = { findById, findAll, create, update, remove };
