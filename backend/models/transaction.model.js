@@ -113,28 +113,6 @@ const findAllUnpaid = async () => {
   }
 };
 
-const findRevenueByRange = async (from, to) => {
-  try {
-    const sql = `
-                SELECT
-                  DATE(date) AS date,
-                  SUM(total) AS revenue
-                FROM transactions
-                WHERE date >= ? 
-                  AND date < ? + INTERVAL 1 DAY
-                  AND status = 'paid'
-                GROUP BY DATE(date)
-                ORDER BY DATE(date) ASC
-                `;
-
-    const [rows] = await pool.execute(sql, [from, to]);
-
-    return rows;
-  } catch (err) {
-    throw new Error(`[DATABASE] ${err.message}`);
-  }
-};
-
 const create = async (data, conn = null) => {
   const db = conn || pool;
 
@@ -170,6 +148,28 @@ const sumRevenueByDate = async (date) => {
     const [rows] = await pool.execute(sql, [date, date]);
 
     return Number(rows[0]?.total || 0);
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const sumRevenueByRange = async (from, to) => {
+  try {
+    const sql = `
+                SELECT
+                  DATE(date) AS date,
+                  SUM(total) AS total
+                FROM transactions
+                WHERE date >= ? 
+                  AND date < ? + INTERVAL 1 DAY
+                  AND status = 'paid'
+                GROUP BY DATE(date)
+                ORDER BY DATE(date) ASC
+                `;
+
+    const [rows] = await pool.execute(sql, [from, to]);
+
+    return rows;
   } catch (err) {
     throw new Error(`[DATABASE] ${err.message}`);
   }
@@ -272,7 +272,7 @@ module.exports = {
   findWithItems,
   findUnpaidByCustomer,
   findAllWithCustomer,
-  findRevenueByRange,
+  sumRevenueByRange,
   create,
   sumTodayRevenue,
   sumRevenueByDate,
