@@ -101,3 +101,12 @@ const closeReport = async (id, userId) => {
     throw new Error(`[DATABASE] ${err.message}`);
   }
 };
+
+module.exports = {
+  findById,
+  findAll,
+  findByDate,
+  findToday,
+  create,
+  closeReport,
+};
