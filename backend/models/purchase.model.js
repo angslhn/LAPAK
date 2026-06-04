@@ -115,7 +115,9 @@ const create = async (data) => {
   }
 };
 
-const updateStatus = async (id, status) => {
+const updateStatus = async ({ id, status }, conn = null) => {
+  const db = conn || pool;
+
   const VALID_STATUS = ['paid', 'unpaid'];
 
   if (!VALID_STATUS.includes(status))
@@ -124,7 +126,7 @@ const updateStatus = async (id, status) => {
   try {
     const sql = 'UPDATE purchases SET status = ? WHERE id = ?';
 
-    const [result] = await pool.execute(sql, [status, id]);
+    const [result] = await db.execute(sql, [status, id]);
 
     return result.affectedRows;
   } catch (err) {
