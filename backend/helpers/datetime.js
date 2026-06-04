@@ -33,10 +33,10 @@ const isDayName = (date) => {
   return ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'][index];
 };
 
-const isDayName = (module.exports = {
+module.exports = {
   getLocalDate,
   getLocalPastDate,
   getLocalTime,
   getLocalDateTime,
   isDayName,
-});
+};
