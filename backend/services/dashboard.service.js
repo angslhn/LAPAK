@@ -35,7 +35,7 @@ const getSummary = async () => {
       TransactionModel.countToday(),
       TransactionItemModel.sumTodayQuantity(),
       TransactionItemModel.findTopProductsToday(5),
-      TransactionModel.findRevenueByRange(fromDate, todayDate),
+      TransactionModel.sumRevenueByRange(fromDate, todayDate),
       CashLedgerModel.sumByType(todayDate),
       ProductModel.findLowStock(),
       TransactionModel.sumRevenueByDate(yesterdayDate),
@@ -80,7 +80,7 @@ const getSummary = async () => {
 
       chart_weekly_revenue.push({
         day: isDayName(targetDate),
-        revenue: foundData ? Number(foundData.revenue) : 0,
+        total: foundData ? Number(foundData.total) : 0,
       });
     }
 
