@@ -1,6 +1,7 @@
 const ERROR_CODES = {
   // Auth
   AUTH_INVALID_CREDENTIALS: 'AUTH_INVALID_CREDENTIALS', // email/password salah
+  AUTH_EMAIL_ALREADY_EXISTS: 'AUTH_EMAIL_ALREADY_EXISTS', // email telah tersedia
   AUTH_TOKEN_EXPIRED: 'AUTH_TOKEN_EXPIRED', // JWT expired
   AUTH_UNAUTHORIZED: 'AUTH_UNAUTHORIZED', // tidak ada token / token invalid
 
@@ -8,6 +9,7 @@ const ERROR_CODES = {
   VALIDATION_ERROR: 'VALIDATION_ERROR', // input tidak valid
   NOT_FOUND: 'NOT_FOUND', // resource generic tidak ditemukan
   INTERNAL_SERVER_ERROR: 'INTERNAL_SERVER_ERROR', // error tidak terduga
+  NO_IMAGE_PROVIDED: 'NO_IMAGE_PROVIDED', // gambar tidak ditemukan
 
   // User
   USER_NOT_FOUND: 'USER_NOT_FOUND', // user tidak ditemukan
