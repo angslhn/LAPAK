@@ -49,4 +49,24 @@ const createExpense = async (data) => {
   }
 };
 
-module.exports = { getAll, getByDate, createExpense };
+const createIncome = async (data) => {
+  try {
+    const { date, note, amount } = data;
+
+    if (amount <= 0) throw new Error(VALIDATION_ERROR);
+
+    return await CashLedgerModel.create({
+      date,
+      type: 'income',
+      category: 'operational',
+      note,
+      amount,
+      reference_id: null,
+      reference_type: 'manual',
+    });
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
+
+module.exports = { getAll, getByDate, createExpense, createIncome };
