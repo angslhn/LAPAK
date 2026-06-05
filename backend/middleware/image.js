@@ -36,7 +36,7 @@ const image = (req, res, next) => {
         return error(
           res,
           'INVALID_FILE_FORMAT',
-          'File format not supported. Use JPG/PNG/WEBP',
+          'Format berkas tidak didukung. Gunakan JPG/PNG/WEBP',
           400
         );
       }
@@ -46,7 +46,7 @@ const image = (req, res, next) => {
           return error(
             res,
             'FILE_TOO_LARGE',
-            'File size is too large. Maximum 3MB',
+            'Ukuran berkas terlalu besar. Maksimal 3MB',
             413
           );
         }
@@ -55,7 +55,7 @@ const image = (req, res, next) => {
       return error(
         res,
         'IMAGE_UPLOAD_ERROR',
-        'An error occurred while uploading the image',
+        'Terjadi kesalahan saat mengunggah gambar',
         500
       );
     }
