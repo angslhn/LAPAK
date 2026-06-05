@@ -78,4 +78,26 @@ const sumByType = async (date) => {
   }
 };
 
-module.exports = { findAll, findByDate, create, sumByType };
+const sumExpensesByRange = async (from, to) => {
+  try {
+    const sql = `
+                SELECT
+                  DATE(date) AS date,
+                  SUM(amount) AS total
+                FROM cash_ledger
+                WHERE date >= ? 
+                  AND date < ? + INTERVAL 1 DAY
+                  AND type = 'expense'
+                GROUP BY DATE(date)
+                ORDER BY DATE(date) ASC
+                `;
+
+    const [rows] = await pool.execute(sql, [from, to]);
+
+    return rows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+module.exports = { findAll, findByDate, create, sumByType, sumExpensesByRange };
