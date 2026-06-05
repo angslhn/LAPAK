@@ -26,14 +26,16 @@ const getToday = async () => {
       const today = getLocalDate();
       const yesterday = getLocalPastDate(1);
 
-      const [revenue, hpp, cashLedger, yesterdayReport] = await Promise.all([
-        TransactionModel.sumTodayRevenue(),
-        TransactionItemModel.sumTodayHPP(),
-        CashLedgerModel.sumByType(today),
-        DailyReportModel.findByDate(yesterday),
-      ]);
+      const [revenue, hpp, transaction_count, cashLedger, yesterdayReport] =
+        await Promise.all([
+          TransactionModel.sumTodayRevenue(),
+          TransactionItemModel.sumTodayHPP(),
+          TransactionModel.countToday(),
+          CashLedgerModel.sumByType(today),
+          DailyReportModel.findByDate(yesterday),
+        ]);
 
-      const expenses = cashLedger.reduce((acc, cash) => {
+      const expense = cashLedger.reduce((acc, cash) => {
         if (cash.type === 'expense') {
           acc += cash.total || 0;
         }
@@ -41,15 +43,16 @@ const getToday = async () => {
         return acc;
       }, 0);
 
-      const gross_profit = revenue - hpp;
+      const net_profit = revenue - hpp - expense;
       const opening_balance = yesterdayReport?.closing_balance || 0;
-      const closing_balance = opening_balance + revenue - expenses;
+      const closing_balance = opening_balance + revenue - expense;
 
       report = {
         date: today,
         total_revenue: revenue,
-        total_expenses: expenses,
-        gross_profit,
+        total_expense: expense,
+        transaction_count,
+        net_profit,
         opening_balance,
         closing_balance,
         status: 'open',
@@ -86,14 +89,16 @@ const closeReport = async (data) => {
       const today = getLocalDate();
       const yesterday = getLocalPastDate(1);
 
-      const [revenue, hpp, cashLedger, yesterdayReport] = await Promise.all([
-        TransactionModel.sumTodayRevenue(),
-        TransactionItemModel.sumTodayHPP(),
-        CashLedgerModel.sumByType(today),
-        DailyReportModel.findByDate(yesterday),
-      ]);
+      const [revenue, hpp, transaction_count, cashLedger, yesterdayReport] =
+        await Promise.all([
+          TransactionModel.sumTodayRevenue(),
+          TransactionItemModel.sumTodayHPP(),
+          TransactionModel.countToday(),
+          CashLedgerModel.sumByType(today),
+          DailyReportModel.findByDate(yesterday),
+        ]);
 
-      const expenses = cashLedger.reduce((acc, cash) => {
+      const expense = cashLedger.reduce((acc, cash) => {
         if (cash.type === 'expense') {
           acc += cash.total || 0;
         }
@@ -101,15 +106,16 @@ const closeReport = async (data) => {
         return acc;
       }, 0);
 
-      const gross_profit = revenue - hpp;
+      const net_profit = revenue - hpp - expense;
       const opening_balance = yesterdayReport?.closing_balance || 0;
-      const closing_balance = opening_balance + revenue - expenses;
+      const closing_balance = opening_balance + revenue - expense;
 
       const reportId = await DailyReportModel.create({
         date: today,
         total_revenue: revenue,
-        total_expenses: expenses,
-        gross_profit,
+        total_expense: expense,
+        transaction_count,
+        net_profit,
         opening_balance,
         closing_balance,
         status: 'closed',
