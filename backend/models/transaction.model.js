@@ -5,9 +5,13 @@ const ALLOWED_FIELDS = [
   'user_id',
   'invoice_number',
   'date',
+  'discount',
+  'tax',
   'total',
   'payment_method',
   'status',
+  'due_date',
+  'note',
 ];
 
 const pool = getPool();
@@ -249,7 +253,7 @@ const getNextInvoiceSequence = async (conn) => {
 const updateStatus = async ({ id, status }, conn = null) => {
   const db = conn || pool;
 
-  const VALID_STATUS = ['paid', 'unpaid'];
+  const VALID_STATUS = ['paid', 'unpaid', 'cancelled'];
 
   if (!VALID_STATUS.includes(status))
     throw new Error(`Invalid status: ${status}`);
