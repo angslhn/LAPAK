@@ -3,8 +3,9 @@ const { getPool } = require('../lib/mysql');
 const ALLOWED_FIELDS = [
   'date',
   'total_revenue',
-  'total_expenses',
-  'gross_profit',
+  'total_expense',
+  'transaction_count',
+  'net_profit',
   'opening_balance',
   'closing_balance',
   'status',
