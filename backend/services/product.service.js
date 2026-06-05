@@ -1,6 +1,10 @@
 const CategoryModel = require('../models/category.model');
 const ProductModel = require('../models/product.model');
 
+const { v4: uuidv4 } = require('uuid');
+
+const { cloudinary } = require('../lib/cloudinary');
+
 const {
   PRODUCT_NOT_FOUND,
   CATEGORY_NOT_FOUND,
@@ -31,7 +35,7 @@ const getById = async (data) => {
   }
 };
 
-const create = async (data) => {
+const create = async (data, file_buffer = null) => {
   try {
     const { category_id, sku } = data;
 
@@ -43,7 +47,91 @@ const create = async (data) => {
 
     if (!category) throw new Error(CATEGORY_NOT_FOUND);
 
-    return await ProductModel.create(data);
+    let image_url = null;
+    let image_public_id = null;
+
+    if (file_buffer) {
+      const publicId = uuidv4();
+
+      try {
+        image_url = await new Promise((resolve, reject) => {
+          cloudinary.uploader
+            .upload_stream(
+              {
+                folder: 'product_images',
+                public_id: publicId,
+              },
+              (error, result) => {
+                if (error) reject(error);
+                else resolve(result.secure_url);
+              }
+            )
+            .end(file_buffer);
+        });
+
+        image_public_id = publicId;
+      } catch (err) {
+        console.info('[CLOUDINARY] Upload image failed:', err.message);
+      }
+    }
+
+    const productId = await ProductModel.create({
+      ...data,
+      image_url,
+      image_public_id,
+    });
+
+    return productId;
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
+
+const updateImage = async (id, file_buffer) => {
+  try {
+    const product = await ProductModel.findById(id);
+
+    if (!product) throw new Error(PRODUCT_NOT_FOUND);
+
+    let image_url = null;
+    let image_public_id = null;
+
+    if (product.image_public_id) {
+      try {
+        await cloudinary.uploader.destroy(product.image_public_id);
+      } catch (err) {
+        console.info('[CLOUDINARY] Delete old image failed:', err.message);
+      }
+    }
+
+    if (file_buffer) {
+      const publicId = uuidv4();
+
+      try {
+        image_url = await new Promise((resolve, reject) => {
+          cloudinary.uploader
+            .upload_stream(
+              {
+                folder: 'product_images',
+                public_id: publicId,
+              },
+              (error, result) => {
+                if (error) reject(error);
+                else resolve(result.secure_url);
+              }
+            )
+            .end(file_buffer);
+        });
+
+        image_public_id = publicId;
+      } catch (err) {
+        throw new Error('IMAGE_UPLOAD_FAILED');
+      }
+    }
+
+    await ProductModel.update({ id, image_url, image_public_id });
+
+    return { image_url, image_public_id };
   } catch (err) {
     throw new Error(err.message);
   }
@@ -91,4 +179,11 @@ const remove = async (data) => {
   }
 };
 
-module.exports = { getAll, getById, create, update, remove };
+module.exports = {
+  getAll,
+  getById,
+  create,
+  update,
+  updateImage,
+  remove,
+};
