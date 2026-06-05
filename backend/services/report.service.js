@@ -42,29 +42,36 @@ const getRevenue = async (data) => {
       toDate = to;
     }
 
-    const revenue = await TransactionModel.sumRevenueByRange(fromDate, toDate);
+    const [revenue, hpp, expenses] = await Promise.all([
+      TransactionModel.sumRevenueByRange(fromDate, toDate),
+      TransactionItemModel.sumHPPByRange(fromDate, toDate),
+      CashLedgerModel.sumExpensesByRange(fromDate, toDate),
+    ]);
 
-    const hpp = await TransactionItemModel.sumHPPByRange(fromDate, toDate);
-
-    const labels = revenue.map((rev) => {
-      const date = rev.date;
-
-      return {
-        date,
-        dayname: isDayName(date),
-      };
-    });
+    const labels = revenue.map((rev) => ({
+      date: rev.date,
+      dayname: isDayName(rev.date),
+    }));
 
     const hppMap = {};
 
     hpp.forEach((h) => (hppMap[h.date] = h.total));
+
+    const expensesMap = {};
+
+    expenses.forEach((e) => (expensesMap[e.date] = e.total));
 
     const gross_profit = revenue.map((rev) => ({
       date: rev.date,
       value: rev.total - (hppMap[rev.date] || 0),
     }));
 
-    return { labels, revenue, gross_profit };
+    const net_profit = revenue.map((rev) => ({
+      date: rev.date,
+      value: rev.total - (hppMap[rev.date] || 0) - (expensesMap[rev.date] || 0),
+    }));
+
+    return { labels, revenue, gross_profit, net_profit };
   } catch (err) {
     throw new Error(err.message);
   }
@@ -92,4 +99,17 @@ const getByCategory = async () => {
   }
 };
 
-module.exports = { getRevenue, getTopProducts, getByCategory };
+const getCategoryQuantity = async () => {
+  try {
+    return await TransactionItemModel.sumQuantityByCategory();
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
+
+module.exports = {
+  getRevenue,
+  getTopProducts,
+  getByCategory,
+  getCategoryQuantity,
+};
