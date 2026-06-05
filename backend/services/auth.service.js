@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
+const { jwtSecret, jwtExpiresIn } = require('../config/env');
 const { sendResetPasswordEmail } = require('../helpers/mailer');
 
 const {
@@ -26,8 +27,8 @@ const login = async (data) => {
 
     const token = jwt.sign(
       { id: user.id, name: user.name, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: '1d' }
+      jwtSecret,
+      { expiresIn: jwtExpiresIn }
     );
 
     return {
@@ -61,7 +62,7 @@ const register = async (data) => {
       phone,
       store_name,
       address,
-      role: 'cashier',
+      role: 'owner',
     });
 
     const user = await UserModel.findById(userId);
