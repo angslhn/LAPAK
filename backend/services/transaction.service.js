@@ -67,10 +67,13 @@ const create = async (data) => {
       })
     );
 
-    const total = transactionItems.reduce(
+    const subtotal = transactionItems.reduce(
       (sum, item) => sum + item.subtotal,
       0
     );
+    const discount = data.discount || 0;
+    const tax = (subtotal - discount) * 0.11;
+    const total = subtotal - discount + tax;
 
     await connection.beginTransaction();
 
@@ -84,9 +87,13 @@ const create = async (data) => {
         customer_id,
         invoice_number,
         date: getLocalDateTime(),
+        discount,
+        tax,
         total,
         payment_method,
         status: payment_method === 'credit' ? 'unpaid' : 'paid',
+        due_date: payment_method === 'credit' ? data.due_date : null,
+        note: data.note || null,
       },
       connection
     );
