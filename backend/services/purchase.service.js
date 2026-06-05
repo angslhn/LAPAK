@@ -115,6 +115,14 @@ const create = async (data) => {
   }
 };
 
+const getUnpaidTotal = async () => {
+  try {
+    return await PurchaseModel.sumUnpaidTotal();
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
+
 const markAsPaid = async (data) => {
   try {
     const { id } = data;
@@ -133,4 +141,4 @@ const markAsPaid = async (data) => {
   }
 };
 
-module.exports = { getAll, getById, create, markAsPaid };
+module.exports = { getAll, getById, create, getUnpaidTotal, markAsPaid };
