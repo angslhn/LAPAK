@@ -4,6 +4,7 @@ const ERROR_CODES = {
   AUTH_EMAIL_ALREADY_EXISTS: 'AUTH_EMAIL_ALREADY_EXISTS', // email telah tersedia
   AUTH_TOKEN_EXPIRED: 'AUTH_TOKEN_EXPIRED', // JWT expired
   AUTH_UNAUTHORIZED: 'AUTH_UNAUTHORIZED', // tidak ada token / token invalid
+  AUTH_INVALID_RESET_TOKEN: 'AUTH_INVALID_RESET_TOKEN', // reset token tidak valid
 
   // General
   VALIDATION_ERROR: 'VALIDATION_ERROR', // input tidak valid
