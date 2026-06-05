@@ -1,6 +1,13 @@
 const { getPool } = require('../lib/mysql');
 
-const ALLOWED_FIELDS = ['name', 'phone', 'address'];
+const ALLOWED_FIELDS = [
+  'name',
+  'phone',
+  'email',
+  'contact_person',
+  'address',
+  'note',
+];
 
 const pool = getPool();
 

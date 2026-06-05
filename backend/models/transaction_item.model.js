@@ -57,6 +57,7 @@ const findTopProductsByRange = async (from, to, limit = 5) => {
                 SELECT
                   p.id,
                   p.name,
+                  p.sku,
                   c.name AS category,
                   SUM(ti.quantity) AS qty_sold,
                   SUM(ti.subtotal) AS total_revenue
@@ -86,6 +87,7 @@ const findTopProductsAllTime = async (limit = 5) => {
                 SELECT
                   p.id,
                   p.name,
+                  p.sku,
                   c.name AS category,
                   SUM(ti.quantity) AS qty_sold,
                   SUM(ti.subtotal) AS total_revenue
@@ -148,6 +150,30 @@ const create = async (data, conn = null) => {
     const [result] = await db.execute(sql, values);
 
     return result.insertId;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const sumQuantityByCategory = async () => {
+  try {
+    const sql = `
+                SELECT
+                  c.id,
+                  c.name AS category_name,
+                  SUM(ti.quantity) AS total_quantity
+                FROM transaction_items ti
+                JOIN transactions t ON ti.transaction_id = t.id
+                JOIN products p ON ti.product_id = p.id
+                JOIN categories c ON p.category_id = c.id
+                WHERE t.status = 'paid'
+                GROUP BY c.id, c.name
+                ORDER BY total_quantity DESC
+                `;
+
+    const [rows] = await pool.execute(sql);
+
+    return rows;
   } catch (err) {
     throw new Error(`[DATABASE] ${err.message}`);
   }
@@ -248,5 +274,6 @@ module.exports = {
   sumTodayHPP,
   sumHPPByRange,
   sumTodayQuantity,
+  sumQuantityByCategory,
   sumQuantityByDate,
 };
