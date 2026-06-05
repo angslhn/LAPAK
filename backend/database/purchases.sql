@@ -3,8 +3,9 @@ CREATE TABLE IF NOT EXISTS purchases (
   supplier_id INT NOT NULL,
   receipt_number VARCHAR(50) NOT NULL UNIQUE,
   date DATE NOT NULL,
+  due_date DATE DEFAULT NULL,
   total DECIMAL(15, 2) NOT NULL,
-  status ENUM('paid', 'unpaid') NOT NULL DEFAULT 'unpaid',
+  status ENUM('paid', 'unpaid', 'partial') NOT NULL DEFAULT 'unpaid',
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
  
   FOREIGN KEY (supplier_id) REFERENCES suppliers(id) ON DELETE RESTRICT
