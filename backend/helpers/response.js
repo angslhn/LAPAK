@@ -12,7 +12,12 @@ const created = (res, data, message = 'Created') =>
     data,
   });
 
-const error = (res, code, message, httpStatus = 400) =>
+const error = (
+  res,
+  code = 'INTERNAL_SERVER_ERROR',
+  message,
+  httpStatus = 500
+) =>
   res.status(httpStatus).json({
     success: false,
     code,
