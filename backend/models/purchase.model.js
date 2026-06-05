@@ -4,6 +4,7 @@ const ALLOWED_FIELDS = [
   'supplier_id',
   'receipt_number',
   'date',
+  'due_date',
   'total',
   'status',
 ];
@@ -42,7 +43,7 @@ const findAllUnpaid = async () => {
                   s.name AS supplier_name
                 FROM purchases p
                 LEFT JOIN suppliers s ON p.supplier_id = s.id
-                WHERE p.status = 'unpaid'
+                WHERE p.status IN ('unpaid', 'partial')
                 ORDER BY p.created_at DESC
                 `;
 
@@ -115,10 +116,40 @@ const create = async (data) => {
   }
 };
 
+const sumUnpaidTotal = async () => {
+  try {
+    const sql =
+      'SELECT SUM(total) AS total FROM purchases WHERE status = "unpaid"';
+
+    const [rows] = await pool.execute(sql);
+
+    return Number(rows[0]?.total || 0);
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const sumPurchaseByCurrentMonth = async () => {
+  try {
+    const sql = `
+                SELECT SUM(total) AS total
+                FROM purchases
+                WHERE YEAR(date) = YEAR(CURDATE()) 
+                  AND MONTH(date) = MONTH(CURDATE())
+                `;
+
+    const [rows] = await pool.execute(sql);
+
+    return Number(rows[0]?.total || 0);
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
 const updateStatus = async ({ id, status }, conn = null) => {
   const db = conn || pool;
 
-  const VALID_STATUS = ['paid', 'unpaid'];
+  const VALID_STATUS = ['paid', 'unpaid', 'partial'];
 
   if (!VALID_STATUS.includes(status))
     throw new Error(`Invalid status: ${status}`);
@@ -140,6 +171,8 @@ module.exports = {
   findAllUnpaid,
   findAllWithSupplier,
   findWithItems,
+  sumUnpaidTotal,
+  sumPurchaseByCurrentMonth,
   create,
   updateStatus,
 };
