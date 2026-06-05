@@ -2,7 +2,12 @@ const { getPool } = require('../lib/mysql');
 
 const ALLOWED_FIELDS = [
   'category_id',
+  'sku',
+  'barcode',
+  'weight',
   'name',
+  'image_url',
+  'image_public_id',
   'purchase_price',
   'selling_price',
   'stock',
