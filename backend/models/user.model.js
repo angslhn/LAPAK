@@ -52,6 +52,8 @@ const create = async (data) => {
     ALLOWED_FIELDS.includes(field)
   );
 
+  if (fields.length === 0) throw new Error('No valid fields provided');
+
   const values = fields.map((field) => data[field]);
 
   try {
