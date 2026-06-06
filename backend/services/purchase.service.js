@@ -5,8 +5,8 @@ const CashLedgerModel = require('../models/cash_ledger.model');
 const PurchaseItemModel = require('../models/purchase_item.model');
 const StockMutationModel = require('../models/stock_mutation.model');
 
-import { getPool } from '../lib/mysql';
-import { getLocalDate } from '../helpers/datetime';
+const { getPool } = require('../lib/mysql');
+const { getLocalDate } = require('../helpers/datetime');
 
 const {
   PURCHASE_NOT_FOUND,
@@ -27,7 +27,7 @@ const getById = async (data) => {
   try {
     const { id } = data;
 
-    const purchase = PurchaseModel.findWithItems(id);
+    const purchase = await PurchaseModel.findWithItems(id);
 
     if (!purchase) throw new Error(PURCHASE_NOT_FOUND);
 
@@ -42,7 +42,7 @@ const create = async (data) => {
   const connection = await pool.getConnection();
 
   try {
-    const { supplier_id, receipt_number, date, items } = data;
+    const { supplier_id, receipt_number, date, due_date, items, note } = data;
 
     if (items.length < 1) throw new Error(VALIDATION_ERROR);
 
@@ -61,8 +61,10 @@ const create = async (data) => {
       supplier_id,
       receipt_number,
       date,
+      due_date,
       total,
       status: 'unpaid',
+      note,
     });
 
     for (const { product_id, quantity, purchase_price } of items) {
@@ -133,7 +135,7 @@ const markAsPaid = async (data) => {
 
     if (purchase.status === 'paid') throw new Error(PURCHASE_ALREADY_PAID);
 
-    await PurchaseModel.updateStatus(id, 'paid');
+    await PurchaseModel.updateStatus({ id, status: 'paid' });
 
     return id;
   } catch (err) {
