@@ -2,6 +2,7 @@ const ProductModel = require('../models/product.model');
 const StockMutationModel = require('../models/stock_mutation.model');
 
 const { getPool } = require('../lib/mysql');
+
 const {
   PRODUCT_NOT_FOUND,
   PRODUCT_INSUFFICIENT_STOCK,
@@ -112,13 +113,13 @@ const getMutations = async () => {
 
 const getMutationsByProduct = async (data) => {
   try {
-    const { productId } = data;
+    const { id } = data;
 
-    const product = await ProductModel.findById(productId);
+    const product = await ProductModel.findById(id);
 
     if (!product) throw new Error(PRODUCT_NOT_FOUND);
 
-    return await StockMutationModel.findByProduct(productId);
+    return await StockMutationModel.findByProduct(id);
   } catch (err) {
     throw new Error(err.message);
   }
