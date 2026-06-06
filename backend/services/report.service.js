@@ -1,3 +1,4 @@
+const CashLedgerModel = require('../models/cash_ledger.model');
 const TransactionModel = require('../models/transaction.model');
 const TransactionItemModel = require('../models/transaction_item.model');
 
