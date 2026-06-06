@@ -10,7 +10,7 @@ const getMeHandler = async (req, res) => {
 
     const data = await UserService.getMe({ id });
 
-    return ok(res, data, 'Profil pengguna berhasil diambil');
+    return ok(res, data);
   } catch (err) {
     let code = err.message;
 
