@@ -57,6 +57,7 @@ const updateProfileHandler = async (req, res) => {
 const updateAvatarHandler = async (req, res) => {
   try {
     const { id } = req.user;
+
     const file_buffer = req.file?.buffer || null;
 
     if (!file_buffer) {
