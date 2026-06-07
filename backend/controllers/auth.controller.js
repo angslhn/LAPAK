@@ -1,6 +1,6 @@
 const AuthService = require('../services/auth.service');
 
-const { isProduction, cookieMaxAge } = require('../config/env');
+const { isProduction, authCookieName, cookieMaxAge } = require('../config/env');
 const { ok, created, error } = require('../helpers/response');
 
 const { ERROR_MESSAGES } = require('../helpers/error_messages');
@@ -14,7 +14,7 @@ const loginHandler = async (req, res) => {
 
     const { token, user } = data;
 
-    res.cookie('auth_id', token, {
+    res.cookie(authCookieName, token, {
       httpOnly: true,
       secure: isProduction,
       sameSite: 'strict',
