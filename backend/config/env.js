@@ -24,6 +24,7 @@ module.exports = {
   cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
   cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET,
 
+  authCookieName: process.env.AUTH_COOKIE_NAME || 'lapak_auth_id',
   cookieMaxAge: Number(process.env.COOKIE_MAX_AGE) || 86400000,
   jwtSecret: process.env.JWT_SECRET,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '1d',
