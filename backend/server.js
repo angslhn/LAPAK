@@ -1,4 +1,5 @@
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -24,9 +25,10 @@ const morganStream = {
   },
 };
 
+app.use(helmet());
 app.use(cors(corsOptions));
 app.use(morgan(morganFormat, { stream: morganStream }));
-app.use(helmet());
+app.use(cookieParser());
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: false }));
 
