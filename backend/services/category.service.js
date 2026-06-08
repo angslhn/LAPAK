@@ -22,7 +22,9 @@ const create = async (data) => {
 
     if (category) throw new Error(CATEGORY_ALREADY_EXISTS);
 
-    return await CategoryModel.create(data);
+    const id = await CategoryModel.create(data);
+
+    return { id };
   } catch (err) {
     throw new Error(err.message);
   }
@@ -36,11 +38,11 @@ const update = async (data) => {
 
     if (!category) throw new Error(CATEGORY_NOT_FOUND);
 
-    const result = await CategoryModel.update({ id, name });
+    const affectedRows = await CategoryModel.update({ id, name });
 
-    if (result === 0) throw new Error(CATEGORY_UPDATE_FAILED);
+    if (affectedRows === 0) throw new Error(CATEGORY_UPDATE_FAILED);
 
-    return result;
+    return { affected_rows: affectedRows };
   } catch (err) {
     throw new Error(err.message);
   }
