@@ -3,8 +3,8 @@ const AuthService = require('../services/auth.service');
 const { isProduction, authCookieName, cookieMaxAge } = require('../config/env');
 const { ok, created, error } = require('../helpers/response');
 
-const { ERROR_MESSAGES } = require('../helpers/error_messages');
-const { ERROR_STATUS } = require('../helpers/error_status');
+const ERROR_MESSAGES = require('../helpers/error_messages');
+const ERROR_STATUS = require('../helpers/error_status');
 
 const loginHandler = async (req, res) => {
   try {

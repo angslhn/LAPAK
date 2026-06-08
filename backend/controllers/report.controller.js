@@ -2,8 +2,8 @@ const ReportService = require('../services/report.service');
 
 const { ok, error } = require('../helpers/response');
 
-const { ERROR_MESSAGES } = require('../helpers/error_messages');
-const { ERROR_STATUS } = require('../helpers/error_status');
+const ERROR_MESSAGES = require('../helpers/error_messages');
+const ERROR_STATUS = require('../helpers/error_status');
 
 const getRevenueHandler = async (req, res) => {
   try {

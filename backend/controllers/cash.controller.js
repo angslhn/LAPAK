@@ -2,8 +2,8 @@ const CashService = require('../services/cash.service');
 
 const { ok, error, created } = require('../helpers/response');
 
-const { ERROR_MESSAGES } = require('../helpers/error_messages');
-const { ERROR_STATUS } = require('../helpers/error_status');
+const ERROR_MESSAGES = require('../helpers/error_messages');
+const ERROR_STATUS = require('../helpers/error_status');
 
 const getAllHandler = async (req, res) => {
   try {
