@@ -1,9 +1,11 @@
-# 🏪 LAPAK — Laporan Penjualan dan Kas
+# 🏪 LAPAK — Aplikasi POS Warung dan Toko Kelontong
 
 LAPAK adalah aplikasi *Point of Sale* (POS) berbasis web yang dirancang khusus untuk operasional warung, toko kelontong, dan toko grosir kecil. Dibangun untuk menyederhanakan pencatatan penjualan harian, stok barang, dan keuangan toko — tanpa perlu keahlian akuntansi.
 
 ## ✨ Fitur Utama
-
+* **🔐 Autentikasi** — Login/register aman dengan JWT atau OAuth, dan lupa password via email
+* **🖼️ Upload Gambar** — Foto produk dan avatar toko via Cloudinary
+* **👥 Multi-user** — Role Owner & Kasir dengan hak akses berbeda
 * **🛒 Kasir (POS)** — Proses transaksi cepat dengan panel keranjang belanja real-time, mendukung pembayaran tunai, QRIS, transfer, dan hutang.
 * **📦 Manajemen Produk & Stok** — Pemantauan stok dengan indikator visual (Aman / Hampir Habis / Kritis) dan notifikasi otomatis.
 * **🚚 Pembelian & Supplier** — Pencatatan restock dari supplier, stok naik otomatis setelah pembelian dicatat.
@@ -19,6 +21,9 @@ LAPAK adalah aplikasi *Point of Sale* (POS) berbasis web yang dirancang khusus u
 
 **Backend:**
 * Node.js, Express.js, MySQL
+* JWT untuk autentikasi
+* Multer & Cloudinary untuk upload gambar
+* Nodemailer untuk email reset password
 
 ## 📂 Struktur Direktori
 
@@ -34,6 +39,7 @@ lapak/
 │   ├── models/          # Query helper per tabel (findById, create, dll)
 │   ├── routes/          # Definisi endpoint API (prefix /api)
 │   ├── services/        # Business logic (penjualan, stok, kas, rekap, dll)
+│   ├── .env.example     # Contoh konfigurasi environment variables
 │   └── server.js        # Entry point — inisialisasi Express
 ├── frontend/
 │   ├── assets/          # Ikon, gambar, dan file statis
@@ -46,16 +52,32 @@ lapak/
 
 ## 🚀 Cara Menjalankan
 
+### Prasyarat
+- Node.js (v18 atau lebih baru)
+- MySQL (v8 atau lebih baru)
+- npm atau yarn
+
+### Langkah-langkah
+
 ```bash
-# 1. Clone repo
+# 1. Clone repository
 git clone https://github.com/angslhn/LAPAK.git
 cd LAPAK
 
-# 2. Setup backend
+# 2. Masuk ke folder backend
 cd backend
+
+# 3. Install dependensi
 npm install
 
-# 3. Jalankan
+# 4. Copy file environment
+cp .env.example .env
+# Edit file .env sesuai dengan konfigurasi database dan SMTP Anda
+
+# 5. Import database
+mysql -u root -p lapak_db < database/schema.sql
+# (Opsional) mysql -u root -p lapak_db < database/seed.sql
+
+# 6. Jalankan server development
 npm run dev
-# Buka http://localhost:3000
 ```
