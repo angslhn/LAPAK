@@ -15,6 +15,7 @@ const ERROR_MESSAGES = {
 
   // User
   USER_NOT_FOUND: 'Pengguna tidak ditemukan',
+  INVALID_PASSWORD: 'Kata sandi lama salah',
 
   // Product
   PRODUCT_SKU_ALREADY_EXISTS: 'Kode SKU sudah digunakan',
