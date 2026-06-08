@@ -23,7 +23,7 @@ const mediaUploader = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 1024 * 1024 * 4, // 3MB
+    fileSize: 1024 * 1024 * 4,
   },
 });
 
