@@ -1,4 +1,4 @@
-const { transporter } = require('./mailer');
+const { transporter } = require('../lib/nodemailer');
 
 const { frontendUrl } = require('../config/env');
 
