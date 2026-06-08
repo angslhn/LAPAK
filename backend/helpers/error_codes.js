@@ -20,13 +20,14 @@ const ERROR_CODES = {
   PRODUCT_SKU_ALREADY_EXISTS: 'PRODUCT_SKU_ALREADY_EXISTS', // kode sku telah tersedia
   PRODUCT_NOT_FOUND: 'PRODUCT_NOT_FOUND', // produk tidak ditemukan
   PRODUCT_INSUFFICIENT_STOCK: 'PRODUCT_INSUFFICIENT_STOCK', // stok tidak cukup
-  PRODUCT_UPDATE_FAILED: 'PRODUCT_UPDATE_FAILED', // gagal update produk
+  PRODUCT_IMAGE_UPDATE_FAILED: 'PRODUCT_IMAGE_UPDATE_FAILED', // gagal memperbarui gambar produk
+  PRODUCT_UPDATE_FAILED: 'PRODUCT_UPDATE_FAILED', // gagal memperbarui produk
   PRODUCT_DELETE_FAILED: 'PRODUCT_DELETE_FAILED', // gagal hapus produk
 
   // Category
   CATEGORY_ALREADY_EXISTS: 'CATEGORY_ALREADY_EXISTS', // kategori telah tersedia
   CATEGORY_NOT_FOUND: 'CATEGORY_NOT_FOUND', // kategori tidak ditemukan
-  CATEGORY_UPDATE_FAILED: 'CATEGORY_UPDATE_FAILED', // gagal update kategori
+  CATEGORY_UPDATE_FAILED: 'CATEGORY_UPDATE_FAILED', // gagal memperbarui kategori
 
   // Supplier
   SUPPLIER_NOT_FOUND: 'SUPPLIER_NOT_FOUND', // supplier tidak ditemukan
