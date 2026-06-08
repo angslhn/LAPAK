@@ -1,13 +1,14 @@
 const UserModel = require('../models/user.model');
 
 const bcrypt = require('bcryptjs');
-const cloudinary = require('../lib/cloudinary');
+
+const { cloudinary } = require('../lib/cloudinary');
 
 const {
   USER_NOT_FOUND,
-  AUTH_INVALID_CREDENTIALS,
   AUTH_EMAIL_ALREADY_EXISTS,
   NO_IMAGE_PROVIDED,
+  INVALID_PASSWORD,
 } = require('../helpers/error_codes');
 
 const getMe = async (data) => {
@@ -42,12 +43,16 @@ const updateAvatar = async (data) => {
         .upload_stream(
           {
             folder: 'user_avatars',
-            public_id: user_id,
+            public_id: String(user_id),
             overwrite: true,
             transformation: [{ width: 512, height: 512, crop: 'fill' }],
           },
           (error, result) => {
-            if (error || !result) return reject(error);
+            if (error) {
+              console.error('[CLOUDINARY] Upload error:', error.message);
+
+              return reject(error);
+            }
 
             resolve(result.secure_url);
           }
@@ -106,7 +111,7 @@ const changePassword = async (data) => {
 
     const isMatch = await bcrypt.compare(old_password, user.password);
 
-    if (!isMatch) throw new Error(AUTH_INVALID_CREDENTIALS);
+    if (!isMatch) throw new Error(INVALID_PASSWORD);
 
     const hashedPassword = await bcrypt.hash(new_password, 10);
 
@@ -118,4 +123,4 @@ const changePassword = async (data) => {
   }
 };
 
-module.exports = { getMe, updateProfile, changePassword };
+module.exports = { getMe, updateProfile, updateAvatar, changePassword };
