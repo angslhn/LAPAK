@@ -71,7 +71,7 @@ const create = async (data, file_buffer = null) => {
 
         image_public_id = publicId;
       } catch (err) {
-        console.info('[CLOUDINARY] Upload image failed:', err.message);
+        console.error('[CLOUDINARY] Upload image failed:', err.message);
       }
     }
 
@@ -81,7 +81,7 @@ const create = async (data, file_buffer = null) => {
       image_public_id,
     });
 
-    return productId;
+    return { id: productId };
   } catch (err) {
     throw new Error(err.message);
   }
@@ -125,7 +125,7 @@ const updateImage = async (id, file_buffer) => {
 
         image_public_id = publicId;
       } catch (err) {
-        throw new Error('IMAGE_UPLOAD_FAILED');
+        throw new Error('PRODUCT_IMAGE_UPDATE_FAILED');
       }
     }
 
@@ -151,11 +151,11 @@ const update = async (data) => {
       if (!category) throw new Error(CATEGORY_NOT_FOUND);
     }
 
-    const result = await ProductModel.update({ id, ...fields });
+    const affected_rows = await ProductModel.update({ id, ...fields });
 
-    if (result === 0) throw new Error(PRODUCT_UPDATE_FAILED);
+    if (affected_rows === 0) throw new Error(PRODUCT_UPDATE_FAILED);
 
-    return result;
+    return { affected_rows };
   } catch (err) {
     throw new Error(err.message);
   }
@@ -169,11 +169,11 @@ const remove = async (data) => {
 
     if (!product) throw new Error(PRODUCT_NOT_FOUND);
 
-    const result = await ProductModel.remove(id);
+    const affected_rows = await ProductModel.remove(id);
 
-    if (result === 0) throw new Error(PRODUCT_DELETE_FAILED);
+    if (affected_rows === 0) throw new Error(PRODUCT_DELETE_FAILED);
 
-    return result;
+    return { affected_rows };
   } catch (err) {
     throw new Error(err.message);
   }
