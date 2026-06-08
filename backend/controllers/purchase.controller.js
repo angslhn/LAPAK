@@ -80,7 +80,7 @@ const markAsPaidHandler = async (req, res) => {
 
     const data = await PurchaseService.markAsPaid({ id });
 
-    return ok(res, data);
+    return ok(res, data, 'Pembelian ditandai lunas');
   } catch (err) {
     let code = err.message;
 
