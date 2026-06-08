@@ -131,9 +131,3 @@ module.exports = {
   updateHandler,
   removeHandler,
 };
-
-// getAllHandler         # tidak perlu data → panggil supplier.getAll
-// getByIdHandler        # ambil id dari params → panggil supplier.getById
-// createHandler         # ambil name, phone, email, contact_person, address, note dari body → panggil supplier.create
-// updateHandler         # ambil id dari params + fields dari body → panggil supplier.update
-// removeHandler         # ambil id dari params → panggil supplier.remove
