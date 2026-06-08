@@ -66,3 +66,5 @@ const updateHandler = async (req, res) => {
     return error(res, code, message, httpStatus);
   }
 };
+
+module.exports = { getAllHandler, createHandler, updateHandler };
