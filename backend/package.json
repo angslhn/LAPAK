@@ -1,7 +1,7 @@
 {
   "name": "lapak",
   "version": "1.0.0",
-  "description": "Aplikasi POS berbasis web untuk manajemen warung dan toko kelontong — penjualan, stok, keuangan, dan laporan harian.",
+  "description": "Aplikasi POS (Point of Sale) berbasis web untuk manajemen warung dan toko kelontong. Fitur: penjualan, manajemen stok, pembelian supplier, laporan keuangan, piutang & hutang, rekap harian, dan tutup buku.",
   "main": "server.js",
   "author": "Aang Solihin, Budiansyah, Neiza Aurellya Putri, Puspa Ratnawulan, Rizki Maulana",
   "license": "UNLICENSED",
