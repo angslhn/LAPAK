@@ -40,10 +40,10 @@ const findTopProductsToday = async (limit = 5) => {
                   AND t.status = 'paid'
                 GROUP BY p.id, p.name, c.name
                 ORDER BY qty_sold DESC
-                LIMIT ?
+                LIMIT ${parseInt(limit)}
                 `;
 
-    const [rows] = await pool.execute(sql, [limit]);
+    const [rows] = await pool.query(sql);
 
     return rows;
   } catch (err) {
@@ -70,10 +70,10 @@ const findTopProductsByRange = async (from, to, limit = 5) => {
                   AND t.status = 'paid'
                 GROUP BY p.id, p.name, c.name
                 ORDER BY qty_sold DESC
-                LIMIT ?
+                LIMIT ${parseInt(limit)}
                 `;
 
-    const [rows] = await pool.execute(sql, [from, to, limit]);
+    const [rows] = await pool.execute(sql, [from, to]);
 
     return rows;
   } catch (err) {
@@ -98,10 +98,10 @@ const findTopProductsAllTime = async (limit = 5) => {
                 WHERE t.status = 'paid'
                 GROUP BY p.id, p.name, c.name
                 ORDER BY qty_sold DESC
-                LIMIT ?
+                LIMIT ${parseInt(limit)}
                 `;
 
-    const [rows] = await pool.execute(sql, [limit]);
+    const [rows] = await pool.query(sql);
 
     return rows;
   } catch (err) {
@@ -187,7 +187,7 @@ const sumQuantityByDate = async (date) => {
                 FROM transaction_items ti
                 JOIN transactions t ON ti.transaction_id = t.id 
                 WHERE t.date >= ? 
-                  AND t.date < ? + INTERVAL 1 DAY
+                  AND t.date < DATE_ADD(?, INTERVAL 1 DAY)
                   AND t.status = 'paid'
                 `;
 
