@@ -43,7 +43,7 @@ const create = async (data) => {
   const connection = await pool.getConnection();
 
   try {
-    const { user_id, customer_id, payment_method, items } = data;
+    const { user_id, payment_method, items } = data;
 
     if (items.length < 1) throw new Error(VALIDATION_ERROR);
 
@@ -84,7 +84,7 @@ const create = async (data) => {
     const transactionId = await TransactionModel.create(
       {
         user_id,
-        customer_id,
+        customer_id: data.customer_id ?? null,
         invoice_number,
         date: getLocalDateTime(),
         discount,
@@ -155,7 +155,7 @@ const create = async (data) => {
 
     await connection.commit();
 
-    return transactionId;
+    return { id: transactionId };
   } catch (err) {
     await connection.rollback();
     throw new Error(err.message);
@@ -182,7 +182,7 @@ const cancel = async (data) => {
 
     const { invoice_number, items } = transaction;
 
-    await TransactionModel.updateStatus(
+    const affected_rows = await TransactionModel.updateStatus(
       { id, status: 'cancelled' },
       connection
     );
@@ -231,7 +231,7 @@ const cancel = async (data) => {
 
     await connection.commit();
 
-    return id;
+    return { affected_rows };
   } catch (err) {
     await connection.rollback();
     throw new Error(err.message);
