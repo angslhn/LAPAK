@@ -145,7 +145,7 @@ const sumRevenueByDate = async (date) => {
                 SELECT SUM(total) AS total
                 FROM transactions
                 WHERE date >= ? 
-                  AND date < ? + INTERVAL 1 DAY
+                  AND date < DATE_ADD(?, INTERVAL 1 DAY)
                   AND status = 'paid'
                 `;
 
@@ -165,7 +165,7 @@ const sumRevenueByRange = async (from, to) => {
                   SUM(total) AS total
                 FROM transactions
                 WHERE date >= ? 
-                  AND date < ? + INTERVAL 1 DAY
+                  AND date < DATE_ADD(?, INTERVAL 1 DAY)
                   AND status = 'paid'
                 GROUP BY DATE(date)
                 ORDER BY DATE(date) ASC
@@ -184,9 +184,9 @@ const sumTodayRevenue = async () => {
     const sql = `
                 SELECT SUM(total) AS total
                 FROM transactions
-                WHERE t.date >= CURDATE() 
-                  AND t.date < CURDATE() + INTERVAL 1 DAY
-                  AND t.status = 'paid'
+                WHERE date >= CURDATE() 
+                  AND date < CURDATE() + INTERVAL 1 DAY
+                  AND status = 'paid'
                 `;
 
     const [rows] = await pool.execute(sql);
@@ -202,9 +202,9 @@ const countByDate = async (date) => {
     const sql = `
                 SELECT COUNT(id) AS total
                 FROM transactions
-                WHERE t.date >= ? 
-                  AND t.date < ? + INTERVAL 1 DAY
-                  AND t.status = 'paid'
+                WHERE date >= ? 
+                  AND date < DATE_ADD(?, INTERVAL 1 DAY)
+                  AND status = 'paid'
                 `;
 
     const [rows] = await pool.execute(sql, [date, date]);
@@ -220,9 +220,9 @@ const countToday = async () => {
     const sql = `
                 SELECT COUNT(id) AS total
                 FROM transactions
-                WHERE t.date >= CURDATE() 
-                  AND t.date < CURDATE() + INTERVAL 1 DAY
-                  AND t.status = 'paid'
+                WHERE date >= CURDATE() 
+                  AND date < CURDATE() + INTERVAL 1 DAY
+                  AND status = 'paid'
                 `;
 
     const [rows] = await pool.execute(sql);
