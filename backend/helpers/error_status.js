@@ -15,6 +15,7 @@ const ERROR_STATUS = {
 
   // User
   USER_NOT_FOUND: 404,
+  INVALID_PASSWORD: 401,
 
   // Product
   PRODUCT_SKU_ALREADY_EXISTS: 409,
