@@ -21,6 +21,7 @@ const ERROR_MESSAGES = {
   PRODUCT_SKU_ALREADY_EXISTS: 'Kode SKU sudah digunakan',
   PRODUCT_NOT_FOUND: 'Produk tidak ditemukan',
   PRODUCT_INSUFFICIENT_STOCK: 'Stok produk tidak mencukupi',
+  PRODUCT_IMAGE_UPDATE_FAILED: 'Gagal memperbarui gambar produk',
   PRODUCT_UPDATE_FAILED: 'Gagal memperbarui produk',
   PRODUCT_DELETE_FAILED: 'Gagal menghapus produk',
 
