@@ -49,4 +49,4 @@ const ERROR_STATUS = {
   REPORT_ALREADY_CLOSED: 400,
 };
 
-module.exports = { ERROR_CODES, ERROR_MESSAGES, ERROR_STATUS };
+module.exports = ERROR_STATUS;

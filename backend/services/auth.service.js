@@ -1,7 +1,7 @@
 const UserModel = require('../models/user.model');
 const PasswordResetModel = require('../models/password_reset.model');
 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 

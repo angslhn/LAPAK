@@ -50,4 +50,4 @@ const ERROR_MESSAGES = {
   REPORT_ALREADY_CLOSED: 'Laporan harian sudah ditutup',
 };
 
-module.exports = { ERROR_CODES, ERROR_MESSAGES };
+module.exports = ERROR_MESSAGES;
