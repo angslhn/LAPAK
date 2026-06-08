@@ -5,6 +5,8 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
 
+const mainRoutes = require('./routes/main.route');
+
 const { isProduction, port, baseURL } = require('./config/env');
 const { connectDatabase } = require('./lib/mysql');
 
@@ -31,16 +33,25 @@ app.use(morgan(morganFormat, { stream: morganStream }));
 app.use(cookieParser());
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+app.use(mainRoutes);
 
 app.use((req, res) => {
-  res.status(404).send({ success: false, message: 'Endpoint tidak ditemukan' });
+  res.status(404).json({
+    success: false,
+    code: 'ENDPOINT_NOT_FOUND',
+    message: 'Endpoint tidak ditemukan',
+  });
 });
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res
-    .status(500)
-    .json({ success: false, message: 'Kesalahan server internal' });
+  res.status(500).json({
+    success: false,
+    code: 'INTERNAL_SERVER_ERROR',
+    message: 'Terjadi kesalahan pada server',
+  });
 });
 
 if (!isProduction) {
