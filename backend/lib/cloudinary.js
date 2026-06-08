@@ -4,7 +4,7 @@ const {
   cloudinaryCloudName,
   cloudinaryApiKey,
   cloudinaryApiSecret,
-} = require('../config/env.js');
+} = require('../config/env');
 
 cloudinary.config({
   cloud_name: cloudinaryCloudName,
