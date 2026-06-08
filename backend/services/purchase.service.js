@@ -13,7 +13,7 @@ const {
   VALIDATION_ERROR,
   SUPPLIER_NOT_FOUND,
   PURCHASE_ALREADY_PAID,
-} = require('../helpers/errorCodes');
+} = require('../helpers/error_codes');
 
 const getAll = async () => {
   try {

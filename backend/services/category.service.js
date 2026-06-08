@@ -4,7 +4,7 @@ const {
   CATEGORY_ALREADY_EXISTS,
   CATEGORY_NOT_FOUND,
   CATEGORY_UPDATE_FAILED,
-} = require('../helpers/errorCodes');
+} = require('../helpers/error_codes');
 
 const getAll = async () => {
   try {

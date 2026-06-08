@@ -14,7 +14,7 @@ const {
   PRODUCT_NOT_FOUND,
   PRODUCT_INSUFFICIENT_STOCK,
   TRANSACTION_ALREADY_CANCELLED,
-} = require('../helpers/errorCodes');
+} = require('../helpers/error_codes');
 
 const getAll = async () => {
   try {
