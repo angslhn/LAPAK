@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 const { authCookieName, jwtSecret } = require('../config/env');
 const { error } = require('../helpers/response');
 
-const { ERROR_MESSAGES } = require('../helpers/error_messages');
-const { ERROR_STATUS } = require('../helpers/error_status');
+const ERROR_MESSAGES = require('../helpers/error_messages');
+const ERROR_STATUS = require('../helpers/error_status');
 
 const { AUTH_UNAUTHORIZED } = require('../helpers/error_codes');
 
