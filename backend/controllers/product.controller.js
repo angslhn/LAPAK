@@ -47,7 +47,20 @@ const getByIdHandler = async (req, res) => {
 
 const createHandler = async (req, res) => {
   try {
-    const payload = req.body;
+    const rawData = JSON.parse(req.body.data);
+
+    const payload = {
+      category_id: rawData.category_id,
+      name: rawData.name,
+      sku: rawData.sku || null,
+      barcode: rawData.barcode || null,
+      weight: rawData.weight || null,
+      purchase_price: rawData.purchase_price,
+      selling_price: rawData.selling_price,
+      stock: rawData.stock || 0,
+      minimum_stock: rawData.minimum_stock || 0,
+      unit: rawData.unit,
+    };
 
     const file_buffer = req.file?.buffer || null;
 
@@ -118,7 +131,7 @@ const removeHandler = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const data = await ProductService.remove(id);
+    const data = await ProductService.remove({ id });
 
     return ok(res, data, 'Produk berhasil dihapus');
   } catch (err) {
