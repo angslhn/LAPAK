@@ -14,6 +14,7 @@ const ERROR_CODES = {
 
   // User
   USER_NOT_FOUND: 'USER_NOT_FOUND', // user tidak ditemukan
+  INVALID_PASSWORD: 'INVALID_PASSWORD', // password lama salah
 
   // Product
   PRODUCT_SKU_ALREADY_EXISTS: 'PRODUCT_SKU_ALREADY_EXISTS', // kode sku telah tersedia
