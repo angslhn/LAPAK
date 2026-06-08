@@ -86,7 +86,7 @@ const sumExpensesByRange = async (from, to) => {
                   SUM(amount) AS total
                 FROM cash_ledger
                 WHERE date >= ? 
-                  AND date < ? + INTERVAL 1 DAY
+                  AND date < DATE_ADD(?, INTERVAL 1 DAY)
                   AND type = 'expense'
                 GROUP BY DATE(date)
                 ORDER BY DATE(date) ASC
