@@ -35,7 +35,7 @@ const createExpense = async (data) => {
 
     if (amount <= 0) throw new Error(VALIDATION_ERROR);
 
-    return await CashLedgerModel.create({
+    const cashLedgerId = await CashLedgerModel.create({
       date,
       type: 'expense',
       category: 'operational',
@@ -44,6 +44,8 @@ const createExpense = async (data) => {
       reference_id: null,
       reference_type: 'manual',
     });
+
+    return { id: cashLedgerId };
   } catch (err) {
     throw new Error(err.message);
   }
@@ -55,7 +57,7 @@ const createIncome = async (data) => {
 
     if (amount <= 0) throw new Error(VALIDATION_ERROR);
 
-    return await CashLedgerModel.create({
+    const cashLedgerId = await CashLedgerModel.create({
       date,
       type: 'income',
       category: 'operational',
@@ -64,6 +66,8 @@ const createIncome = async (data) => {
       reference_id: null,
       reference_type: 'manual',
     });
+
+    return { id: cashLedgerId };
   } catch (err) {
     throw new Error(err.message);
   }
