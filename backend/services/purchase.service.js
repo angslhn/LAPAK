@@ -108,7 +108,7 @@ const create = async (data) => {
 
     await connection.commit();
 
-    return purchaseId;
+    return { id: purchaseId };
   } catch (err) {
     await connection.rollback();
     throw new Error(err.message);
@@ -135,9 +135,12 @@ const markAsPaid = async (data) => {
 
     if (purchase.status === 'paid') throw new Error(PURCHASE_ALREADY_PAID);
 
-    await PurchaseModel.updateStatus({ id, status: 'paid' });
+    const affected_rows = await PurchaseModel.updateStatus({
+      id,
+      status: 'paid',
+    });
 
-    return id;
+    return { affected_rows };
   } catch (err) {
     throw new Error(err.message);
   }
