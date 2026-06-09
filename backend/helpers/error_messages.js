@@ -38,7 +38,7 @@ const ERROR_MESSAGES = {
 
   // Transaction
   TRANSACTION_NOT_FOUND: 'Transaksi tidak ditemukan',
-  TRANSACTION_ALREADY_CANCELLED: 'Transaksi sudah dibatalkan sebelumnya',
+  TRANSACTION_ALREADY_CANCELLED: 'Transaksi ini sudah dibatalkan',
 
   // Purchase
   PURCHASE_NOT_FOUND: 'Pembelian tidak ditemukan',
