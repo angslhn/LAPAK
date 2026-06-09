@@ -103,7 +103,7 @@ const create = async (data) => {
       amount: total,
       reference_id: purchaseId,
       reference_type: 'purchase',
-      note: receipt_number,
+      note: 'Pembelian dari ' + receipt_number,
     });
 
     await connection.commit();
