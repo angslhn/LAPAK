@@ -7,7 +7,9 @@ const { getLocalDate } = require('../helpers/datetime');
 
 const {
   TRANSACTION_NOT_FOUND,
-  DEBT_ALREADY_PAID,
+  DEBT_CUSTOMER_ALREADY_CANCELLED,
+  DEBT_CUSTOMER_ALREADY_PAID,
+  DEBT_SUPPLIER_ALREADY_PAID,
   PURCHASE_NOT_FOUND,
 } = require('../helpers/error_codes');
 
@@ -50,7 +52,11 @@ const payCustomerDebt = async (data) => {
 
     if (!transaction) throw new Error(TRANSACTION_NOT_FOUND);
 
-    if (transaction.status === 'paid') throw new Error(DEBT_ALREADY_PAID);
+    if (transaction.status === 'cancelled')
+      throw new Error(DEBT_CUSTOMER_ALREADY_CANCELLED);
+
+    if (transaction.status === 'paid')
+      throw new Error(DEBT_CUSTOMER_ALREADY_PAID);
 
     await connection.beginTransaction();
 
@@ -64,14 +70,14 @@ const payCustomerDebt = async (data) => {
         amount: transaction.total,
         reference_id: id,
         reference_type: 'transaction',
-        note: 'Pelunasan ' + transaction.invoice_number,
+        note: 'Pelunasan piutang dari ' + transaction.invoice_number,
       },
       connection
     );
 
     await connection.commit();
 
-    return cashLedgerId;
+    return { id: cashLedgerId };
   } catch (err) {
     await connection.rollback();
     throw new Error(err.message);
@@ -99,7 +105,8 @@ const paySupplierDebt = async (data) => {
 
     if (!purchase) throw new Error(PURCHASE_NOT_FOUND);
 
-    if (purchase.status === 'paid') throw new Error(DEBT_ALREADY_PAID);
+    if (transaction.status === 'paid')
+      throw new Error(DEBT_SUPPLIER_ALREADY_PAID);
 
     await connection.beginTransaction();
 
@@ -113,14 +120,14 @@ const paySupplierDebt = async (data) => {
         amount: purchase.total,
         reference_id: id,
         reference_type: 'purchase',
-        note: 'Pelunasan ' + purchase.receipt_number,
+        note: 'Pelunasan hutang dari ' + purchase.receipt_number,
       },
       connection
     );
 
     await connection.commit();
 
-    return cashLedgerId;
+    return { id: cashLedgerId };
   } catch (err) {
     await connection.rollback();
     throw new Error(err.message);
