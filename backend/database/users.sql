@@ -7,6 +7,6 @@ CREATE TABLE IF NOT EXISTS users (
   store_name VARCHAR(150) DEFAULT NULL,
   address TEXT DEFAULT NULL,
   avatar_url VARCHAR(255) DEFAULT NULL,
-  role ENUM('owner', 'cashier') NOT NULL DEFAULT 'cashier',
+  role ENUM('owner', 'cashier') NOT NULL DEFAULT 'owner',
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
