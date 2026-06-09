@@ -91,7 +91,7 @@ const cancelHandler = async (req, res) => {
 
     const data = await TransactionService.cancel({ id });
 
-    return ok(res, data);
+    return ok(res, data, 'Transaksi berhasil dibatalkan');
   } catch (err) {
     let code = err.message;
 
