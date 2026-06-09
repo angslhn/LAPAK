@@ -26,11 +26,18 @@ const getById = async (data) => {
 
 const create = async (data) => {
   try {
-    const { name, phone, address } = data;
+    const { name, phone, email, contact_person, address, note } = data;
 
-    const supplierId = await SupplierModel.create({ name, phone, address });
+    const supplierId = await SupplierModel.create({
+      name,
+      phone,
+      email,
+      contact_person,
+      address,
+      note,
+    });
 
-    return supplierId;
+    return { id: supplierId };
   } catch (err) {
     throw new Error(err.message);
   }
