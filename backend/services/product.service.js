@@ -1,5 +1,6 @@
 const CategoryModel = require('../models/category.model');
 const ProductModel = require('../models/product.model');
+const StockMutationModel = require('../models/stock_mutation.model');
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -60,6 +61,7 @@ const create = async (data, file_buffer = null) => {
               {
                 folder: 'product_images',
                 public_id: publicId,
+                transformation: [{ width: 512, height: 512, crop: 'fill' }],
               },
               (error, result) => {
                 if (error) reject(error);
@@ -114,6 +116,7 @@ const updateImage = async (id, file_buffer) => {
               {
                 folder: 'product_images',
                 public_id: publicId,
+                transformation: [{ width: 512, height: 512, crop: 'fill' }],
               },
               (error, result) => {
                 if (error) reject(error);
@@ -149,6 +152,22 @@ const update = async (data) => {
       const category = await CategoryModel.findById(fields.category_id);
 
       if (!category) throw new Error(CATEGORY_NOT_FOUND);
+    }
+
+    if (fields.stock !== undefined && fields.stock !== product.stock) {
+      const delta = fields.stock - product.stock;
+      const type = delta > 0 ? 'in' : 'out';
+
+      await StockMutationModel.create({
+        product_id: id,
+        type,
+        source: 'adjustment',
+        quantity: Math.abs(delta),
+        stock_before: product.stock,
+        stock_after: fields.stock,
+        reference_id: null,
+        note: 'Penyesuaian stok via ubah detail produk',
+      });
     }
 
     const affected_rows = await ProductModel.update({ id, ...fields });
