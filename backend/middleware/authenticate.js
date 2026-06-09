@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 
+const UserModel = require('../models/user.model');
+
 const { authCookieName, jwtSecret } = require('../config/env');
 const { error } = require('../helpers/response');
 
@@ -19,6 +21,16 @@ const authenticate = async (req, res, next) => {
     }
 
     const token = jwt.verify(authCookie, jwtSecret);
+
+    const user = await UserModel.findById(token.id);
+
+    if (!user) {
+      const code = AUTH_UNAUTHORIZED;
+
+      res.clearCookie(authCookieName);
+
+      return error(res, code, ERROR_MESSAGES[code], ERROR_STATUS[code]);
+    }
 
     req.user = token;
 
