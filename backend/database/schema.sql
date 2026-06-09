@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
   store_name VARCHAR(150) DEFAULT NULL,
   address TEXT DEFAULT NULL,
   avatar_url VARCHAR(255) DEFAULT NULL,
-  role ENUM('owner', 'cashier') NOT NULL DEFAULT 'cashier',
+  role ENUM('owner', 'cashier') NOT NULL DEFAULT 'owner',
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS suppliers (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(150) NOT NULL,
   phone VARCHAR(20) DEFAULT NULL,
-  email VARCHAR(255) NOT NULL,
-  contact_person VARCHAR(100) NOT NULL,
+  email VARCHAR(255) DEFAULT NULL UNIQUE,
+  contact_person VARCHAR(100) DEFAULT NULL,
   address TEXT DEFAULT NULL,
   note TEXT DEFAULT NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS purchases (
   date DATE NOT NULL,
   due_date DATE DEFAULT NULL,
   total DECIMAL(15, 2) NOT NULL,
-  status ENUM('paid', 'unpaid', 'partial') NOT NULL DEFAULT 'unpaid',
+  status ENUM('paid', 'unpaid') NOT NULL DEFAULT 'unpaid'
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
  
   FOREIGN KEY (supplier_id) REFERENCES suppliers(id) ON DELETE RESTRICT
