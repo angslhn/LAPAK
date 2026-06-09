@@ -49,30 +49,59 @@ const getRevenue = async (data) => {
       CashLedgerModel.sumExpensesByRange(fromDate, toDate),
     ]);
 
-    const labels = revenue.map((rev) => ({
-      date: rev.date,
-      dayname: isDayName(rev.date),
+    const dateRange = [];
+
+    let currentDate = new Date(fromDate);
+    const endDate = new Date(toDate);
+
+    while (currentDate <= endDate) {
+      const dateStr = currentDate.toLocaleDateString('sv-SE', {
+        timeZone: 'Asia/Jakarta',
+      });
+
+      dateRange.push(dateStr);
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    const labels = dateRange.map((date) => ({
+      date,
+      dayname: isDayName(date),
     }));
 
-    const hppMap = {};
+    const revenueMap = {};
+    revenue.forEach((r) => (revenueMap[r.date] = r.total));
 
+    const hppMap = {};
     hpp.forEach((h) => (hppMap[h.date] = h.total));
 
     const expensesMap = {};
-
     expenses.forEach((e) => (expensesMap[e.date] = e.total));
 
-    const gross_profit = revenue.map((rev) => ({
-      date: rev.date,
-      value: rev.total - (hppMap[rev.date] || 0),
+    const revenueFormatted = dateRange.map((date) => ({
+      date,
+      total: revenueMap[date] || 0,
     }));
 
-    const net_profit = revenue.map((rev) => ({
-      date: rev.date,
-      value: rev.total - (hppMap[rev.date] || 0) - (expensesMap[rev.date] || 0),
+    const grossProfitFormatted = dateRange.map((date) => ({
+      date,
+      value: (revenueMap[date] || 0) - (hppMap[date] || 0),
     }));
 
-    return { labels, revenue, gross_profit, net_profit };
+    const netProfitFormatted = dateRange.map((date) => ({
+      date,
+      value:
+        (revenueMap[date] || 0) -
+        (hppMap[date] || 0) -
+        (expensesMap[date] || 0),
+    }));
+
+    return {
+      labels,
+      revenue: revenueFormatted,
+      gross_profit: grossProfitFormatted,
+      net_profit: netProfitFormatted,
+    };
   } catch (err) {
     throw new Error(err.message);
   }
