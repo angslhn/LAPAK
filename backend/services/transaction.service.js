@@ -71,8 +71,9 @@ const create = async (data) => {
       (sum, item) => sum + item.subtotal,
       0
     );
+
+    const tax = 0;
     const discount = data.discount || 0;
-    const tax = (subtotal - discount) * 0.11;
     const total = subtotal - discount + tax;
 
     await connection.beginTransaction();
@@ -147,7 +148,7 @@ const create = async (data) => {
           amount: total,
           reference_id: transactionId,
           reference_type: 'transaction',
-          note: invoice_number,
+          note: 'Transaksi dari ' + invoice_number,
         },
         connection
       );
@@ -206,7 +207,7 @@ const cancel = async (data) => {
           stock_before,
           stock_after,
           reference_id: id,
-          note: 'Pembatalan transaksi ' + invoice_number,
+          note: 'Pembatalan transaksi dari ' + invoice_number,
         },
         connection
       );
@@ -223,7 +224,7 @@ const cancel = async (data) => {
           amount: total,
           reference_id: id,
           reference_type: 'transaction',
-          note: 'Pembatalan ' + invoice_number,
+          note: 'Pembatalan transaksi dari ' + invoice_number,
         },
         connection
       );
