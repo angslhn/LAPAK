@@ -45,7 +45,9 @@ const ERROR_MESSAGES = {
   PURCHASE_ALREADY_PAID: 'Pembelian sudah lunas',
 
   // Debt
-  DEBT_ALREADY_PAID: 'Hutang/piutang sudah lunas',
+  DEBT_CUSTOMER_ALREADY_PAID: 'Transaksi ini sudah lunas',
+  DEBT_CUSTOMER_ALREADY_CANCELLED: 'Transaksi ini sudah dibatalkan',
+  DEBT_SUPPLIER_ALREADY_PAID: 'Pembelian ini sudah lunas',
 
   // Daily Report
   REPORT_NOT_FOUND: 'Laporan harian tidak ditemukan',
