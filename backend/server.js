@@ -3,11 +3,12 @@ const cookieParser = require('cookie-parser');
 const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const passport = require('passport');
 const path = require('path');
 
 const mainRoutes = require('./routes/main.route');
 
-const { isProduction, port, baseURL } = require('./config/env');
+const { port, isProduction, clientURL } = require('./config/env');
 const { connectDatabase } = require('./lib/mysql');
 
 const app = express();
@@ -15,7 +16,7 @@ const app = express();
 connectDatabase();
 
 const corsOptions = {
-  origin: baseURL,
+  origin: clientURL,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   credentials: true,
 };
@@ -33,6 +34,7 @@ app.use(morgan(morganFormat, { stream: morganStream }));
 app.use(cookieParser());
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: false }));
+app.use(passport.initialize());
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 app.use(mainRoutes);
@@ -47,6 +49,7 @@ app.use((req, res) => {
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
+
   res.status(500).json({
     success: false,
     code: 'INTERNAL_SERVER_ERROR',
