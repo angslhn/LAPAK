@@ -15,7 +15,9 @@ const create = async (data) => {
   try {
     const { name, phone } = data;
 
-    return await CustomerModel.create({ name, phone });
+    const customerId = await CustomerModel.create({ name, phone });
+
+    return { id: customerId };
   } catch (err) {
     throw new Error(err.message);
   }
