@@ -43,7 +43,7 @@ const findAllUnpaid = async () => {
                   s.name AS supplier_name
                 FROM purchases p
                 LEFT JOIN suppliers s ON p.supplier_id = s.id
-                WHERE p.status IN ('unpaid', 'partial')
+                WHERE p.status = 'unpaid'
                 ORDER BY p.created_at DESC
                 `;
 
@@ -149,7 +149,7 @@ const sumPurchaseByCurrentMonth = async () => {
 const updateStatus = async ({ id, status }, conn = null) => {
   const db = conn || pool;
 
-  const VALID_STATUS = ['paid', 'unpaid', 'partial'];
+  const VALID_STATUS = ['paid', 'unpaid'];
 
   if (!VALID_STATUS.includes(status))
     throw new Error(`Invalid status: ${status}`);
