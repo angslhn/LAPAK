@@ -30,7 +30,7 @@ const createHandler = async (req, res) => {
 
     const data = await CustomerService.create({ name, phone });
 
-    return created(res, data);
+    return created(res, data, 'Pelanggan berhasil ditambahkan');
   } catch (err) {
     let code = err.message;
 
