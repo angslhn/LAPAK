@@ -44,7 +44,9 @@ const ERROR_CODES = {
   PURCHASE_ALREADY_PAID: 'PURCHASE_ALREADY_PAID', // nota sudah lunas
 
   // Debt
-  DEBT_ALREADY_PAID: 'DEBT_ALREADY_PAID', // hutang/piutang sudah lunas
+  DEBT_CUSTOMER_ALREADY_PAID: 'DEBT_CUSTOMER_ALREADY_PAID', // piutang dari pelanggan sudah lunas
+  DEBT_CUSTOMER_ALREADY_CANCELLED: 'DEBT_CUSTOMER_ALREADY_CANCELLED', // piutang dari pelanggan sudah dibatalkan
+  DEBT_SUPPLIER_ALREADY_PAID: 'DEBT_SUPPLIER_ALREADY_PAID', // hutang ke supplier sudah lunas
 
   // Daily Report
   REPORT_NOT_FOUND: 'REPORT_NOT_FOUND', // rekap tidak ditemukan
