@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LAPAK – Business Management</title>
+  <link rel="stylesheet" href="/frontend/style/stock.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🏪</div>
+    <div class="logo-text">
+      <h2>LAPAK</h2>
+      <span>Business Management</span>
+    </div>
+  </div>
+  <nav>
+    <a class="nav-item" href="/frontend/views/beranda.html">  <span class="nav-icon">⊞</span> Beranda</a>
+    <a class="nav-item" href="/frontend/views/penjualan.html">  <span class="nav-icon">🧾</span> Penjualan</a>
+     <a class="nav-item" href="/frontend/views/transaksi.html"><span class="nav-icon">↔</span> transaksi</a>
+    <a class="nav-item" href="/frontend/views/produk.html"> <span class="nav-icon">📦</span> Produk</a>
+    <div class="nav-item">                            <span class="nav-icon">🗃️</span>  Stok Barang</div>
+    <a class="nav-item" href="/frontend/views/pembelian.html">  <span class="nav-icon">🛒</span> Pembelian</a>
+    <a class="nav-item" href="/frontend/views/supplier.html">  <span class="nav-icon">👥</span> Supplier</a>
+    <a class="nav-item" href="/frontend/views/laporan.html">  <span class="nav-icon">📊</span> Laporan</a>
+    <a class="nav-item" href="/frontend/views/kas&hutang.html">  <span class="nav-icon">💳</span> Kas &amp; Hutang</a>
+    <a class="nav-item" href="/frontend/views/rekap.html">  <span class="nav-icon">📅</span> Rekap Harian</a>
+    <a class="nav-item" href="/frontend/views/setting.html">  <span class="nav-icon">⚙️</span> Pengaturan</a>
+  </nav>
+</aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main">
+
+    <!-- Summary Cards -->
+    <section class="cards">
+
+      <div class="card">
+        <div class="card__body">
+          <div>
+            <p class="card__label">TOTAL PRODUK</p>
+            <p class="card__value">1,248</p>
+          </div>
+          <div class="card__icon card__icon--teal">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M7 7h10M7 12h10M7 17h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__body">
+          <div>
+            <p class="card__label">HAMPIR HABIS</p>
+            <p class="card__value">42</p>
+          </div>
+          <div class="card__icon card__icon--amber">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__body">
+          <div>
+            <p class="card__label">STOK KRITIS</p>
+            <p class="card__value card__value--red">15</p>
+          </div>
+          <div class="card__icon card__icon--red">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Stock Table -->
+    <section class="table-section">
+      <div class="table-header">
+        <div class="table-tabs">
+          <button class="tab tab--active">Stok Saat Ini</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <h2 class="table-title">Daftar Stok Produk</h2>
+        <table class="stock-table">
+          <thead>
+            <tr>
+              <th>Nama Produk</th>
+              <th>Kategori</th>
+              <th class="text-right">Stok Saat Ini</th>
+              <th class="text-right">Batas Minimum</th>
+              <th class="text-center">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="product-name">Beras Premium 5kg</td>
+              <td class="category">Sembako</td>
+              <td class="text-right stock-value">120</td>
+              <td class="text-right min-value">20</td>
+              <td class="text-center"><span class="badge badge--aman">Aman</span></td>
+            </tr>
+            <tr>
+              <td class="product-name">Minyak Goreng 2L</td>
+              <td class="category">Sembako</td>
+              <td class="text-right stock-value">35</td>
+              <td class="text-right min-value">30</td>
+              <td class="text-center"><span class="badge badge--hampir">Hampir Habis</span></td>
+            </tr>
+            <tr>
+              <td class="product-name">Kopi Instan Box</td>
+              <td class="category">Minuman</td>
+              <td class="text-right stock-value stock-value--kritis">5</td>
+              <td class="text-right min-value">15</td>
+              <td class="text-center"><span class="badge badge--kritis">Kritis</span></td>
+            </tr>
+            <tr>
+              <td class="product-name">Gula Pasir 1kg</td>
+              <td class="category">Sembako</td>
+              <td class="text-right stock-value">85</td>
+              <td class="text-right min-value">25</td>
+              <td class="text-center"><span class="badge badge--aman">Aman</span></td>
+            </tr>
+            <tr>
+              <td class="product-name">Susu Kental Manis Kaleng</td>
+              <td class="category">Bahan Kue</td>
+              <td class="text-right stock-value">42</td>
+              <td class="text-right min-value">10</td>
+              <td class="text-center"><span class="badge badge--aman">Aman</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>

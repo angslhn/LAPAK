@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LAPAK – Pembelian Barang</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/frontend/style/pembelian.css"/>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🏪</div>
+    <div class="logo-text">
+      <h2>LAPAK</h2>
+      <span>Business Management</span>
+    </div>
+  </div>
+  <nav>
+    <a class="nav-item" href="/frontend/views/beranda.html">  <span class="nav-icon">⊞</span> Beranda</a>
+    <a class="nav-item" href="/frontend/views/penjualan.html">  <span class="nav-icon">🧾</span> Penjualan</a>
+    <a class="nav-item" href="/frontend/views/transaksi.html"><span class="nav-icon">↔</span> transaksi</a>
+    <a class="nav-item" href="/frontend/views/produk.html"> <span class="nav-icon">📦</span> Produk</a>
+    <a class="nav-item" href="/frontend/views/stok.html">  <span class="nav-icon">🗃️</span> Stok Barang</a>
+    <div class="nav-item">                            <span class="nav-icon">🛒</span> Pembelian</div>
+    <a class="nav-item" href="/frontend/views/supplier.html">  <span class="nav-icon">👥</span> Supplier</a>
+    <a class="nav-item" href="/frontend/views/laporan.html">  <span class="nav-icon">📊</span> Laporan</a>
+    <a class="nav-item" href="/frontend/views/kas&hutang.html">  <span class="nav-icon">💳</span> Kas &amp; Hutang</a>
+    <a class="nav-item" href="/frontend/views/rekap.html">  <span class="nav-icon">📅</span> Rekap Harian</a>
+    <a class="nav-item" href="/frontend/views/setting.html">  <span class="nav-icon">⚙️</span> Pengaturan</a>
+  </nav>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>Pembelian Barang</h1>
+      <p>Kelola data pembelian dan tagihan supplier</p>
+    </div>
+    <button class="btn-primary">
+      <svg viewBox="0 0 18 18" fill="none" width="16" height="16"><path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      Catat Pembelian Baru
+    </button>
+  </div>
+
+  <!-- Summary Cards -->
+  <section class="cards">
+
+    <div class="card">
+      <div class="card-icon card-icon--teal">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 2H3L2 7l.5 12a1 1 0 001 1h17a1 1 0 001-1L22 7l-1-5h-3M6 2V1M18 2V1M6 2h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 11l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="card-blob card-blob--teal"></div>
+      <div class="card-body">
+        <p class="card-label">TOTAL PEMBELIAN (BULAN INI)</p>
+        <p class="card-value">Rp 45.200.000</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-icon card-icon--red">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="15" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M2 10h20M7 15h3M15 15h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </div>
+      <div class="card-blob card-blob--red"></div>
+      <div class="card-body">
+        <p class="card-label">HUTANG BELUM LUNAS</p>
+        <p class="card-value card-value--red">Rp 12.500.000</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-icon card-icon--gray">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="1.8"/><circle cx="16" cy="8" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M3 20c0-4 2.7-6 6-6M11 20c0-4 2.7-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </div>
+      <div class="card-blob card-blob--gray"></div>
+      <div class="card-body">
+        <p class="card-label">SUPPLIER AKTIF</p>
+        <p class="card-value">18</p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Table Card -->
+  <div class="table-card">
+
+    <!-- Search & Filter bar -->
+    <div class="table-toolbar">
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="M13 13l2.5 2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input type="text" id="searchInput" placeholder="Cari nota atau supplier..." oninput="handleSearch()"/>
+      </div>
+      <button class="btn-filter">
+        <svg viewBox="0 0 18 18" fill="none" width="14" height="14"><path d="M2 4h14M5 9h8M8 14h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        Filter
+      </button>
+    </div>
+
+    <!-- Table -->
+    <table class="pb-table">
+      <thead>
+        <tr>
+          <th>TANGGAL PEMBELIAN</th>
+          <th>NOMOR NOTA</th>
+          <th>SUPPLIER</th>
+          <th class="text-right">TOTAL PEMBELIAN</th>
+          <th class="text-center">STATUS PEMBAYARAN</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+
+    <!-- Footer -->
+    <div class="table-footer">
+      <div class="table-info" id="tableInfo"></div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  const allData = [
+    { tanggal:'24 Okt 2023', nota:'INV-PO-001', supplier:'PT. Makmur Sejahtera',  total:'Rp 15.000.000', status:'Lunas' },
+    { tanggal:'22 Okt 2023', nota:'INV-PO-002', supplier:'CV. Bintang Mas',        total:'Rp 8.500.000',  status:'Belum Lunas' },
+    { tanggal:'20 Okt 2023', nota:'INV-PO-003', supplier:'Toko Sukses Selalu',     total:'Rp 4.200.000',  status:'Lunas' },
+    { tanggal:'18 Okt 2023', nota:'INV-PO-004', supplier:'PT. Makmur Sejahtera',   total:'Rp 12.000.000', status:'Belum Lunas' },
+    { tanggal:'15 Okt 2023', nota:'INV-PO-005', supplier:'Distributor Jaya',       total:'Rp 5.500.000',  status:'Lunas' },
+    { tanggal:'12 Okt 2023', nota:'INV-PO-006', supplier:'CV. Sumber Makmur',      total:'Rp 3.750.000',  status:'Lunas' },
+    { tanggal:'10 Okt 2023', nota:'INV-PO-007', supplier:'PT. Nusantara Dagang',   total:'Rp 9.100.000',  status:'Belum Lunas' },
+    { tanggal:'08 Okt 2023', nota:'INV-PO-008', supplier:'Toko Berkah Abadi',      total:'Rp 2.300.000',  status:'Lunas' },
+    { tanggal:'05 Okt 2023', nota:'INV-PO-009', supplier:'CV. Bintang Mas',        total:'Rp 6.800.000',  status:'Lunas' },
+    { tanggal:'02 Okt 2023', nota:'INV-PO-010', supplier:'Distributor Jaya',       total:'Rp 11.400.000', status:'Belum Lunas' },
+    { tanggal:'29 Sep 2023', nota:'INV-PO-011', supplier:'PT. Makmur Sejahtera',   total:'Rp 7.600.000',  status:'Lunas' },
+    { tanggal:'25 Sep 2023', nota:'INV-PO-012', supplier:'Toko Sukses Selalu',     total:'Rp 4.900.000',  status:'Lunas' },
+    { tanggal:'20 Sep 2023', nota:'INV-PO-013', supplier:'CV. Sumber Makmur',      total:'Rp 3.200.000',  status:'Belum Lunas' },
+    { tanggal:'15 Sep 2023', nota:'INV-PO-014', supplier:'PT. Nusantara Dagang',   total:'Rp 8.750.000',  status:'Lunas' },
+    { tanggal:'10 Sep 2023', nota:'INV-PO-015', supplier:'Distributor Jaya',       total:'Rp 5.100.000',  status:'Lunas' },
+    { tanggal:'05 Sep 2023', nota:'INV-PO-016', supplier:'CV. Bintang Mas',        total:'Rp 14.300.000', status:'Belum Lunas' },
+    { tanggal:'01 Sep 2023', nota:'INV-PO-017', supplier:'Toko Berkah Abadi',      total:'Rp 2.600.000',  status:'Lunas' },
+    { tanggal:'28 Agu 2023', nota:'INV-PO-018', supplier:'PT. Makmur Sejahtera',   total:'Rp 9.900.000',  status:'Lunas' },
+    { tanggal:'22 Agu 2023', nota:'INV-PO-019', supplier:'CV. Sumber Makmur',      total:'Rp 3.450.000',  status:'Belum Lunas' },
+    { tanggal:'18 Agu 2023', nota:'INV-PO-020', supplier:'Distributor Jaya',       total:'Rp 6.700.000',  status:'Lunas' },
+    { tanggal:'12 Agu 2023', nota:'INV-PO-021', supplier:'PT. Nusantara Dagang',   total:'Rp 10.200.000', status:'Lunas' },
+    { tanggal:'08 Agu 2023', nota:'INV-PO-022', supplier:'CV. Bintang Mas',        total:'Rp 4.600.000',  status:'Belum Lunas' },
+    { tanggal:'03 Agu 2023', nota:'INV-PO-023', supplier:'Toko Sukses Selalu',     total:'Rp 7.300.000',  status:'Lunas' },
+    { tanggal:'28 Jul 2023', nota:'INV-PO-024', supplier:'PT. Makmur Sejahtera',   total:'Rp 13.800.000', status:'Lunas' },
+  ];
+
+  const PER_PAGE = 5;
+  let currentPage = 1;
+  let searchQuery = '';
+
+  function getFiltered() {
+    const q = searchQuery.toLowerCase();
+    if (!q) return allData;
+    return allData.filter(d =>
+      d.nota.toLowerCase().includes(q) ||
+      d.supplier.toLowerCase().includes(q)
+    );
+  }
+
+  function renderTable() {
+    const data  = getFiltered();
+    const total = data.length;
+    const start = (currentPage - 1) * PER_PAGE;
+    const end   = Math.min(start + PER_PAGE, total);
+    const page  = data.slice(start, end);
+
+    document.getElementById('tableInfo').textContent =
+      `Menampilkan ${total ? start + 1 : 0}-${end} dari ${total} pembelian`;
+
+    document.getElementById('tableBody').innerHTML = page.map(d => `
+      <tr>
+        <td class="cell-date">${d.tanggal}</td>
+        <td><span class="nota-id">${d.nota}</span></td>
+        <td class="cell-supplier">${d.supplier}</td>
+        <td class="cell-total text-right">${d.total}</td>
+        <td class="text-center">
+          <span class="badge ${d.status === 'Lunas' ? 'badge-lunas' : 'badge-belum-lunas'}">${d.status}</span>
+        </td>
+      </tr>
+    `).join('');
+
+    renderPagination(total);
+  }
+
+  function renderPagination(total) {
+    const totalPages = Math.ceil(total / PER_PAGE);
+    const pg = document.getElementById('pagination');
+    let html = `<button class="page-btn arrow" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>&#8249;</button>`;
+    for (let i = 1; i <= totalPages; i++) {
+      html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+    }
+    html += `<button class="page-btn arrow" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>&#8250;</button>`;
+    pg.innerHTML = html;
+  }
+
+  function goPage(p) {
+    const max = Math.ceil(getFiltered().length / PER_PAGE);
+    if (p < 1 || p > max) return;
+    currentPage = p;
+    renderTable();
+  }
+
+  function handleSearch() {
+    searchQuery = document.getElementById('searchInput').value;
+    currentPage = 1;
+    renderTable();
+  }
+
+  renderTable();
+</script>
+</body>
+</html>

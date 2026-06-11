@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LAPAK – Business Management</title>
+  <link rel="stylesheet" href="/frontend/style/kas&hutang.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🏪</div>
+    <div class="logo-text">
+      <h2>LAPAK</h2>
+      <span>Business Management</span>
+    </div>
+  </div>
+  <nav>
+    <a class="nav-item" href="/frontend/views/beranda.html">  <span class="nav-icon">⊞</span> Beranda</a>
+    <a class="nav-item" href="/frontend/views/penjualan.html">  <span class="nav-icon">🧾</span> Penjualan</a>
+    <a class="nav-item" href="/frontend/views/transaksi.html"><span class="nav-icon">↔</span> transaksi</a>
+    <a class="nav-item" href="/frontend/views/produk.html"> <span class="nav-icon">📦</span> Produk</a>
+    <a class="nav-item" href="/frontend/views/stok.html">  <span class="nav-icon">🗃️</span> Stok Barang</a>
+    <a class="nav-item" href="/frontend/views/pembelian.html">  <span class="nav-icon">🛒</span> Pembelian</a>
+    <a class="nav-item" href="/frontend/views/supplier.html">  <span class="nav-icon">👥</span> Supplier</a>
+    <a class="nav-item" href="/frontend/views/laporan.html">  <span class="nav-icon">📊</span> Laporan</a>
+    <div class="nav-item">                            <span class="nav-icon">💳</span> Kas &amp; Hutang</div>
+    <a class="nav-item" href="/frontend/views/rekap.html">  <span class="nav-icon">📅</span> Rekap Harian</a>
+    <a class="nav-item" href="/frontend/views/setting.html">  <span class="nav-icon">⚙️</span> Pengaturan</a>
+  </nav>
+</aside
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main">
+
+    <!-- Tab Navigation -->
+    <div class="tabs">
+      <button class="tab tab--active">Kas Harian</button>
+      <button class="tab">Piutang Pelanggan</button>
+      <button class="tab">Hutang Dagang</button>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="cards">
+      <div class="card card--default">
+        <div class="card__header">
+          <span class="card__label">SALDO AWAL</span>
+          <span class="card__icon card__icon--neutral">🏦</span>
+        </div>
+        <div class="card__amount">Rp 2.500.000</div>
+        <div class="card__meta">Hari ini, 08:00</div>
+      </div>
+
+      <div class="card card--default">
+        <div class="card__header">
+          <span class="card__label">KAS MASUK</span>
+          <span class="card__icon card__icon--in">↓</span>
+        </div>
+        <div class="card__amount">Rp 4.250.000</div>
+        <div class="card__meta card__meta--positive">↑ +15% dari kemarin</div>
+      </div>
+
+      <div class="card card--default">
+        <div class="card__header">
+          <span class="card__label">KAS KELUAR</span>
+          <span class="card__icon card__icon--out">↑</span>
+        </div>
+        <div class="card__amount">Rp 850.000</div>
+        <div class="card__meta">Pengeluaran operasional</div>
+      </div>
+
+      <div class="card card--primary">
+        <div class="card__header">
+          <span class="card__label">SALDO SAAT INI</span>
+          <span class="card__icon card__icon--white">💰</span>
+        </div>
+        <div class="card__amount card__amount--large">Rp 5.900.000</div>
+        <div class="card__meta card__meta--light">Sesuai dengan laci kas</div>
+      </div>
+    </div>
+
+    <!-- Transaction History Table -->
+    <div class="table-card">
+      <div class="table-card__header">
+        <h2 class="table-card__title">Riwayat Kas Harian</h2>
+        <button class="btn-add">+ Catat Manual</button>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>WAKTU</th>
+              <th>KETERANGAN</th>
+              <th>TIPE</th>
+              <th class="text-right">NOMINAL</th>
+              <th>AKSI</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>08:00</td>
+              <td>Setoran Modal Awal</td>
+              <td><span class="badge badge--system">Sistem</span></td>
+              <td class="text-right amount--neutral">Rp 2.500.000</td>
+              <td><button class="btn-action">⋮</button></td>
+            </tr>
+            <tr>
+              <td>09:15</td>
+              <td>Penjualan #TRX-001</td>
+              <td><span class="badge badge--in">Masuk</span></td>
+              <td class="text-right amount--in">+ Rp 150.000</td>
+              <td><button class="btn-action">⋮</button></td>
+            </tr>
+            <tr>
+              <td>11:30</td>
+              <td>Beli Lakban &amp; Plastik</td>
+              <td><span class="badge badge--out">Keluar</span></td>
+              <td class="text-right amount--out">- Rp 45.000</td>
+              <td><button class="btn-action">⋮</button></td>
+            </tr>
+            <tr>
+              <td>13:45</td>
+              <td>Penjualan #TRX-008</td>
+              <td><span class="badge badge--in">Masuk</span></td>
+              <td class="text-right amount--in">+ Rp 420.000</td>
+              <td><button class="btn-action">⋮</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-card__footer">
+        <span class="table-info">Menampilkan 4 dari 24 transaksi</span>
+        <div class="pagination">
+          <button class="page-btn">&#8249;</button>
+          <button class="page-btn page-btn--active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn">&#8250;</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</body>
+</html>

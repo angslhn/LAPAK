@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LAPAK – Laporan Bisnis</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/frontend/style/laporan.css"/>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🏪</div>
+    <div class="logo-text">
+      <h2>LAPAK</h2>
+      <span>Business Management</span>
+    </div>
+  </div>
+  <nav>
+    <a class="nav-item" href="/frontend/views/beranda.html">  <span class="nav-icon">⊞</span> Beranda</a>
+    <a class="nav-item" href="/frontend/views/penjualan.html">  <span class="nav-icon">🧾</span> Penjualan</a>
+     <a class="nav-item" href="/frontend/views/transaksi.html"><span class="nav-icon">↔</span> transaksi</a>
+    <a class="nav-item" href="/frontend/views/produk.html"> <span class="nav-icon">📦</span> Produk</a>
+    <a class="nav-item" href="/frontend/views/stok.html">  <span class="nav-icon">🗃️</span> Stok Barang</a>
+    <a class="nav-item" href="/frontend/views/pembelian.html">  <span class="nav-icon">🛒</span> Pembelian</a>
+    <a class="nav-item" href="/frontend/views/supplier.html">  <span class="nav-icon">👥</span> Supplier</a>
+    <div class="nav-item">                            <span class="nav-icon">📊</span> Laporan</div>
+    <a class="nav-item" href="/frontend/views/kas&hutang.html">  <span class="nav-icon">💳</span> Kas &amp; Hutang</a>
+    <a class="nav-item" href="/frontend/views/rekap.html">  <span class="nav-icon">📅</span> Rekap Harian</a>
+    <a class="nav-item" href="/frontend/views/setting.html">  <span class="nav-icon">⚙️</span> Pengaturan</a>
+  </nav>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1>Laporan Bisnis</h1>
+      <p>Ringkasan performa dan metrik utama bisnis Anda.</p>
+    </div>
+    <div class="page-header-right">
+      <!-- Period dropdown -->
+      <div class="dropdown-period" id="periodDropdown" onclick="togglePeriod()">
+        <span id="periodLabel">Mingguan</span>
+        <svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="dropdown-menu" id="periodMenu">
+          <div class="dropdown-option selected" onclick="selectPeriod('Mingguan',this)">Mingguan</div>
+          <div class="dropdown-option" onclick="selectPeriod('Bulanan',this)">Bulanan</div>
+          <div class="dropdown-option" onclick="selectPeriod('Tahunan',this)">Tahunan</div>
+        </div>
+      </div>
+      <button class="btn-outline">
+        <svg viewBox="0 0 18 18" fill="none" width="14" height="14"><path d="M3 9h12M3 4.5h12M3 13.5h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        Export PDF
+      </button>
+      <button class="btn-primary">
+        <svg viewBox="0 0 18 18" fill="none" width="14" height="14"><rect x="2" y="2" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M6 6h6M6 9h6M6 12h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Export Excel
+      </button>
+    </div>
+  </div>
+
+  <!-- Chart Card -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <h2>Grafik Omzet &amp; Laba</h2>
+      <button class="btn-more">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="omzetChart"></canvas>
+    </div>
+    <div class="chart-legend">
+      <span class="legend-dot legend-dot--green"></span> Omzet Kotor
+      <span class="legend-dot legend-dot--gold" style="margin-left:18px;"></span> Laba Bersih
+    </div>
+  </div>
+
+  <!-- Bottom row -->
+  <div class="bottom-row">
+
+    <!-- Produk Terlaris -->
+    <div class="panel panel--produk">
+      <div class="panel-header">
+        <h2>Produk Terlaris</h2>
+        <a class="link-all" href="#">Lihat Semua</a>
+      </div>
+      <table class="prod-table">
+        <thead>
+          <tr>
+            <th>PRODUK</th>
+            <th>KATEGORI</th>
+            <th>TERJUAL</th>
+            <th class="text-right">PENDAPATAN</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="prod-info">
+                <div class="prod-thumb">
+                  <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.4"/><path d="M2 7h16M7 2v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="prod-name">Kopi Susu Aren</div>
+                  <div class="prod-sku">SKU: KSA-001</div>
+                </div>
+              </div>
+            </td>
+            <td class="cell-cat">Minuman</td>
+            <td class="cell-qty">452 <span class="unit">pcs</span></td>
+            <td class="cell-rev">Rp<br>9.040.000</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="prod-info">
+                <div class="prod-thumb">
+                  <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.4"/><path d="M2 7h16M7 2v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="prod-name">Roti Bakar Coklat</div>
+                  <div class="prod-sku">SKU: RBC-002</div>
+                </div>
+              </div>
+            </td>
+            <td class="cell-cat">Makanan</td>
+            <td class="cell-qty">310 <span class="unit">pcs</span></td>
+            <td class="cell-rev">Rp<br>4.650.000</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="prod-info">
+                <div class="prod-thumb">
+                  <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.4"/><path d="M2 7h16M7 2v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="prod-name">Kentang Goreng</div>
+                  <div class="prod-sku">SKU: KTG-003</div>
+                </div>
+              </div>
+            </td>
+            <td class="cell-cat">Snack</td>
+            <td class="cell-qty">285 <span class="unit">pcs</span></td>
+            <td class="cell-rev">Rp<br>3.420.000</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="prod-info">
+                <div class="prod-thumb">
+                  <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.4"/><path d="M2 7h16M7 2v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="prod-name">Es Teh Manis</div>
+                  <div class="prod-sku">SKU: ETM-004</div>
+                </div>
+              </div>
+            </td>
+            <td class="cell-cat">Minuman</td>
+            <td class="cell-qty">240 <span class="unit">pcs</span></td>
+            <td class="cell-rev">Rp<br>1.200.000</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Distribusi per Kategori -->
+    <div class="panel panel--donut">
+      <h2>Distribusi per Kategori</h2>
+      <div class="donut-wrap">
+        <canvas id="donutChart"></canvas>
+        <div class="donut-center">
+          <div class="donut-num">780</div>
+          <div class="donut-lbl">Total Item</div>
+        </div>
+      </div>
+      <ul class="donut-legend">
+        <li><span class="leg-dot" style="background:#1C7C6C;"></span> Minuman <span class="leg-pct">50%</span></li>
+        <li><span class="leg-dot" style="background:#E8A020;"></span> Makanan <span class="leg-pct">30%</span></li>
+        <li><span class="leg-dot" style="background:#8A9E8C;"></span> Snack    <span class="leg-pct">20%</span></li>
+      </ul>
+    </div>
+
+  </div><!-- /bottom-row -->
+
+</main>
+
+<!-- Chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+/* ── LINE CHART ── */
+const days = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
+const omzet = [32,35,33,38,42,48,52];
+const laba  = [14,15,14,17,19,22,25];
+
+const ctxLine = document.getElementById('omzetChart').getContext('2d');
+
+const fillGreen = ctxLine.createLinearGradient(0, 0, 0, 320);
+fillGreen.addColorStop(0, 'rgba(42,157,143,0.22)');
+fillGreen.addColorStop(1, 'rgba(42,157,143,0.02)');
+
+const fillGold = ctxLine.createLinearGradient(0, 0, 0, 320);
+fillGold.addColorStop(0, 'rgba(232,160,32,0.18)');
+fillGold.addColorStop(1, 'rgba(232,160,32,0.02)');
+
+new Chart(ctxLine, {
+  type: 'line',
+  data: {
+    labels: days,
+    datasets: [
+      {
+        label: 'Omzet Kotor',
+        data: omzet.map(v => v * 1_000_000),
+        borderColor: '#1C7C6C',
+        borderWidth: 2.5,
+        pointRadius: 0,
+        tension: 0.45,
+        fill: true,
+        backgroundColor: fillGreen,
+        order: 2,
+      },
+      {
+        label: 'Laba Bersih',
+        data: laba.map(v => v * 1_000_000),
+        borderColor: '#C8A832',
+        borderWidth: 2,
+        borderDash: [6, 4],
+        pointRadius: 0,
+        tension: 0.45,
+        fill: true,
+        backgroundColor: fillGold,
+        order: 1,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: {
+      callbacks: {
+        label: ctx => ' Rp ' + (ctx.raw / 1_000_000).toFixed(0) + 'M'
+      }
+    }},
+    scales: {
+      x: {
+        grid: { display: false },
+        border: { display: false },
+        ticks: { color: '#8A9E8C', font: { family: 'Plus Jakarta Sans', size: 12 } }
+      },
+      y: {
+        min: 0,
+        max: 100_000_000,
+        ticks: {
+          color: '#8A9E8C',
+          font: { family: 'Plus Jakarta Sans', size: 11 },
+          callback: v => (v / 1_000_000) + 'M',
+          stepSize: 25_000_000,
+        },
+        grid: { color: '#EEF2EE' },
+        border: { display: false }
+      }
+    }
+  }
+});
+
+/* ── DONUT CHART ── */
+const ctxDonut = document.getElementById('donutChart').getContext('2d');
+new Chart(ctxDonut, {
+  type: 'doughnut',
+  data: {
+    labels: ['Minuman','Makanan','Snack'],
+    datasets: [{
+      data: [50, 30, 20],
+      backgroundColor: ['#1C7C6C','#E8A020','#8A9E8C'],
+      borderWidth: 0,
+      hoverOffset: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '70%',
+    plugins: { legend: { display: false }, tooltip: {
+      callbacks: { label: ctx => ' ' + ctx.label + ': ' + ctx.raw + '%' }
+    }}
+  }
+});
+
+/* ── PERIOD DROPDOWN ── */
+function togglePeriod() {
+  document.getElementById('periodDropdown').classList.toggle('open');
+}
+function selectPeriod(val, el) {
+  document.getElementById('periodLabel').textContent = val;
+  document.querySelectorAll('#periodMenu .dropdown-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('periodDropdown').classList.remove('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('#periodDropdown'))
+    document.getElementById('periodDropdown').classList.remove('open');
+});
+</script>
+</body>
+</html>

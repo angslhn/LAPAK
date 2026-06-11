@@ -89,7 +89,7 @@ nav { padding: 10px 8px; flex: 1; overflow-y: auto; }
 
 .nav-icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
 
-a.nav-item { text-decoration: none; color: inherit; }
+a.nav-item { text-decoration: none; color: #8fa3be; }
 
 /* ─── MAIN ─── */
 .main {

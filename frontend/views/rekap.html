@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LAPAK – Rekap Harian</title>
+  <link rel="stylesheet" href="/frontend/style/rekap.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🏪</div>
+    <div class="logo-text">
+      <h2>LAPAK</h2>
+      <span>Business Management</span>
+    </div>
+  </div>
+  <nav>
+    <a class="nav-item" href="/frontend/views/beranda.html">  <span class="nav-icon">⊞</span> Beranda</a>
+    <a class="nav-item" href="/frontend/views/penjualan.html">  <span class="nav-icon">🧾</span> Penjualan</a>
+     <a class="nav-item" href="/frontend/views/transaksi.html"><span class="nav-icon">↔</span> transaksi</a>
+    <a class="nav-item" href="/frontend/views/produk.html"> <span class="nav-icon">📦</span> Produk</a>
+    <a class="nav-item" href="/frontend/views/stok.html">  <span class="nav-icon">🗃️</span> Stok Barang</a>
+    <a class="nav-item" href="/frontend/views/pembelian.html">  <span class="nav-icon">🛒</span> Pembelian</a>
+    <a class="nav-item" href="/frontend/views/supplier.html">  <span class="nav-icon">👥</span> Supplier</a>
+    <a class="nav-item" href="/frontend/views/laporan.html">  <span class="nav-icon">📊</span> Laporan</a>
+    <a class="nav-item" href="/frontend/views/kas&hutang.html">  <span class="nav-icon">💳</span> Kas &amp; Hutang</a>
+    <div class="nav-item">                            <span class="nav-icon">📅</span> Rekap Harian</div>
+    <a class="nav-item" href="/frontend/views/setting.html">  <span class="nav-icon">⚙️</span> Pengaturan</a>
+  </nav>
+</aside>
+
+  <!-- ===== MAIN ===== -->
+  <main class="main">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="page-header__left">
+        <h1 class="page-title">Rekap &amp; Tutup Buku</h1>
+        <p class="page-date">Rabu, 24 Mei 2023</p>
+      </div>
+      <div class="page-header__actions">
+        <button class="btn-outline">
+          <span class="btn-icon">🖨</span> Cetak PDF
+        </button>
+        <button class="btn-primary">
+          <span class="btn-icon">🔒</span> Tutup Buku Hari Ini
+        </button>
+      </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="content-grid">
+
+      <!-- LEFT COLUMN -->
+      <div class="content-left">
+
+        <!-- Section: Ringkasan Performa -->
+        <section class="section">
+          <h2 class="section-title">Ringkasan Performa</h2>
+
+          <div class="perf-grid">
+            <!-- Total Transaksi -->
+            <div class="perf-card">
+              <div class="perf-card__header">
+                <span class="perf-card__label">TOTAL TRANSAKSI</span>
+                <span class="perf-card__icon perf-card__icon--teal">📋</span>
+              </div>
+              <div class="perf-card__value perf-card__value--count">142</div>
+            </div>
+
+            <!-- Omzet -->
+            <div class="perf-card">
+              <div class="perf-card__header">
+                <span class="perf-card__label">OMZET</span>
+                <span class="perf-card__icon perf-card__icon--teal">💵</span>
+              </div>
+              <div class="perf-card__value">Rp 12.450.000</div>
+            </div>
+
+            <!-- Pengeluaran -->
+            <div class="perf-card">
+              <div class="perf-card__header">
+                <span class="perf-card__label">PENGELUARAN</span>
+                <span class="perf-card__icon perf-card__icon--red">📉</span>
+              </div>
+              <div class="perf-card__value">Rp 2.100.000</div>
+            </div>
+
+            <!-- Laba Bersih -->
+            <div class="perf-card perf-card--highlight">
+              <div class="perf-card__header">
+                <span class="perf-card__label">LABA BERSIH</span>
+                <span class="perf-card__icon perf-card__icon--teal">📈</span>
+              </div>
+              <div class="perf-card__value perf-card__value--green">Rp 10.350.000</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Daftar Pengeluaran Harian -->
+        <section class="section">
+          <div class="section-header">
+            <h2 class="section-title">Daftar Pengeluaran Harian</h2>
+            <button class="btn-add">+ TAMBAH</button>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Waktu</th>
+                  <th>Keterangan</th>
+                  <th>Kategori</th>
+                  <th class="text-right">Nominal</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>08:15</td>
+                  <td>Beli Lakban &amp; Plastik</td>
+                  <td><span class="badge badge--operational">Operasional</span></td>
+                  <td class="text-right">Rp 150.000</td>
+                </tr>
+                <tr>
+                  <td>12:30</td>
+                  <td>Makan Siang Karyawan</td>
+                  <td><span class="badge badge--konsumsi">Konsumsi</span></td>
+                  <td class="text-right">Rp 350.000</td>
+                </tr>
+                <tr>
+                  <td>15:00</td>
+                  <td>Bayar Kurir Lalamove</td>
+                  <td><span class="badge badge--logistik">Logistik</span></td>
+                  <td class="text-right">Rp 1.600.000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div><!-- /content-left -->
+
+      <!-- RIGHT COLUMN -->
+      <aside class="content-right">
+
+        <div class="kas-card">
+          <h3 class="kas-card__title">Ringkasan Kas Laci</h3>
+
+          <div class="kas-rows">
+            <div class="kas-row">
+              <span class="kas-row__label">Saldo Awal</span>
+              <span class="kas-row__value">Rp 2.500.000</span>
+            </div>
+            <div class="kas-row">
+              <span class="kas-row__label">
+                <span class="kas-row__arrow kas-row__arrow--in">↓</span>
+                Total Pemasukan Tunai
+              </span>
+              <span class="kas-row__value kas-row__value--in">+ Rp 5.200.000</span>
+            </div>
+            <div class="kas-row">
+              <span class="kas-row__label">
+                <span class="kas-row__arrow kas-row__arrow--out">↑</span>
+                Total Pengeluaran Kas
+              </span>
+              <span class="kas-row__value kas-row__value--out">- Rp 850.000</span>
+            </div>
+          </div>
+
+          <div class="kas-saldo">
+            <div class="kas-saldo__left">
+              <div class="kas-saldo__title">Saldo Akhir</div>
+              <div class="kas-saldo__sub">(Estimasi)</div>
+            </div>
+            <div class="kas-saldo__amount">Rp<br />6.850.000</div>
+          </div>
+
+          <p class="kas-note">Uang fisik yang harus ada di laci kasir.</p>
+
+          <div class="kas-alert">
+            <span class="kas-alert__icon">ℹ</span>
+            <div class="kas-alert__body">
+              <div class="kas-alert__title">Cek Kembali Uang Fisik</div>
+              <p class="kas-alert__text">Pastikan jumlah uang di laci sesuai dengan estimasi saldo akhir sebelum melakukan Tutup Buku.</p>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+
+    </div><!-- /content-grid -->
+  </main>
+
+</body>
+</html>
