@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LAPAK – Penjualan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/frontend/style/penjualan.css"/>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🏪</div>
+    <div class="logo-text">
+      <h2>LAPAK</h2>
+      <span>Business Management</span>
+    </div>
+  </div>
+  <nav>
+    <a class="nav-item" href="/frontend/views/beranda.html"><span class="nav-icon">⊞</span> Beranda</a>
+    <div class="nav-item active"><span class="nav-icon">🧾</span> Penjualan</div>
+    <a class="nav-item" href="/frontend/views/transaksi.html"><span class="nav-icon">↔</span> transaksi</a>
+   <a class="nav-item" href="/frontend/views/produk.html"><span class="nav-icon">📦</span> Produk</a>
+    <div class="nav-item"><span class="nav-icon">🗃</span> Stok Barang</div>
+    <div class="nav-item"><span class="nav-icon">🛒</span> Pembelian</div>
+    <div class="nav-item"><span class="nav-icon">👥</span> Supplier</div>
+    <div class="nav-item"><span class="nav-icon">📊</span> Laporan</div>
+    <div class="nav-item"><span class="nav-icon">💳</span> Kas &amp; Hutang</div>
+    <div class="nav-item"><span class="nav-icon">📅</span> Rekap Harian</div>
+    <div class="nav-item"><span class="nav-icon">⚙</span> Pengaturan</div>
+  </nav>
+</aside>
+
+<!-- ── MAIN ── -->
+<div class="main">
+  <div class="top-bar">
+    <div>
+      <h1>Penjualan</h1>
+      <p>Kelola transaksi penjualan secara cepat</p>
+    </div>
+    <div class="date-badge">31 Mei 2026</div>
+  </div>
+
+  <div class="content-row">
+
+    <!-- Product Panel -->
+    <div class="product-panel">
+      <div class="search-bar">
+        <div class="search-input-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Cari nama produk atau SKU..." oninput="filterProducts()"/>
+        </div>
+        <button class="btn-scan" title="Scan Barcode">⬛</button>
+      </div>
+
+      <div class="filter-pills">
+        <button class="pill active" onclick="setFilter('Semua Produk', this)">Semua Produk</button>
+        <button class="pill" onclick="setFilter('Sembako', this)">Sembako</button>
+        <button class="pill" onclick="setFilter('Minuman', this)">Minuman</button>
+        <button class="pill" onclick="setFilter('Snack', this)">Snack</button>
+        <button class="pill" onclick="setFilter('Lainnya', this)">Lainnya</button>
+      </div>
+
+      <div class="product-grid" id="productGrid"></div>
+    </div>
+
+    <!-- Order Panel -->
+    <div class="order-panel">
+      <div class="order-header">
+        <div class="order-title">🛒 Pesanan Baru</div>
+        <button class="btn-kosong" onclick="clearOrder()">🗑 Kosongkan</button>
+      </div>
+
+      <div class="order-items" id="orderItems">
+        <div class="order-empty">
+          <div class="empty-icon">🛒</div>
+          <p>Belum ada produk dipilih</p>
+        </div>
+      </div>
+
+      <div class="order-summary">
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span id="subtotalVal">Rp 0</span>
+        </div>
+        <div class="summary-row discount">
+          <span>Diskon</span>
+          <span id="discountVal">- Rp 0</span>
+        </div>
+        <div class="summary-row">
+          <span>Pajak (PPN 11%)</span>
+          <span id="taxVal">Rp 0</span>
+        </div>
+        <hr class="summary-divider"/>
+        <div class="summary-total">
+          <span>Total</span>
+          <div class="summary-total-val" id="totalVal">Rp 0</div>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="pay-label">Metode Pembayaran</div>
+        <div class="pay-methods">
+          <button class="pay-btn active" onclick="selectPay(this, 'tunai')">
+            <span class="pay-icon">💵</span>
+            <span class="pay-name">TUNAI</span>
+          </button>
+          <button class="pay-btn" onclick="selectPay(this, 'qris')">
+            <span class="pay-icon">📱</span>
+            <span class="pay-name">QRIS</span>
+          </button>
+          <button class="pay-btn" onclick="selectPay(this, 'transfer')">
+            <span class="pay-icon">🏦</span>
+            <span class="pay-name">TRANSFER</span>
+          </button>
+        </div>
+
+        <button class="btn-bayar" id="btnBayar" disabled onclick="processPayment()">
+          ✓ Proses Transaksi
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const products = [
+    { id:1, name:'Indomie Goreng Spesial',    price:3000,   stok:45, category:'Sembako',     image:'Lapak/frontend/asset/images/indomie.jpg' },
+    { id:2, name:'Teh Pucuk Harum 350ml',      price:4000,  stok:24, category:'Minuman',  emoji:'🍵' },
+    { id:3, name:'Chitato Sapi Panggang 68g',  price:12500, stok:12, category:'Snack',    emoji:'🍟' },
+    { id:4, name:'Beras Maknyus 5 Kg Premium', price:68000, stok:8,  category:'Sembako',  emoji:'🌾' },
+    { id:5, name:'Telur Ayam Negeri 1 Kg',     price:28500, stok:2,  category:'Sembako',  emoji:'🥚' },
+    { id:6, name:'Aqua 600ml',                 price:3500,  stok:60, category:'Minuman',  emoji:'💧' },
+    { id:7, name:'Pringles Original 110g',     price:32000, stok:15, category:'Snack',    emoji:'🥂' },
+    { id:8, name:'Sabun Mandi Lifebuoy',       price:5500,  stok:3,  category:'Lainnya',  emoji:'🧼' },
+  ];
+
+  let cart = {};
+  let activeFilter = 'Semua Produk';
+  let payMethod = 'tunai';
+
+  function renderProducts() {
+    const grid = document.getElementById('productGrid');
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = products.filter(p =>
+      (activeFilter === 'Semua Produk' || p.category === activeFilter) &&
+      p.name.toLowerCase().includes(q)
+    );
+    grid.innerHTML = filtered.map(p => {
+      const badgeClass = p.stok <= 2 ? 'critical' : p.stok <= 8 ? 'low' : '';
+      return `
+        <div class="prod-card" onclick="addToCart(${p.id})">
+          <div class="prod-img">
+            <img src="${p.image}" alt="${p.name}">
+            <span class="stok-badge ${badgeClass}">
+              STOK: ${p.stok}
+            </span>
+          </div>
+          <div class="prod-info">
+            <div class="prod-name">${p.name}</div>
+            <div class="prod-bottom">
+              <div class="prod-price">Rp ${p.price.toLocaleString('id-ID')}</div>
+              <button class="btn-add" onclick="event.stopPropagation();addToCart(${p.id})">+</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function setFilter(f, el) {
+    activeFilter = f;
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    renderProducts();
+  }
+
+  function filterProducts() { renderProducts(); }
+
+  function addToCart(id) {
+    const prod = products.find(p => p.id === id);
+    const cur = cart[id] || 0;
+    if (cur >= prod.stok) { showToast('⚠ Stok tidak mencukupi!'); return; }
+    cart[id] = cur + 1;
+    renderOrder();
+    showToast(`${prod.name} ditambahkan ✓`);
+  }
+
+  function setQty(id, qty) {
+    if (qty <= 0) { delete cart[id]; }
+    else {
+      const prod = products.find(p => p.id === +id);
+      cart[id] = Math.min(qty, prod.stok);
+    }
+    renderOrder();
+  }
+
+  function clearOrder() { cart = {}; renderOrder(); }
+
+  function renderOrder() {
+    const container = document.getElementById('orderItems');
+    const ids = Object.keys(cart).map(Number);
+
+    if (ids.length === 0) {
+      container.innerHTML = `<div class="order-empty"><div class="empty-icon">🛒</div><p>Belum ada produk dipilih</p></div>`;
+      updateSummary(0); return;
+    }
+
+    container.innerHTML = ids.map(id => {
+      const prod = products.find(p => p.id === id);
+      const qty  = cart[id];
+      const sub  = prod.price * qty;
+      return `
+        <div class="order-item">
+          <div class="order-item-name">${prod.name}</div>
+          <div class="order-item-unit">Rp ${prod.price.toLocaleString('id-ID')}</div>
+          <div class="order-item-row">
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="setQty(${id},${qty-1})">−</button>
+              <span class="qty-val">${qty}</span>
+              <button class="qty-btn" onclick="setQty(${id},${qty+1})">+</button>
+            </div>
+            <div class="order-item-subtotal">Rp ${sub.toLocaleString('id-ID')}</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    const subtotal = ids.reduce((s, id) => s + products.find(p => p.id === id).price * cart[id], 0);
+    updateSummary(subtotal);
+  }
+
+  function updateSummary(subtotal) {
+    const tax   = Math.round(subtotal * 0.11);
+    const total = subtotal + tax;
+    document.getElementById('subtotalVal').textContent = 'Rp ' + subtotal.toLocaleString('id-ID');
+    document.getElementById('taxVal').textContent      = 'Rp ' + tax.toLocaleString('id-ID');
+    document.getElementById('totalVal').textContent    = 'Rp ' + total.toLocaleString('id-ID');
+    document.getElementById('btnBayar').disabled       = subtotal === 0;
+  }
+
+  function selectPay(el, method) {
+    document.querySelectorAll('.pay-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    payMethod = method;
+  }
+
+  function processPayment() {
+    const subtotal = Object.keys(cart).reduce((s, id) => {
+      return s + products.find(p => p.id === +id).price * cart[id];
+    }, 0);
+    const total = subtotal + Math.round(subtotal * 0.11);
+    const label = payMethod === 'tunai' ? 'Tunai' : payMethod === 'qris' ? 'QRIS' : 'Transfer';
+    showToast(`✅ Transaksi ${label} Rp ${total.toLocaleString('id-ID')} berhasil!`);
+    Object.keys(cart).forEach(id => {
+      const prod = products.find(p => p.id === +id);
+      prod.stok -= cart[id];
+    });
+    cart = {};
+    renderOrder();
+    renderProducts();
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 2300);
+  }
+
+  // Init
+  renderProducts();
+  cart = { 1: 2, 2: 1 };
+  renderOrder();
+</script>
+</body>
+</html>

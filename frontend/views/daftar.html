@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LAPAK – Daftar Akun</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/frontend/style/daftar.css"/>
+</head>
+<body>
+
+<div class="register-card">
+
+  <!-- Header -->
+  <div class="card-header">
+    <div class="card-header-top">
+      <div class="logo-icon">🏪</div>
+      <span style="font-size:20px;font-weight:800;color:#1a5c45;letter-spacing:.5px;">LAPAK</span>
+    </div>
+    <h2>Buat Akun Baru</h2>
+    <p>Daftarkan bisnis Anda dan mulai kelola<br>penjualan dengan lebih mudah.</p>
+  </div>
+
+  <!-- Nama Depan + Nama Belakang -->
+  <div class="form-row">
+    <div class="form-group">
+      <label class="form-label">Nama Depan</label>
+      <div class="input-wrap" id="wrapNamaDepan">
+        <span class="input-icon">👤</span>
+        <input type="text" id="inputNamaDepan" placeholder="cth. Djaya" oninput="clearErr('NamaDepan')"/>
+      </div>
+      <div class="error-msg" id="errNamaDepan">Nama depan wajib diisi.</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nama Belakang</label>
+      <div class="input-wrap" id="wrapNamaBelakang">
+        <span class="input-icon">👤</span>
+        <input type="text" id="inputNamaBelakang" placeholder="cth. Santoso"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nama Toko -->
+  <div class="form-group">
+    <label class="form-label">Nama Toko / Bisnis</label>
+    <div class="input-wrap" id="wrapToko">
+      <span class="input-icon">🏪</span>
+      <input type="text" id="inputToko" placeholder="cth. Toko Berkah Jaya" oninput="clearErr('Toko')"/>
+    </div>
+    <div class="error-msg" id="errToko">Nama toko wajib diisi.</div>
+  </div>
+
+  <!-- No. Telepon -->
+  <div class="form-group">
+    <label class="form-label">No. Telepon</label>
+    <div class="input-wrap" id="wrapTelp">
+      <span class="input-icon">📱</span>
+      <input type="tel" id="inputTelp" placeholder="cth. 08123456789" oninput="clearErr('Telp')"/>
+    </div>
+    <div class="error-msg" id="errTelp">No. telepon wajib diisi.</div>
+  </div>
+
+  <!-- Email -->
+  <div class="form-group">
+    <label class="form-label">Email</label>
+    <div class="input-wrap" id="wrapEmail">
+      <span class="input-icon">✉</span>
+      <input type="email" id="inputEmail" placeholder="nama@email.com" oninput="clearErr('Email')"/>
+    </div>
+    <div class="error-msg" id="errEmail">Email tidak valid.</div>
+  </div>
+
+  <!-- Password -->
+  <div class="form-group">
+    <label class="form-label">Password</label>
+    <div class="input-wrap" id="wrapPassword">
+      <span class="input-icon">🔒</span>
+      <input type="password" id="inputPassword" placeholder="Min. 8 karakter"
+        oninput="clearErr('Password'); checkStrength(this.value)"/>
+      <button class="eye-btn" onclick="togglePw('inputPassword', this)">👁</button>
+    </div>
+    <div class="strength-wrap" id="strengthWrap" style="display:none">
+      <div class="strength-bar-bg"><div class="strength-bar" id="strengthBar"></div></div>
+      <div class="strength-label" id="strengthLabel"></div>
+    </div>
+    <div class="error-msg" id="errPassword">Password minimal 8 karakter.</div>
+  </div>
+
+  <!-- Konfirmasi Password -->
+  <div class="form-group">
+    <label class="form-label">Konfirmasi Password</label>
+    <div class="input-wrap" id="wrapKonfirmasi">
+      <span class="input-icon">🔒</span>
+      <input type="password" id="inputKonfirmasi" placeholder="Ulangi password"
+        oninput="clearErr('Konfirmasi')"
+        onkeydown="if(event.key==='Enter') doRegister()"/>
+      <button class="eye-btn" onclick="togglePw('inputKonfirmasi', this)">👁</button>
+    </div>
+    <div class="error-msg" id="errKonfirmasi">Password tidak cocok.</div>
+  </div>
+
+  <!-- Checkbox Syarat -->
+  <div class="checkbox-row">
+    <input type="checkbox" id="agreeCheck"/>
+    <label for="agreeCheck">
+      Saya menyetujui <a href="#">Syarat &amp; Ketentuan</a> serta
+      <a href="#">Kebijakan Privasi</a> LAPAK.
+    </label>
+  </div>
+
+  <!-- Tombol Daftar -->
+  <button class="btn-register" id="btnRegister" onclick="doRegister()">
+    <div class="spinner" id="spinner"></div>
+    <span id="btnText">Buat Akun</span>
+  </button>
+
+  <!-- Divider -->
+  <div class="divider">atau</div>
+
+  <!-- Google -->
+  <button class="btn-google" onclick="showToast('🚧 Daftar dengan Google belum tersedia')">
+    <span class="g-icon">G</span>
+    Daftar dengan Google
+  </button>
+
+  <!-- Login link -->
+  <div class="login-row">
+    Sudah punya akun?
+    <a href="/frontend/views/masuk.html">Masuk sekarang</a>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ── TOGGLE PASSWORD ── */
+  function togglePw(id, btn) {
+    const inp = document.getElementById(id);
+    if (inp.type === 'password') { inp.type = 'text';     btn.textContent = '🙈'; }
+    else                         { inp.type = 'password'; btn.textContent = '👁'; }
+  }
+
+  /* ── CLEAR ERROR ── */
+  function clearErr(field) {
+    document.getElementById('wrap' + field).classList.remove('error');
+    document.getElementById('err'  + field).classList.remove('show');
+  }
+
+  /* ── PASSWORD STRENGTH ── */
+  function checkStrength(val) {
+    const wrap  = document.getElementById('strengthWrap');
+    const bar   = document.getElementById('strengthBar');
+    const label = document.getElementById('strengthLabel');
+
+    if (!val) { wrap.style.display = 'none'; return; }
+    wrap.style.display = 'block';
+
+    let score = 0;
+    if (val.length >= 8)          score++;
+    if (/[A-Z]/.test(val))        score++;
+    if (/[0-9]/.test(val))        score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+
+    const levels = [
+      { w:'25%',  bg:'#d94f3d', txt:'Sangat Lemah' },
+      { w:'50%',  bg:'#f59e0b', txt:'Lemah' },
+      { w:'75%',  bg:'#3aab78', txt:'Cukup Kuat' },
+      { w:'100%', bg:'#1a5c45', txt:'Sangat Kuat' },
+    ];
+
+    const lv = levels[score - 1] || levels[0];
+    bar.style.width      = lv.w;
+    bar.style.background = lv.bg;
+    label.textContent    = lv.txt;
+    label.style.color    = lv.bg;
+  }
+
+  /* ── SHOW ERROR ── */
+  function showErr(field, msg) {
+    document.getElementById('wrap' + field).classList.add('error');
+    const el = document.getElementById('err' + field);
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+
+  /* ── REGISTER ── */
+  function doRegister() {
+    const namaDepan  = document.getElementById('inputNamaDepan').value.trim();
+    const toko       = document.getElementById('inputToko').value.trim();
+    const telp       = document.getElementById('inputTelp').value.trim();
+    const email      = document.getElementById('inputEmail').value.trim();
+    const password   = document.getElementById('inputPassword').value;
+    const konfirmasi = document.getElementById('inputKonfirmasi').value;
+    const agree      = document.getElementById('agreeCheck').checked;
+
+    let valid = true;
+
+    if (!namaDepan) { showErr('NamaDepan', 'Nama depan wajib diisi.'); valid = false; }
+    if (!toko)      { showErr('Toko',      'Nama toko wajib diisi.');  valid = false; }
+    if (!telp)      { showErr('Telp',      'No. telepon wajib diisi.'); valid = false; }
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showErr('Email', 'Masukkan email yang valid.');
+      valid = false;
+    }
+
+    if (!password || password.length < 8) {
+      showErr('Password', 'Password minimal 8 karakter.');
+      valid = false;
+    }
+
+    if (password !== konfirmasi) {
+      showErr('Konfirmasi', 'Password tidak cocok.');
+      valid = false;
+    }
+
+    if (!agree) {
+      showToast('⚠ Setujui syarat & ketentuan terlebih dahulu.');
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    /* Simulate loading */
+    const btn     = document.getElementById('btnRegister');
+    const spinner = document.getElementById('spinner');
+    const btnText = document.getElementById('btnText');
+
+    btn.disabled           = true;
+    spinner.style.display  = 'block';
+    btnText.textContent    = 'Mendaftarkan...';
+
+    setTimeout(() => {
+      spinner.style.display = 'none';
+      btn.disabled          = false;
+      btnText.textContent   = 'Buat Akun';
+
+      showToast('✅ Akun berhasil dibuat! Mengalihkan ke halaman login...');
+      setTimeout(() => { window.location.href = 'masuk.html'; }, 2000);
+    }, 1600);
+  }
+
+  /* ── TOAST ── */
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._t);
+    t._t = setTimeout(() => t.classList.remove('show'), 2800);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LAPAK – Business Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/frontend/style/beranda.css"/>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🏪</div>
+    <div class="logo-text">
+      <h2>LAPAK</h2>
+      <span>Business Management</span>
+    </div>
+  </div>
+
+  <nav>
+    <div class="nav-item active"><span class="nav-icon">⊞</span> Beranda</div>
+    <a class="nav-item" href="/frontend/views/penjualan.html"><span class="nav-icon">🧾</span> Penjualan</a>
+    <a class="nav-item" href="/frontend/views/transaksi.html"><span class="nav-icon">↔</span> transaksi</a>
+    <a class="nav-item" href="/frontend/views/produk.html"> <span class="nav-icon">📦</span> Produk</a>
+    <div class="nav-item"><span class="nav-icon">🗃</span> Stok Barang</div>
+    <div class="nav-item"><span class="nav-icon">🛒</span> Pembelian</div>
+    <div class="nav-item"><span class="nav-icon">👥</span> Supplier</div>
+    <div class="nav-item"><span class="nav-icon">📊</span> Laporan</div>
+    <div class="nav-item"><span class="nav-icon">💳</span> Kas &amp; Hutang</div>
+    <div class="nav-item"><span class="nav-icon">📅</span> Rekap Harian</div>
+    <div class="nav-item"><span class="nav-icon">⚙</span> Pengaturan</div>
+  </nav>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="greeting">
+      <h1>Selamat Datang, Djaya 👋</h1>
+      <p>Berikut ringkasan bisnis hari ini</p>
+    </div>
+    <div class="date-badge">31 Mei 2026</div>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="stat-grid">
+
+    <div class="stat-card">
+      <div class="stat-label">
+        Omzet Hari Ini
+        <div class="stat-icon green">💰</div>
+      </div>
+      <div class="stat-value"><small>Rp</small><br>2.500.000</div>
+      <div class="stat-badge up">↗ +5%</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">
+        Total Transaksi
+        <div class="stat-icon green">🗒</div>
+      </div>
+      <div class="stat-value">42</div>
+      <div class="stat-badge up">↗ +2%</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">
+        Laba Bersih
+        <div class="stat-icon red">📉</div>
+      </div>
+      <div class="stat-value"><small>Rp</small><br>850.000</div>
+      <div class="stat-badge down">↘ -1%</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">
+        Produk Terjual
+        <div class="stat-icon green">📋</div>
+      </div>
+      <div class="stat-value">125</div>
+      <div class="stat-badge up">↗ +8%</div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Row -->
+  <div class="bottom-row">
+
+    <!-- Chart -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>Omzet 7 Hari Terakhir</h3>
+        <a class="chart-link">Lihat Detail</a>
+      </div>
+      <div class="chart-wrap">
+        <!-- Inline SVG line chart -->
+        <svg class="line-chart" viewBox="0 0 620 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#3aab78" stop-opacity="0.18"/>
+              <stop offset="100%" stop-color="#3aab78" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Y axis labels -->
+          <text x="0" y="18"  class="axis-label">3 Jt</text>
+          <text x="0" y="55"  class="axis-label">2.5 Jt</text>
+          <text x="0" y="92"  class="axis-label">2 Jt</text>
+          <text x="0" y="129" class="axis-label">1.5 Jt</text>
+          <text x="0" y="166" class="axis-label">1 Jt</text>
+          <text x="0" y="198" class="axis-label">0.5 Jt</text>
+
+          <!-- Horizontal grid lines -->
+          <g stroke="#e8ecf0" stroke-width="1">
+            <line x1="36" y1="15"  x2="620" y2="15"/>
+            <line x1="36" y1="52"  x2="620" y2="52"/>
+            <line x1="36" y1="89"  x2="620" y2="89"/>
+            <line x1="36" y1="126" x2="620" y2="126"/>
+            <line x1="36" y1="163" x2="620" y2="163"/>
+            <line x1="36" y1="195" x2="620" y2="195"/>
+          </g>
+
+          <!--
+            Y scale: 0 Jt = 195, 3 Jt = 15 → range 180px / 3,000,000
+            Values (in Juta): Sen=1.85, Sel=2.05, Rab=1.9, Kam=2.35, Jum=2.0, Sab=2.8, Min=2.5
+            y = 195 - (val/3) * 180
+          -->
+          <!-- Area fill -->
+          <path d="
+            M 66,84
+            C 130,70 155,64 197,77
+            C 239,90 262,82 330,60
+            C 380,44 406,38 461,25
+            C 510,13 545,20 580,32
+            L 580,195 L 66,195 Z
+          " fill="url(#chartFill)"/>
+
+          <!-- Line -->
+          <path d="
+            M 66,84
+            C 130,70 155,64 197,77
+            C 239,90 262,82 330,60
+            C 380,44 406,38 461,25
+            C 510,13 545,20 580,32
+          " fill="none" stroke="#2d8c63" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <!-- Data points -->
+          <g fill="white" stroke="#2d8c63" stroke-width="2.5">
+            <circle cx="66"  cy="84"  r="4.5"/>
+            <circle cx="155" cy="70"  r="4.5"/>
+            <circle cx="243" cy="82"  r="4.5"/>
+            <circle cx="330" cy="60"  r="4.5"/>
+            <circle cx="418" cy="68"  r="4.5"/>
+            <circle cx="506" cy="25"  r="4.5"/>
+            <circle cx="580" cy="32"  r="4.5"/>
+          </g>
+
+          <!-- X axis labels -->
+          <text x="59"  y="213" class="axis-label" text-anchor="middle">Sen</text>
+          <text x="148" y="213" class="axis-label" text-anchor="middle">Sel</text>
+          <text x="237" y="213" class="axis-label" text-anchor="middle">Rab</text>
+          <text x="325" y="213" class="axis-label" text-anchor="middle">Kam</text>
+          <text x="413" y="213" class="axis-label" text-anchor="middle">Jum</text>
+          <text x="502" y="213" class="axis-label" text-anchor="middle">Sab</text>
+          <text x="580" y="213" class="axis-label" text-anchor="middle">Min</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Stok Kritis -->
+    <div class="stok-card">
+      <div class="stok-header">
+        <span class="warn-icon">⚠️</span>
+        <h3>Stok Kritis</h3>
+      </div>
+      <p class="stok-sub">Produk dengan stok di bawah 5 item.</p>
+
+      <div class="stok-list">
+
+        <div class="stok-item">
+          <div class="stok-item-icon">🧱</div>
+          <div class="stok-item-info">
+            <div class="stok-item-name">Beras 5kg Premium</div>
+            <div class="stok-item-price">Rp 65.000</div>
+          </div>
+          <div>
+            <div class="stok-count red">2</div>
+            <div class="stok-count-label">Sisa</div>
+          </div>
+        </div>
+
+        <div class="stok-item">
+          <div class="stok-item-icon">🧱</div>
+          <div class="stok-item-info">
+            <div class="stok-item-name">Minyak Goreng 2L</div>
+            <div class="stok-item-price">Rp 32.000</div>
+          </div>
+          <div>
+            <div class="stok-count red">3</div>
+            <div class="stok-count-label">Sisa</div>
+          </div>
+        </div>
+
+        <div class="stok-item">
+          <div class="stok-item-icon">🧱</div>
+          <div class="stok-item-info">
+            <div class="stok-item-name">Gula Pasir 1kg</div>
+            <div class="stok-item-price">Rp 14.500</div>
+          </div>
+          <div>
+            <div class="stok-count orange">4</div>
+            <div class="stok-count-label">Sisa</div>
+          </div>
+        </div>
+
+      </div>
+
+      <button class="btn-restok">Restok Semua</button>
+    </div>
+
+  </div>
+</main>
+
+</body>
+</html>

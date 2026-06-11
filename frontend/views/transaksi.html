@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LAPAK – Riwayat Transaksi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/frontend/style/transaksi.css"/>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🏪</div>
+    <div class="logo-text">
+      <h2>LAPAK</h2>
+      <span>Business Management</span>
+    </div>
+  </div>
+  <nav>
+    <a class="nav-item" href="/frontend/views/beranda.html">  <span class="nav-icon">⊞</span> Beranda</a>
+    <a class="nav-item" href="/frontend/views/penjualan.html">  <span class="nav-icon">🧾</span> Penjualan</a>
+    <div class="nav-item active">                     <span class="nav-icon">↔</span>  Transaksi</div>
+    <a class="nav-item" href="/frontend/views/produk.html"> <span class="nav-icon">📦</span> Produk</a>
+    <div class="nav-item">                            <span class="nav-icon">🗃</span>  Stok Barang</div>
+    <div class="nav-item">                            <span class="nav-icon">🛒</span> Pembelian</div>
+    <div class="nav-item">                            <span class="nav-icon">👥</span> Supplier</div>
+    <div class="nav-item">                            <span class="nav-icon">📊</span> Laporan</div>
+    <div class="nav-item">                            <span class="nav-icon">💳</span> Kas &amp; Hutang</div>
+    <div class="nav-item">                            <span class="nav-icon">📅</span> Rekap Harian</div>
+    <div class="nav-item">                            <span class="nav-icon">⚙</span>  Pengaturan</div>
+  </nav>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <h1>Riwayat Transaksi</h1>
+      <p>Kelola dan pantau seluruh transaksi penjualan Anda.</p>
+    </div>
+    <div class="top-bar-right">
+      <!-- Dropdown Status -->
+      <div class="dropdown-status" id="statusDropdown" onclick="toggleDropdown()">
+        <span id="statusLabel">Semua Status</span>
+        <span class="chevron">▼</span>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <div class="dropdown-option selected" onclick="selectStatus('Semua Status', this)">Semua Status</div>
+          <div class="dropdown-option" onclick="selectStatus('Lunas', this)">Lunas</div>
+          <div class="dropdown-option" onclick="selectStatus('Belum Lunas', this)">Belum Lunas</div>
+          <div class="dropdown-option" onclick="selectStatus('Proses', this)">Proses</div>
+        </div>
+      </div>
+      <!-- Filter Tanggal -->
+      <button class="btn-filter">
+        <span class="filter-icon">≡</span> Filter Tanggal
+      </button>
+    </div>
+  </div>
+
+  <!-- Table Card -->
+  <div class="table-card">
+    <table class="trx-table">
+      <thead>
+        <tr>
+          <th>ID TRANSAKSI</th>
+          <th>TANGGAL &amp; WAKTU</th>
+          <th>PELANGGAN</th>
+          <th>METODE</th>
+          <th>TOTAL</th>
+          <th>STATUS</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- Diisi oleh JavaScript -->
+      </tbody>
+    </table>
+
+    <!-- Footer -->
+    <div class="table-footer">
+      <div class="table-info" id="tableInfo">Menampilkan 1-4 dari 124 transaksi</div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  /* ── DATA ── */
+  const allTransaksi = [
+    { id:'#TRX-20231024-001', tanggal:'24 Okt 2023', waktu:'14:30 WIB', pelanggan:'Budi Santoso',   metode:'QRIS',     metodeIcon:'📱', total:'Rp 450.000',   status:'Lunas' },
+    { id:'#TRX-20231024-002', tanggal:'24 Okt 2023', waktu:'15:15 WIB', pelanggan:'Pelanggan Umum', metode:'Tunai',    metodeIcon:'💵', total:'Rp 125.000',   status:'Lunas' },
+    { id:'#TRX-20231024-003', tanggal:'24 Okt 2023', waktu:'16:00 WIB', pelanggan:'CV. Maju Jaya',  metode:'Transfer', metodeIcon:'🏦', total:'Rp 2.500.000', status:'Belum Lunas' },
+    { id:'#TRX-20231024-004', tanggal:'24 Okt 2023', waktu:'16:45 WIB', pelanggan:'Siti Aminah',    metode:'QRIS',     metodeIcon:'📱', total:'Rp 85.000',    status:'Lunas' },
+    { id:'#TRX-20231024-005', tanggal:'23 Okt 2023', waktu:'09:10 WIB', pelanggan:'Andi Wijaya',    metode:'Tunai',    metodeIcon:'💵', total:'Rp 320.000',   status:'Lunas' },
+    { id:'#TRX-20231024-006', tanggal:'23 Okt 2023', waktu:'10:30 WIB', pelanggan:'Toko Berkah',    metode:'Transfer', metodeIcon:'🏦', total:'Rp 1.750.000', status:'Lunas' },
+    { id:'#TRX-20231024-007', tanggal:'23 Okt 2023', waktu:'11:45 WIB', pelanggan:'Rina Susanti',   metode:'QRIS',     metodeIcon:'📱', total:'Rp 67.500',    status:'Belum Lunas' },
+    { id:'#TRX-20231024-008', tanggal:'22 Okt 2023', waktu:'08:20 WIB', pelanggan:'Pelanggan Umum', metode:'Tunai',    metodeIcon:'💵', total:'Rp 48.000',    status:'Lunas' },
+    { id:'#TRX-20231024-009', tanggal:'22 Okt 2023', waktu:'13:00 WIB', pelanggan:'PT. Sejahtera',  metode:'Transfer', metodeIcon:'🏦', total:'Rp 5.200.000', status:'Proses' },
+    { id:'#TRX-20231024-010', tanggal:'22 Okt 2023', waktu:'14:15 WIB', pelanggan:'Dewi Kartika',   metode:'QRIS',     metodeIcon:'📱', total:'Rp 210.000',   status:'Lunas' },
+    { id:'#TRX-20231024-011', tanggal:'21 Okt 2023', waktu:'09:50 WIB', pelanggan:'Hendra Gunawan', metode:'Tunai',    metodeIcon:'💵', total:'Rp 95.000',    status:'Lunas' },
+    { id:'#TRX-20231024-012', tanggal:'21 Okt 2023', waktu:'11:20 WIB', pelanggan:'Warung Barokah', metode:'Transfer', metodeIcon:'🏦', total:'Rp 780.000',   status:'Belum Lunas' },
+  ];
+
+  const PER_PAGE = 4;
+  let currentPage = 1;
+  let activeStatus = 'Semua Status';
+
+  /* ── FILTER ── */
+  function getFiltered() {
+    if (activeStatus === 'Semua Status') return allTransaksi;
+    return allTransaksi.filter(t => t.status === activeStatus);
+  }
+
+  /* ── BADGE ── */
+  function badgeClass(status) {
+    if (status === 'Lunas')       return 'badge badge-lunas';
+    if (status === 'Belum Lunas') return 'badge badge-belum-lunas';
+    return 'badge badge-proses';
+  }
+
+  /* ── RENDER TABLE ── */
+  function renderTable() {
+    const data  = getFiltered();
+    const total = data.length;
+    const start = (currentPage - 1) * PER_PAGE;
+    const end   = Math.min(start + PER_PAGE, total);
+    const page  = data.slice(start, end);
+
+    document.getElementById('tableInfo').textContent =
+      `Menampilkan ${start + 1}-${end} dari ${total} transaksi`;
+
+    document.getElementById('tableBody').innerHTML = page.map(t => `
+      <tr>
+        <td><a class="trx-id">${t.id}</a></td>
+        <td>
+          <div class="trx-date">${t.tanggal}</div>
+          <div class="trx-time">${t.waktu}</div>
+        </td>
+        <td class="trx-customer">${t.pelanggan}</td>
+        <td>
+          <div class="trx-method">
+            <span class="method-icon">${t.metodeIcon}</span>
+            ${t.metode}
+          </div>
+        </td>
+        <td class="trx-total">${t.total}</td>
+        <td><span class="${badgeClass(t.status)}">${t.status}</span></td>
+      </tr>
+    `).join('');
+
+    renderPagination(total);
+  }
+
+  /* ── PAGINATION ── */
+  function renderPagination(total) {
+    const totalPages = Math.ceil(total / PER_PAGE);
+    const pg = document.getElementById('pagination');
+
+    let html = `<button class="page-btn arrow" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
+
+    for (let i = 1; i <= totalPages; i++) {
+      html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goPage(${i})">${i}</button>`;
+    }
+
+    html += `<button class="page-btn arrow" onclick="goPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>`;
+    pg.innerHTML = html;
+  }
+
+  function goPage(p) {
+    const total = getFiltered().length;
+    const max   = Math.ceil(total / PER_PAGE);
+    if (p < 1 || p > max) return;
+    currentPage = p;
+    renderTable();
+  }
+
+  /* ── DROPDOWN ── */
+  function toggleDropdown() {
+    document.getElementById('statusDropdown').classList.toggle('open');
+  }
+
+  function selectStatus(val, el) {
+    activeStatus = val;
+    currentPage  = 1;
+    document.getElementById('statusLabel').textContent = val;
+    document.querySelectorAll('.dropdown-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('statusDropdown').classList.remove('open');
+    renderTable();
+  }
+
+  /* Tutup dropdown saat klik di luar */
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#statusDropdown')) {
+      document.getElementById('statusDropdown').classList.remove('open');
+    }
+  });
+
+  /* ── INIT ── */
+  renderTable();
+</script>
+</body>
+</html>

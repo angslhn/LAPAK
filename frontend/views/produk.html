@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LAPAK – Manajemen Produk</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/frontend/style/produk.css"/>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🏪</div>
+    <div class="logo-text">
+      <h2>LAPAK</h2>
+      <span>Business Management</span>
+    </div>
+  </div>
+  <nav>
+    <a class="nav-item" href="/frontend/views/beranda.html"> <span class="nav-icon">⊞</span> Beranda</a>
+    <a class="nav-item" href="/frontend/views/penjualan.html"> <span class="nav-icon">🧾</span> Penjualan</a>
+    <a class="nav-item" href="/frontend/views/transaksi.html"> <span class="nav-icon">↔</span>  Transaksi</a>
+    <div class="nav-item active">                    <span class="nav-icon">📦</span> Produk</div>
+    <div class="nav-item">                           <span class="nav-icon">🗃</span>  Stok Barang</div>
+    <div class="nav-item">                           <span class="nav-icon">🛒</span> Pembelian</div>
+    <div class="nav-item">                           <span class="nav-icon">👥</span> Supplier</div>
+    <div class="nav-item">                           <span class="nav-icon">📊</span> Laporan</div>
+    <div class="nav-item">                           <span class="nav-icon">💳</span> Kas &amp; Hutang</div>
+    <div class="nav-item">                           <span class="nav-icon">📅</span> Rekap Harian</div>
+    <div class="nav-item">                           <span class="nav-icon">⚙</span>  Pengaturan</div>
+  </nav>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <h1>Manajemen Produk</h1>
+      <p>Kelola katalog barang, harga, dan ketersediaan stok.</p>
+    </div>
+    <button class="btn-tambah" onclick="openModal()">+ Tambah Produk Baru</button>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="s-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Cari nama produk, SKU..." oninput="renderProducts()"/>
+    </div>
+
+    <!-- Kategori Dropdown -->
+    <div class="dropdown-kategori" id="katDropdown" onclick="toggleKat()">
+      <span id="katLabel">Semua Kategori</span>
+      <span class="chevron">▼</span>
+      <div class="dropdown-menu" id="katMenu">
+        <div class="dropdown-option selected" onclick="selectKat('Semua Kategori',this)">Semua Kategori</div>
+        <div class="dropdown-option" onclick="selectKat('Minuman',this)">Minuman</div>
+        <div class="dropdown-option" onclick="selectKat('Sembako',this)">Sembako</div>
+        <div class="dropdown-option" onclick="selectKat('Makanan',this)">Makanan</div>
+        <div class="dropdown-option" onclick="selectKat('Farmasi',this)">Farmasi</div>
+        <div class="dropdown-option" onclick="selectKat('Lainnya',this)">Lainnya</div>
+      </div>
+    </div>
+
+    <!-- View Toggle -->
+    <div class="view-toggle">
+      <button class="view-btn active" id="btnGrid" title="Grid View" onclick="setView('grid')">⊞</button>
+      <button class="view-btn" id="btnList" title="List View" onclick="setView('list')">☰</button>
+    </div>
+  </div>
+
+  <!-- Product Grid -->
+  <div class="product-grid" id="productGrid"></div>
+
+  <!-- Product List (table view) -->
+  <div class="product-list" id="productList">
+    <table class="list-table">
+      <thead>
+        <tr>
+          <th>NAMA PRODUK</th>
+          <th>KATEGORI</th>
+          <th>HARGA BELI</th>
+          <th>HARGA JUAL</th>
+          <th>STOK</th>
+          <th>STATUS</th>
+        </tr>
+      </thead>
+      <tbody id="listBody"></tbody>
+    </table>
+  </div>
+
+</main>
+
+<!-- ══ MODAL TAMBAH PRODUK ══ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Tambah Produk Baru</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">NAMA PRODUK</label>
+      <input class="form-input" type="text" id="fNama" placeholder="cth. Indomie Goreng Spesial"/>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">KATEGORI</label>
+        <select class="form-select" id="fKategori">
+          <option value="Minuman">Minuman</option>
+          <option value="Sembako">Sembako</option>
+          <option value="Makanan">Makanan</option>
+          <option value="Farmasi">Farmasi</option>
+          <option value="Lainnya">Lainnya</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">SATUAN</label>
+        <input class="form-input" type="text" id="fSatuan" placeholder="cth. Pcs, Kg, Strip"/>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">HARGA BELI (Rp)</label>
+        <input class="form-input" type="number" id="fBeli" placeholder="0"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">HARGA JUAL (Rp)</label>
+        <input class="form-input" type="number" id="fJual" placeholder="0"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">STOK AWAL</label>
+      <input class="form-input" type="number" id="fStok" placeholder="0"/>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-batal" onclick="closeModal()">Batal</button>
+      <button class="btn-simpan" onclick="simpanProduk()">Simpan Produk</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ── DATA ── */
+  let products = [
+    { id:1, nama:'Kopi Susu Gula Aren 250ml', kategori:'Minuman', beli:12000, jual:18000, stok:45,  satuan:'Pcs',  emoji:'☕' },
+    { id:2, nama:'Beras Premium Pandan Wangi 5kg', kategori:'Sembako', beli:65000, jual:72000, stok:2,   satuan:'Sak',  emoji:'🌾' },
+    { id:3, nama:'Keripik Kentang Rasa Asin 68g',  kategori:'Makanan', beli:8500,  jual:11500, stok:120, satuan:'Pcs',  emoji:'🍟' },
+    { id:4, nama:'Paracetamol 500mg Strip',         kategori:'Farmasi', beli:2500,  jual:4000,  stok:85,  satuan:'Strip',emoji:'💊' },
+    { id:5, nama:'Aqua 600ml',                      kategori:'Minuman', beli:2000,  jual:3500,  stok:200, satuan:'Pcs',  emoji:'💧' },
+    { id:6, nama:'Minyak Goreng Tropical 2L',       kategori:'Sembako', beli:28000, jual:32000, stok:8,   satuan:'Btl',  emoji:'🫙' },
+    { id:7, nama:'Chitato Rasa Original 68g',       kategori:'Makanan', beli:9000,  jual:13000, stok:55,  satuan:'Pcs',  emoji:'🥂' },
+    { id:8, nama:'Vitamin C 1000mg',                kategori:'Farmasi', beli:15000, jual:22000, stok:3,   satuan:'Box',  emoji:'💊' },
+  ];
+
+  let activeKat  = 'Semua Kategori';
+  let activeView = 'grid';
+  let nextId     = 9;
+
+  /* ── HELPERS ── */
+  function fmt(n) { return 'Rp ' + Number(n).toLocaleString('id-ID'); }
+
+  function getStatus(stok) {
+    if (stok <= 3)  return { label:'Kritis', cls:'status-kritis', dot:'dot-kritis', icon:'⚠' };
+    if (stok <= 10) return { label:'Rendah', cls:'status-rendah', dot:'dot-rendah', icon:'▲' };
+    return           { label:'Aman',   cls:'status-aman',   dot:'dot-aman',   icon:'▣' };
+  }
+
+  function getFiltered() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    return products.filter(p =>
+      (activeKat === 'Semua Kategori' || p.kategori === activeKat) &&
+      p.nama.toLowerCase().includes(q)
+    );
+  }
+
+  /* ── RENDER ── */
+  function renderProducts() {
+    const data = getFiltered();
+    renderGrid(data);
+    renderList(data);
+  }
+
+  function renderGrid(data) {
+    const grid = document.getElementById('productGrid');
+    grid.innerHTML = data.map(p => {
+      const st = getStatus(p.stok);
+      return `
+        <div class="prod-card">
+          <div class="prod-img">
+            <div class="no-img">${p.emoji}</div>
+            <span class="cat-badge">${p.kategori.toUpperCase()}</span>
+          </div>
+          <div class="prod-info">
+            <div class="prod-name">${p.nama}</div>
+            <div class="price-row">
+              <span class="price-label">Harga Beli</span>
+              <span class="price-beli">${fmt(p.beli)}</span>
+            </div>
+            <div class="price-row">
+              <span class="price-label">Harga Jual</span>
+              <span class="price-jual">${fmt(p.jual)}</span>
+            </div>
+            <hr class="prod-divider"/>
+            <div class="stock-row">
+              <div class="stock-info">
+                <span class="stock-icon">▣</span>
+                ${st.label === 'Kritis' ? `<span style="color:var(--red-text)">⚠</span>` : ''}
+                <span>${p.stok} ${p.satuan}</span>
+              </div>
+              <div class="status-dot ${st.cls}">
+                <span class="dot ${st.dot}"></span>${st.label}
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function renderList(data) {
+    document.getElementById('listBody').innerHTML = data.map(p => {
+      const st = getStatus(p.stok);
+      return `
+        <tr>
+          <td class="list-prod-name">${p.emoji} ${p.nama}</td>
+          <td><span class="list-cat-badge">${p.kategori.toUpperCase()}</span></td>
+          <td class="list-price">${fmt(p.beli)}</td>
+          <td class="list-price-jual">${fmt(p.jual)}</td>
+          <td>${p.stok} ${p.satuan}</td>
+          <td><div class="status-dot ${st.cls}"><span class="dot ${st.dot}"></span>${st.label}</div></td>
+        </tr>`;
+    }).join('');
+  }
+
+  /* ── VIEW TOGGLE ── */
+  function setView(v) {
+    activeView = v;
+    document.getElementById('btnGrid').classList.toggle('active', v === 'grid');
+    document.getElementById('btnList').classList.toggle('active', v === 'list');
+    document.getElementById('productGrid').classList.toggle('hidden', v === 'list');
+    document.getElementById('productList').classList.toggle('visible', v === 'list');
+  }
+
+  /* ── DROPDOWN KATEGORI ── */
+  function toggleKat() {
+    document.getElementById('katDropdown').classList.toggle('open');
+  }
+
+  function selectKat(val, el) {
+    activeKat = val;
+    document.getElementById('katLabel').textContent = val;
+    document.querySelectorAll('#katMenu .dropdown-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('katDropdown').classList.remove('open');
+    renderProducts();
+  }
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#katDropdown')) {
+      document.getElementById('katDropdown').classList.remove('open');
+    }
+  });
+
+  /* ── MODAL ── */
+  function openModal() {
+    document.getElementById('modalOverlay').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    ['fNama','fSatuan','fBeli','fJual','fStok'].forEach(id => document.getElementById(id).value = '');
+  }
+
+  function closeModalOutside(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  }
+
+  function simpanProduk() {
+    const nama  = document.getElementById('fNama').value.trim();
+    const kat   = document.getElementById('fKategori').value;
+    const sat   = document.getElementById('fSatuan').value.trim() || 'Pcs';
+    const beli  = parseInt(document.getElementById('fBeli').value) || 0;
+    const jual  = parseInt(document.getElementById('fJual').value) || 0;
+    const stok  = parseInt(document.getElementById('fStok').value) || 0;
+
+    if (!nama) { showToast('⚠ Nama produk wajib diisi!'); return; }
+
+    const emojis = { Minuman:'💧', Sembako:'🌾', Makanan:'🍟', Farmasi:'💊', Lainnya:'📦' };
+    products.unshift({ id: nextId++, nama, kategori: kat, beli, jual, stok, satuan: sat, emoji: emojis[kat] || '📦' });
+
+    closeModal();
+    renderProducts();
+    showToast('✅ Produk "' + nama + '" berhasil ditambahkan!');
+  }
+
+  /* ── TOAST ── */
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._t);
+    t._t = setTimeout(() => t.classList.remove('show'), 2400);
+  }
+
+  /* ── INIT ── */
+  renderProducts();
+</script>
+</body>
+</html>

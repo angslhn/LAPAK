@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LAPAK – Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/frontend/style/masuk.css"/>
+</head>
+<body>
+
+<div class="login-wrapper">
+
+  <!-- ══ LEFT PANEL ══ -->
+  <div class="left-panel">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <!-- Brand -->
+    <div class="brand">
+      <div class="brand-icon">🏪</div>
+      <div class="brand-name">LAPAK</div>
+      <div class="brand-tagline">Business Management<br>Kelola bisnis Anda lebih mudah</div>
+    </div>
+
+    <!-- Mini illustration (mimic wireframe) -->
+    <div class="illus">
+      <div class="illus-bar"></div>
+      <div class="illus-bar short"></div>
+      <div class="illus-cards">
+        <div class="illus-card"></div>
+        <div class="illus-card tall"></div>
+        <div class="illus-card"></div>
+      </div>
+    </div>
+
+    <p class="left-caption">Pantau penjualan, stok, dan laporan<br>bisnis Anda dalam satu platform.</p>
+  </div>
+
+  <!-- ══ RIGHT PANEL ══ -->
+  <div class="right-panel">
+
+    <div class="form-head">
+      <h2>Selamat Datang 👋</h2>
+      <p>Masuk ke akun LAPAK Anda untuk<br>mulai mengelola bisnis hari ini.</p>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <div class="input-wrap" id="wrapEmail">
+        <span class="input-icon">✉</span>
+        <input
+          type="email"
+          id="inputEmail"
+          placeholder="nama@email.com"
+          oninput="clearError('email')"
+        />
+      </div>
+      <div class="error-msg" id="errEmail">Email tidak boleh kosong.</div>
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <div class="input-wrap" id="wrapPassword">
+        <span class="input-icon">🔒</span>
+        <input
+          type="password"
+          id="inputPassword"
+          placeholder="Masukkan password"
+          oninput="clearError('password')"
+          onkeydown="if(event.key==='Enter') doLogin()"
+        />
+        <button class="eye-btn" id="eyeBtn" onclick="togglePassword()" title="Tampilkan/Sembunyikan">👁</button>
+      </div>
+      <div class="error-msg" id="errPassword">Password tidak boleh kosong.</div>
+    </div>
+
+    <!-- Remember + Lupa -->
+    <div class="remember-row">
+      <label class="remember-label">
+        <input type="checkbox" id="rememberMe"/>
+        Ingat saya
+      </label>
+      <a href="/frontend/views/lupa_password.html" class="forgot-link">Lupa password?</a>
+    </div>
+
+    <!-- Login Button -->
+    <button class="btn-login" id="btnLogin" onclick="doLogin()">
+      <div class="spinner" id="spinner"></div>
+      <span id="btnText">Masuk</span>
+    </button>
+
+    <!-- Divider -->
+    <div class="divider">atau</div>
+
+    <!-- Google -->
+    <button class="btn-google" onclick="showToast('🚧 Login Google belum tersedia')">
+      <span class="g-icon">G</span>
+      Masuk dengan Google
+    </button>
+
+    <!-- Register -->
+    <div class="register-row">
+      Belum punya akun?
+      <a href="/frontend/views/daftar.html">Daftar sekarang</a>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ── TOGGLE PASSWORD ── */
+  function togglePassword() {
+    const inp = document.getElementById('inputPassword');
+    const btn = document.getElementById('eyeBtn');
+    if (inp.type === 'password') {
+      inp.type = 'text';
+      btn.textContent = '🙈';
+    } else {
+      inp.type = 'password';
+      btn.textContent = '👁';
+    }
+  }
+
+  /* ── CLEAR ERROR ── */
+  function clearError(field) {
+    if (field === 'email') {
+      document.getElementById('wrapEmail').classList.remove('error');
+      document.getElementById('errEmail').classList.remove('show');
+    } else {
+      document.getElementById('wrapPassword').classList.remove('error');
+      document.getElementById('errPassword').classList.remove('show');
+    }
+  }
+
+  /* ── LOGIN ── */
+  function doLogin() {
+    const email    = document.getElementById('inputEmail').value.trim();
+    const password = document.getElementById('inputPassword').value;
+    let valid = true;
+
+    if (!email) {
+      document.getElementById('wrapEmail').classList.add('error');
+      document.getElementById('errEmail').textContent = 'Email tidak boleh kosong.';
+      document.getElementById('errEmail').classList.add('show');
+      valid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      document.getElementById('wrapEmail').classList.add('error');
+      document.getElementById('errEmail').textContent = 'Format email tidak valid.';
+      document.getElementById('errEmail').classList.add('show');
+      valid = false;
+    }
+
+    if (!password) {
+      document.getElementById('wrapPassword').classList.add('error');
+      document.getElementById('errPassword').textContent = 'Password tidak boleh kosong.';
+      document.getElementById('errPassword').classList.add('show');
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    /* Simulate loading */
+    const btn = document.getElementById('btnLogin');
+    const spinner = document.getElementById('spinner');
+    const btnText = document.getElementById('btnText');
+
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    btnText.textContent = 'Memproses...';
+
+    setTimeout(() => {
+      spinner.style.display = 'none';
+      btn.disabled = false;
+      btnText.textContent = 'Masuk';
+
+      /* Demo: check credentials */
+      if (email === 'djaya@lapak.id' && password === 'lapak123') {
+        showToast('✅ Login berhasil! Mengalihkan...');
+        setTimeout(() => { window.location.href = 'beranda.html'; }, 1500);
+      } else {
+        document.getElementById('wrapPassword').classList.add('error');
+        document.getElementById('errPassword').textContent = 'Email atau password salah.';
+        document.getElementById('errPassword').classList.add('show');
+        showToast('❌ Email atau password salah');
+      }
+    }, 1400);
+  }
+
+  /* ── TOAST ── */
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._t);
+    t._t = setTimeout(() => t.classList.remove('show'), 2600);
+  }
+</script>
+</body>
+</html>
