@@ -11,7 +11,7 @@ function id(value) {
 function sku(value) {
   if (value === undefined || value === null || value === '') return null; // optional
 
-  if (typeof value !== 'string') return 'SKU harus berupa teks';
+  if (typeof value !== 'string') return 'SKU harus berupa string';
 
   if (value.length > 50) return 'SKU maksimal 50 karakter';
 
@@ -21,7 +21,7 @@ function sku(value) {
 function barcode(value) {
   if (value === undefined || value === null || value === '') return null; // optional
 
-  if (typeof value !== 'string') return 'Barcode harus berupa teks';
+  if (typeof value !== 'string') return 'Barcode harus berupa string';
 
   if (value.length > 50) return 'Barcode maksimal 50 karakter';
 
