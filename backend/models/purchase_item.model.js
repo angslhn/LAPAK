@@ -9,7 +9,9 @@ const ALLOWED_FIELDS = [
 
 const pool = getPool();
 
-const create = async (data) => {
+const create = async (data, conn = null) => {
+  const db = conn || pool;
+
   const fields = Object.keys(data).filter((field) =>
     ALLOWED_FIELDS.includes(field)
   );
@@ -19,7 +21,7 @@ const create = async (data) => {
   const values = fields.map((field) => data[field]);
 
   try {
-    const [result] = await pool.execute(
+    const [result] = await db.execute(
       `INSERT INTO purchase_items (${fields.join(', ')}) VALUES (${fields.map(() => '?').join(', ')})`,
       values
     );
