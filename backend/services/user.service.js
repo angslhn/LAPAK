@@ -8,7 +8,9 @@ const {
   USER_NOT_FOUND,
   AUTH_EMAIL_ALREADY_EXISTS,
   NO_IMAGE_PROVIDED,
-  INVALID_PASSWORD,
+  USER_INVALID_PASSWORD,
+  USER_UPDATE_FAILED,
+  USER_AVATAR_UPDATE_FAILED,
 } = require('../helpers/error_codes');
 
 const getMe = async (data) => {
@@ -19,9 +21,9 @@ const getMe = async (data) => {
 
     if (!user) throw new Error(USER_NOT_FOUND);
 
-    const { password, ...userWithoutPassword } = user;
+    const { password, ...userData } = user;
 
-    return userWithoutPassword;
+    return userData;
   } catch (err) {
     throw new Error(err.message);
   }
@@ -60,9 +62,11 @@ const updateAvatar = async (data) => {
         .end(file_buffer);
     });
 
-    await UserModel.update({ id: user.id, avatar_url });
+    const affectedRows = await UserModel.update({ id: user.id, avatar_url });
 
-    return avatar_url;
+    if (affectedRows === 0) throw new Error(USER_AVATAR_UPDATE_FAILED);
+
+    return { avatar_url };
   } catch (err) {
     throw new Error(err.message);
   }
@@ -82,7 +86,7 @@ const updateProfile = async (data) => {
       if (existingUser) throw new Error(AUTH_EMAIL_ALREADY_EXISTS);
     }
 
-    await UserModel.update({
+    const affectedRows = await UserModel.update({
       id,
       name,
       email,
@@ -91,11 +95,13 @@ const updateProfile = async (data) => {
       address,
     });
 
+    if (affectedRows === 0) throw new Error(USER_UPDATE_FAILED);
+
     const updatedUser = await UserModel.findById(id);
 
-    const { password, ...userWithoutPassword } = updatedUser;
+    const { password, ...userData } = updatedUser;
 
-    return userWithoutPassword;
+    return userData;
   } catch (err) {
     throw new Error(err.message);
   }
@@ -115,9 +121,14 @@ const changePassword = async (data) => {
 
     const hashedPassword = await bcrypt.hash(new_password, 10);
 
-    await UserModel.update({ id, password: hashedPassword });
+    const affectedRows = await UserModel.update({
+      id,
+      password: hashedPassword,
+    });
 
-    return true;
+    if (affectedRows === 0) throw new Error(USER_UPDATE_FAILED);
+
+    return affectedRows;
   } catch (err) {
     throw new Error(err.message);
   }
