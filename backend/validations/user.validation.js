@@ -1,10 +1,7 @@
 const UserInput = require('./inputs/user.input');
 
 const update = (data) => {
-  const { id, name, email, phone, store_name, address } = data;
-
-  const checkId = UserInput.id(id);
-  if (checkId) throw new Error(checkId);
+  const { name, email, phone, store_name, address } = data;
 
   const checkName = UserInput.name(name);
   if (checkName) throw new Error(checkName);
