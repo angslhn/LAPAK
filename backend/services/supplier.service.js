@@ -1,6 +1,10 @@
 const SupplierModel = require('../models/supplier.model');
 
-const { SUPPLIER_NOT_FOUND } = require('../helpers/error_codes');
+const {
+  SUPPLIER_NOT_FOUND,
+  SUPPLIER_UPDATE_FAILED,
+  SUPPLIER_DELETE_FAILED,
+} = require('../helpers/error_codes');
 
 const getAll = async () => {
   try {
@@ -37,7 +41,7 @@ const create = async (data) => {
       note,
     });
 
-    return { id: supplierId };
+    return supplierId;
   } catch (err) {
     throw new Error(err.message);
   }
@@ -51,7 +55,11 @@ const update = async (data) => {
 
     if (!supplier) throw new Error(SUPPLIER_NOT_FOUND);
 
-    await SupplierModel.update({ id, ...fields });
+    const affectedRows = await SupplierModel.update({ id, ...fields });
+
+    if (affectedRows === 0) throw new Error(SUPPLIER_UPDATE_FAILED);
+
+    return affectedRows;
   } catch (err) {
     throw new Error(err.message);
   }
@@ -65,7 +73,11 @@ const remove = async (data) => {
 
     if (!supplier) throw new Error(SUPPLIER_NOT_FOUND);
 
-    await SupplierModel.remove(id);
+    const affectedRows = await SupplierModel.remove(id);
+
+    if (affectedRows === 0) throw new Error(SUPPLIER_DELETE_FAILED);
+
+    return affectedRows;
   } catch (err) {
     throw new Error(err.message);
   }

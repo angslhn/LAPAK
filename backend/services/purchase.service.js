@@ -10,10 +10,11 @@ const { getLocalDate } = require('../helpers/datetime');
 const { makeReceiptNumber } = require('../helpers/code_generator');
 
 const {
-  PURCHASE_NOT_FOUND,
   VALIDATION_ERROR,
-  SUPPLIER_NOT_FOUND,
+  PURCHASE_NOT_FOUND,
   PURCHASE_ALREADY_PAID,
+  PURCHASE_MARK_PAID_FAILED,
+  SUPPLIER_NOT_FOUND,
 } = require('../helpers/error_codes');
 
 const getAll = async () => {
@@ -122,7 +123,7 @@ const create = async (data) => {
 
     await connection.commit();
 
-    return { id: purchaseId };
+    return purchaseId;
   } catch (err) {
     await connection.rollback();
     throw new Error(err.message);
@@ -149,12 +150,14 @@ const markAsPaid = async (data) => {
 
     if (purchase.status === 'paid') throw new Error(PURCHASE_ALREADY_PAID);
 
-    const affected_rows = await PurchaseModel.updateStatus({
+    const affectedRows = await PurchaseModel.updateStatus({
       id,
       status: 'paid',
     });
 
-    return { affected_rows };
+    if (affectedRows === 0) throw new Error(PURCHASE_MARK_PAID_FAILED);
+
+    return affectedRows;
   } catch (err) {
     throw new Error(err.message);
   }

@@ -83,7 +83,7 @@ const create = async (data, file_buffer = null) => {
       image_public_id,
     });
 
-    return { id: productId };
+    return productId;
   } catch (err) {
     throw new Error(err.message);
   }
@@ -170,11 +170,11 @@ const update = async (data) => {
       });
     }
 
-    const affected_rows = await ProductModel.update({ id, ...fields });
+    const affectedRows = await ProductModel.update({ id, ...fields });
 
-    if (affected_rows === 0) throw new Error(PRODUCT_UPDATE_FAILED);
+    if (affectedRows === 0) throw new Error(PRODUCT_UPDATE_FAILED);
 
-    return { affected_rows };
+    return affectedRows;
   } catch (err) {
     throw new Error(err.message);
   }
@@ -188,11 +188,11 @@ const remove = async (data) => {
 
     if (!product) throw new Error(PRODUCT_NOT_FOUND);
 
-    const affected_rows = await ProductModel.remove(id);
+    const affectedRows = await ProductModel.remove(id);
 
-    if (affected_rows === 0) throw new Error(PRODUCT_DELETE_FAILED);
+    if (affectedRows === 0) throw new Error(PRODUCT_DELETE_FAILED);
 
-    return { affected_rows };
+    return affectedRows;
   } catch (err) {
     throw new Error(err.message);
   }
