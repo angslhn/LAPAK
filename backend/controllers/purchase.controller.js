@@ -47,12 +47,10 @@ const getByIdHandler = async (req, res) => {
 
 const createHandler = async (req, res) => {
   try {
-    const { supplier_id, receipt_number, date, due_date, items, note } =
-      req.body;
+    const { supplier_id, date, due_date, items, note } = req.body;
 
     const data = await PurchaseService.create({
       supplier_id,
-      receipt_number,
       date,
       due_date,
       items,
