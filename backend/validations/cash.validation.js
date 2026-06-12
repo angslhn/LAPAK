@@ -12,3 +12,5 @@ const create = (data) => {
   const checkNote = CashInput.note(note);
   if (checkNote) throw new Error(checkNote);
 };
+
+module.exports = { create };
