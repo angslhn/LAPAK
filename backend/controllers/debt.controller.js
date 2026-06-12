@@ -28,9 +28,9 @@ const payCustomerDebtHandler = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const data = await DebtService.payCustomerDebt({ id });
+    await DebtService.payCustomerDebt({ id });
 
-    return ok(res, data, 'Piutang berhasil dibayar');
+    return ok(res, null, 'Piutang berhasil dibayar');
   } catch (err) {
     let code = err.message;
 
@@ -68,9 +68,9 @@ const paySupplierDebtHandler = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const data = await DebtService.paySupplierDebt({ id });
+    await DebtService.paySupplierDebt({ id });
 
-    return ok(res, data, 'Hutang berhasil dibayar');
+    return ok(res, null, 'Hutang berhasil dibayar');
   } catch (err) {
     let code = err.message;
 

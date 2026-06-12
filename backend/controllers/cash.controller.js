@@ -49,9 +49,9 @@ const createIncomeHandler = async (req, res) => {
   try {
     const { date, amount, note } = req.body;
 
-    const data = await CashService.createIncome({ date, amount, note });
+    await CashService.createIncome({ date, amount, note });
 
-    return created(res, data, 'Pemasukan berhasil dicatat');
+    return created(res, null, 'Pemasukan berhasil dicatat');
   } catch (err) {
     let code = err.message;
 
@@ -70,9 +70,9 @@ const createExpenseHandler = async (req, res) => {
   try {
     const { date, amount, note } = req.body;
 
-    const data = await CashService.createExpense({ date, amount, note });
+    await CashService.createExpense({ date, amount, note });
 
-    return created(res, data, 'Pengeluaran berhasil dicatat');
+    return created(res, null, 'Pengeluaran berhasil dicatat');
   } catch (err) {
     let code = err.message;
 

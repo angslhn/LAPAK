@@ -64,9 +64,9 @@ const createHandler = async (req, res) => {
 
     const file_buffer = req.file?.buffer || null;
 
-    const data = await ProductService.create(payload, file_buffer);
+    await ProductService.create(payload, file_buffer);
 
-    return created(res, data, 'Produk berhasil ditambahkan');
+    return created(res, null, 'Produk berhasil ditambahkan');
   } catch (err) {
     let code = err.message;
 
@@ -87,9 +87,9 @@ const updateHandler = async (req, res) => {
 
     const payload = req.body;
 
-    const data = await ProductService.update({ id, ...payload });
+    await ProductService.update({ id, ...payload });
 
-    return ok(res, data, 'Produk berhasil diperbarui');
+    return ok(res, null, 'Produk berhasil diperbarui');
   } catch (err) {
     let code = err.message;
 

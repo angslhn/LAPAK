@@ -65,12 +65,12 @@ const updateAvatarHandler = async (req, res) => {
       return error(res, 'NO_IMAGE_PROVIDED', 'Gambar tidak ditemukan', 400);
     }
 
-    const avatar_url = await UserService.updateAvatar({
+    const data = await UserService.updateAvatar({
       user_id: id,
       file_buffer,
     });
 
-    return ok(res, { avatar_url }, 'Avatar berhasil diperbarui');
+    return ok(res, data, 'Avatar berhasil diperbarui');
   } catch (err) {
     let code = err.message;
 

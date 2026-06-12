@@ -48,9 +48,9 @@ const adjustStockHandler = async (req, res) => {
     const { id } = req.params;
     const { type, quantity, note } = req.body;
 
-    const data = await StockService.adjustStock({ id, type, quantity, note });
+    await StockService.adjustStock({ id, type, quantity, note });
 
-    return ok(res, data, 'Stok produk berhasil diubah');
+    return ok(res, null, 'Penyesuaian stok produk berhasil');
   } catch (err) {
     let code = err.message;
 

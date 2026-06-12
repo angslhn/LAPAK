@@ -40,7 +40,7 @@ const registerHandler = async (req, res) => {
   try {
     const { name, email, password, phone, store_name, address } = req.body;
 
-    const data = await AuthService.register({
+    await AuthService.register({
       name,
       email,
       password,
@@ -49,7 +49,7 @@ const registerHandler = async (req, res) => {
       address,
     });
 
-    return created(res, data, 'Pendaftaran pengguna berhasil');
+    return created(res, null, 'Pendaftaran pengguna berhasil');
   } catch (err) {
     let code = err.message;
 

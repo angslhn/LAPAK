@@ -59,7 +59,7 @@ const createHandler = async (req, res) => {
       note,
     } = req.body;
 
-    const data = await TransactionService.create({
+    await TransactionService.create({
       user_id: id,
       customer_id,
       payment_method,
@@ -70,7 +70,7 @@ const createHandler = async (req, res) => {
       note,
     });
 
-    return created(res, data, 'Transaksi berhasil dibuat');
+    return created(res, null, 'Transaksi berhasil dibuat');
   } catch (err) {
     let code = err.message;
 
@@ -89,9 +89,9 @@ const cancelHandler = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const data = await TransactionService.cancel({ id });
+    await TransactionService.cancel({ id });
 
-    return ok(res, data, 'Transaksi berhasil dibatalkan');
+    return ok(res, null, 'Transaksi berhasil dibatalkan');
   } catch (err) {
     let code = err.message;
 

@@ -49,7 +49,7 @@ const createHandler = async (req, res) => {
   try {
     const { supplier_id, date, due_date, items, note } = req.body;
 
-    const data = await PurchaseService.create({
+    await PurchaseService.create({
       supplier_id,
       date,
       due_date,
@@ -57,7 +57,7 @@ const createHandler = async (req, res) => {
       note,
     });
 
-    return created(res, data, 'Pembelian berhasil dibuat');
+    return created(res, null, 'Pembelian berhasil dibuat');
   } catch (err) {
     let code = err.message;
 
@@ -76,9 +76,9 @@ const markAsPaidHandler = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const data = await PurchaseService.markAsPaid({ id });
+    await PurchaseService.markAsPaid({ id });
 
-    return ok(res, data, 'Pembelian ditandai lunas');
+    return ok(res, null, 'Pembelian ditandai lunas');
   } catch (err) {
     let code = err.message;
 

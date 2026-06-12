@@ -28,9 +28,9 @@ const createHandler = async (req, res) => {
   try {
     const { name, phone } = req.body;
 
-    const data = await CustomerService.create({ name, phone });
+    await CustomerService.create({ name, phone });
 
-    return created(res, data, 'Pelanggan berhasil ditambahkan');
+    return created(res, null, 'Pelanggan berhasil ditambahkan');
   } catch (err) {
     let code = err.message;
 
@@ -50,9 +50,9 @@ const updateHandler = async (req, res) => {
     const { id } = req.params;
     const { name, phone } = req.body;
 
-    const data = await CustomerService.update({ id, name, phone });
+    await CustomerService.update({ id, name, phone });
 
-    return ok(res, data, 'Pelanggan berhasil diperbarui');
+    return ok(res, null, 'Pelanggan berhasil diperbarui');
   } catch (err) {
     let code = err.message;
 

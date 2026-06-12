@@ -49,7 +49,7 @@ const createHandler = async (req, res) => {
   try {
     const { name, phone, email, contact_person, address, note } = req.body;
 
-    const data = await SupplierService.create({
+    await SupplierService.create({
       name,
       phone,
       email,
@@ -58,7 +58,7 @@ const createHandler = async (req, res) => {
       note,
     });
 
-    return created(res, data, 'Supplier baru ditambahkan');
+    return created(res, null, 'Supplier baru ditambahkan');
   } catch (err) {
     let code = err.message;
 
@@ -78,7 +78,7 @@ const updateHandler = async (req, res) => {
     const { id } = req.params;
     const { name, phone, email, contact_person, address, note } = req.body;
 
-    const data = await SupplierService.update({
+    await SupplierService.update({
       id,
       name,
       phone,
@@ -88,7 +88,7 @@ const updateHandler = async (req, res) => {
       note,
     });
 
-    return ok(res, data, 'Data supplier berhasil diperbarui');
+    return ok(res, null, 'Data supplier berhasil diperbarui');
   } catch (err) {
     let code = err.message;
 
@@ -107,9 +107,9 @@ const removeHandler = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const data = await SupplierService.remove({ id });
+    await SupplierService.remove({ id });
 
-    return ok(res, data, 'Supplier berhasil dihapus');
+    return ok(res, null, 'Supplier berhasil dihapus');
   } catch (err) {
     let code = err.message;
 
