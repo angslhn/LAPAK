@@ -78,4 +78,4 @@ function note(value) {
   return null;
 }
 
-module.exports = { supplierId, receiptNumber, date, dueDate, items, note };
+module.exports = { supplierId, date, dueDate, items, note };
