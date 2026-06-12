@@ -23,6 +23,24 @@ const create = async (data) => {
   }
 };
 
+const update = async (data) => {
+  try {
+    const { id, name, phone } = data;
+
+    const customer = await CustomerModel.findById(id);
+
+    if (!customer) throw new Error(CUSTOMER_NOT_FOUND);
+
+    const affected_rows = await CustomerModel.update({ id, name, phone });
+
+    if (affected_rows === 0) throw new Error(CUSTOMER_NOT_FOUND);
+
+    return { affected_rows };
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
+
 const getReceivables = async (data) => {
   try {
     const { id } = data;
@@ -44,4 +62,4 @@ const getReceivables = async (data) => {
   }
 };
 
-module.exports = { getAll, create, getReceivables };
+module.exports = { getAll, create, update, getReceivables };
