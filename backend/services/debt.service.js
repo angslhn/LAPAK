@@ -77,7 +77,7 @@ const payCustomerDebt = async (data) => {
 
     await connection.commit();
 
-    return { id: cashLedgerId };
+    return cashLedgerId;
   } catch (err) {
     await connection.rollback();
     throw new Error(err.message);
@@ -127,7 +127,7 @@ const paySupplierDebt = async (data) => {
 
     await connection.commit();
 
-    return { id: cashLedgerId };
+    return cashLedgerId;
   } catch (err) {
     await connection.rollback();
     throw new Error(err.message);
