@@ -1,5 +1,9 @@
 const router = require('express').Router();
 
+const validation = require('../middleware/validation');
+
+const SupplierValidation = require('../validations/supplier.validation');
+
 const {
   getAllHandler,
   getByIdHandler,
@@ -10,8 +14,37 @@ const {
 
 router.get('/', getAllHandler);
 router.get('/:id', getByIdHandler);
-router.post('/', createHandler);
-router.put('/:id', updateHandler);
+router.post(
+  '/',
+  validation(
+    [
+      ['name', 'string'],
+      ['phone', 'string'],
+      ['email', 'string'],
+      ['contact_person', 'string'],
+      ['address', 'string'],
+      ['note', 'string'],
+    ],
+    SupplierValidation.create
+  ),
+  createHandler
+);
+router.put(
+  '/:id',
+  validation(
+    [
+      ['id', 'string'],
+      ['name', 'string'],
+      ['phone', 'string'],
+      ['email', 'string'],
+      ['contact_person', 'string'],
+      ['address', 'string'],
+      ['note', 'string'],
+    ],
+    SupplierValidation.update
+  ),
+  updateHandler
+);
 router.delete('/:id', removeHandler);
 
 module.exports = router;

@@ -1,5 +1,9 @@
 const router = require('express').Router();
+
 const passport = require('../lib/passport');
+const validation = require('../middleware/validation');
+
+const AuthValidation = require('../validations/auth.validation');
 
 const {
   authCookieName,
@@ -40,10 +44,48 @@ router.get(
   }
 );
 
-router.post('/login', loginHandler);
-router.post('/register', registerHandler);
-router.post('/forgot-password', forgotPasswordHandler);
-router.post('/reset-password', resetPasswordHandler);
+router.post(
+  '/login',
+  validation(
+    [
+      ['email', 'string'],
+      ['password', 'string'],
+    ],
+    AuthValidation.login
+  ),
+  loginHandler
+);
+router.post(
+  '/register',
+  validation(
+    [
+      ['name', 'string'],
+      ['email', 'string'],
+      ['password', 'string'],
+      ['phone', 'string'],
+      ['store_name', 'string'],
+      ['address', 'string'],
+    ],
+    AuthValidation.register
+  ),
+  registerHandler
+);
+router.post(
+  '/forgot-password',
+  validation([['email', 'string']], AuthValidation.forgotPassword),
+  forgotPasswordHandler
+);
+router.post(
+  '/reset-password',
+  validation(
+    [
+      ['token', 'string'],
+      ['new_password', 'string'],
+    ],
+    AuthValidation.resetPassword
+  ),
+  resetPasswordHandler
+);
 router.post('/logout', logoutHandler);
 
 module.exports = router;
