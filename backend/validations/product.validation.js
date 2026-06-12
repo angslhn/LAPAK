@@ -15,8 +15,8 @@ const create = (data) => {
     unit,
   } = data;
 
-  const checkCategory = CategoryInput.categoryId(category_id);
-  if (checkCategory) throw new Error(checkCategory);
+  const checkCategoryId = CategoryInput.id(category_id);
+  if (checkCategoryId) throw new Error(checkCategoryId);
 
   const checkName = ProductInput.productName(name);
   if (checkName) throw new Error(checkName);
