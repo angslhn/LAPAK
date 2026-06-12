@@ -64,4 +64,4 @@ const image = (req, res, next) => {
   });
 };
 
-module.exports = { image };
+module.exports = image;
