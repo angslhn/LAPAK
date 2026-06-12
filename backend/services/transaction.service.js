@@ -156,7 +156,7 @@ const create = async (data) => {
 
     await connection.commit();
 
-    return { id: transactionId };
+    return transactionId;
   } catch (err) {
     await connection.rollback();
     throw new Error(err.message);
@@ -183,7 +183,7 @@ const cancel = async (data) => {
 
     const { invoice_number, items } = transaction;
 
-    const affected_rows = await TransactionModel.updateStatus(
+    const affectedRows = await TransactionModel.updateStatus(
       { id, status: 'cancelled' },
       connection
     );
@@ -232,7 +232,7 @@ const cancel = async (data) => {
 
     await connection.commit();
 
-    return { affected_rows };
+    return affectedRows;
   } catch (err) {
     await connection.rollback();
     throw new Error(err.message);
