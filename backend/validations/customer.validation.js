@@ -19,4 +19,4 @@ const update = (data) => {
   create(data);
 };
 
-module.exports = { create };
+module.exports = { create, update };
