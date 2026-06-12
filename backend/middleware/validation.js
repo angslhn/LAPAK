@@ -20,7 +20,7 @@ const validation = (fields, validate) => (req, res, next) => {
       fromPayload = true;
     }
 
-    if (value === undefined) continue;
+    if (value === undefined || value === null) continue;
 
     if (fromPayload && typeof value !== type) {
       return res.status(400).json({
