@@ -70,7 +70,7 @@ const forgotPasswordHandler = async (req, res) => {
 
     await AuthService.forgotPassword({ email });
 
-    return ok(res, null, 'Email reset password telah dikirim');
+    return ok(res, null, 'Email untuk perubahan kata sandi telah dikirim');
   } catch (err) {
     let code = err.message;
 
@@ -91,7 +91,7 @@ const resetPasswordHandler = async (req, res) => {
 
     await AuthService.resetPassword({ token, new_password });
 
-    return ok(res, null, 'Password berhasil direset');
+    return ok(res, null, 'Kata sandi berhasil diubah');
   } catch (err) {
     let code = err.message;
 
