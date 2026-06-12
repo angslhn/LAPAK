@@ -54,3 +54,5 @@ const update = (data) => {
 
   create(data);
 };
+
+module.exports = { create, update };
