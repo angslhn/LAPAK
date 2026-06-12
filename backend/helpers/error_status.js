@@ -34,6 +34,7 @@ const ERROR_STATUS = {
 
   // Customer
   CUSTOMER_NOT_FOUND: 404,
+  CUSTOMER_UPDATE_FAILED: 400,
 
   // Transaction
   TRANSACTION_NOT_FOUND: 404,
