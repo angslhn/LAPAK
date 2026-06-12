@@ -14,7 +14,9 @@ const ERROR_CODES = {
 
   // User
   USER_NOT_FOUND: 'USER_NOT_FOUND', // user tidak ditemukan
-  INVALID_PASSWORD: 'INVALID_PASSWORD', // password lama salah
+  USER_INVALID_PASSWORD: 'USER_INVALID_PASSWORD', // password lama salah
+  USER_UPDATE_FAILED: 'USER_UPDATE_FAILED', // gagal memperbarui pengguna
+  USER_AVATAR_UPDATE_FAILED: 'USER_AVATAR_UPDATE_FAILED', // gagal memperbarui avatar pengguna
 
   // Product
   PRODUCT_SKU_ALREADY_EXISTS: 'PRODUCT_SKU_ALREADY_EXISTS', // kode sku telah tersedia
@@ -31,6 +33,8 @@ const ERROR_CODES = {
 
   // Supplier
   SUPPLIER_NOT_FOUND: 'SUPPLIER_NOT_FOUND', // supplier tidak ditemukan
+  SUPPLIER_UPDATE_FAILED: 'SUPPLIER_UPDATE_FAILED', // gagal memperbarui supplier
+  SUPPLIER_DELETE_FAILED: 'SUPPLIER_DELETE_FAILED', // gagal menghapus supplier
 
   // Customer
   CUSTOMER_NOT_FOUND: 'CUSTOMER_NOT_FOUND', // pelanggan tidak ditemukan
@@ -43,6 +47,7 @@ const ERROR_CODES = {
   // Purchase
   PURCHASE_NOT_FOUND: 'PURCHASE_NOT_FOUND', // pembelian tidak ditemukan
   PURCHASE_ALREADY_PAID: 'PURCHASE_ALREADY_PAID', // nota sudah lunas
+  PURCHASE_MARK_PAID_FAILED: 'PURCHASE_MARK_PAID_FAILED', // tanda lunas gagal
 
   // Debt
   DEBT_CUSTOMER_ALREADY_PAID: 'DEBT_CUSTOMER_ALREADY_PAID', // piutang dari pelanggan sudah lunas
