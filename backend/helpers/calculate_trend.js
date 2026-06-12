@@ -11,4 +11,4 @@ const calculateTrend = (today, yesterday) => {
   return Math.round(trend);
 };
 
-module.exports = { calculateTrend };
+module.exports = calculateTrend;
