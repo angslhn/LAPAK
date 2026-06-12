@@ -24,7 +24,7 @@ const create = async (data) => {
 
     const categoryId = await CategoryModel.create(data);
 
-    return { id: categoryId };
+    return categoryId;
   } catch (err) {
     throw new Error(err.message);
   }
@@ -38,11 +38,11 @@ const update = async (data) => {
 
     if (!category) throw new Error(CATEGORY_NOT_FOUND);
 
-    const affected_rows = await CategoryModel.update({ id, name });
+    const affectedRows = await CategoryModel.update({ id, name });
 
-    if (affected_rows === 0) throw new Error(CATEGORY_UPDATE_FAILED);
+    if (affectedRows === 0) throw new Error(CATEGORY_UPDATE_FAILED);
 
-    return { affected_rows };
+    return affectedRows;
   } catch (err) {
     throw new Error(err.message);
   }

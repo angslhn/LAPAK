@@ -17,7 +17,7 @@ const create = async (data) => {
 
     const customerId = await CustomerModel.create({ name, phone });
 
-    return { id: customerId };
+    return customerId;
   } catch (err) {
     throw new Error(err.message);
   }
@@ -31,11 +31,11 @@ const update = async (data) => {
 
     if (!customer) throw new Error(CUSTOMER_NOT_FOUND);
 
-    const affected_rows = await CustomerModel.update({ id, name, phone });
+    const affectedRows = await CustomerModel.update({ id, name, phone });
 
-    if (affected_rows === 0) throw new Error(CUSTOMER_NOT_FOUND);
+    if (affectedRows === 0) throw new Error(CUSTOMER_NOT_FOUND);
 
-    return { affected_rows };
+    return affectedRows;
   } catch (err) {
     throw new Error(err.message);
   }
