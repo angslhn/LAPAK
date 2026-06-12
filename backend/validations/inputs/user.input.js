@@ -1,3 +1,13 @@
+function id(value) {
+  if (!value) return 'ID pengguna tidak boleh kosong';
+
+  if (!/^\d+$/.test(value)) return 'ID pengguna harus berupa angka';
+
+  if (Number(value) <= 0) return 'ID pengguna tidak valid';
+
+  return null;
+}
+
 function name(value) {
   const trimmed = value.trim();
 
@@ -128,6 +138,7 @@ function role(value) {
 }
 
 module.exports = {
+  id,
   name,
   token,
   email,
