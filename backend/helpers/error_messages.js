@@ -15,23 +15,27 @@ const ERROR_MESSAGES = {
 
   // User
   USER_NOT_FOUND: 'Pengguna tidak ditemukan',
-  INVALID_PASSWORD: 'Kata sandi lama salah',
+  USER_INVALID_PASSWORD: 'Kata sandi lama salah',
+  USER_AVATAR_UPDATE_FAILED: 'Gagal memperbarui avatar pengguna',
+  USER_UPDATE_FAILED: 'Gagal memperbarui detail pengguna',
 
   // Product
   PRODUCT_SKU_ALREADY_EXISTS: 'Kode SKU sudah digunakan',
   PRODUCT_NOT_FOUND: 'Produk tidak ditemukan',
   PRODUCT_INSUFFICIENT_STOCK: 'Stok produk tidak mencukupi',
   PRODUCT_IMAGE_UPDATE_FAILED: 'Gagal memperbarui gambar produk',
-  PRODUCT_UPDATE_FAILED: 'Gagal memperbarui produk',
+  PRODUCT_UPDATE_FAILED: 'Gagal memperbarui detail produk',
   PRODUCT_DELETE_FAILED: 'Gagal menghapus produk',
 
   // Category
-  CATEGORY_ALREADY_EXISTS: 'Kategori sudah ada',
+  CATEGORY_ALREADY_EXISTS: 'Kategori sudah tersedia',
   CATEGORY_NOT_FOUND: 'Kategori tidak ditemukan',
   CATEGORY_UPDATE_FAILED: 'Gagal memperbarui kategori',
 
   // Supplier
   SUPPLIER_NOT_FOUND: 'Supplier tidak ditemukan',
+  SUPPLIER_UPDATE_FAILED: 'Gagal memperbarui data supplier',
+  SUPPLIER_DELETE_FAILED: 'Gagal menghapus supplier',
 
   // Customer
   CUSTOMER_NOT_FOUND: 'Pelanggan tidak ditemukan',
@@ -44,6 +48,7 @@ const ERROR_MESSAGES = {
   // Purchase
   PURCHASE_NOT_FOUND: 'Pembelian tidak ditemukan',
   PURCHASE_ALREADY_PAID: 'Pembelian sudah lunas',
+  PURCHASE_MARK_PAID_FAILED: 'Tanda lunas pembelian gagal',
 
   // Debt
   DEBT_CUSTOMER_ALREADY_PAID: 'Transaksi ini sudah lunas',
