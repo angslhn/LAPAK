@@ -45,7 +45,7 @@ const createExpense = async (data) => {
       reference_type: 'manual',
     });
 
-    return { id: cashLedgerId };
+    return cashLedgerId;
   } catch (err) {
     throw new Error(err.message);
   }
@@ -67,7 +67,7 @@ const createIncome = async (data) => {
       reference_type: 'manual',
     });
 
-    return { id: cashLedgerId };
+    return cashLedgerId;
   } catch (err) {
     throw new Error(err.message);
   }

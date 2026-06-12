@@ -65,11 +65,7 @@ const register = async (data) => {
       role: 'owner',
     });
 
-    const user = await UserModel.findById(userId);
-
-    const { password: _, ...userWithoutPassword } = user;
-
-    return userWithoutPassword;
+    return userId;
   } catch (err) {
     throw new Error(err.message);
   }
