@@ -2,14 +2,14 @@ const ok = (res, data, message = 'Success') =>
   res.status(200).json({
     success: true,
     message,
-    data,
+    ...(data && { data }),
   });
 
 const created = (res, data, message = 'Created') =>
   res.status(201).json({
     success: true,
     message,
-    data,
+    ...(data && { data }),
   });
 
 const error = (
@@ -22,7 +22,6 @@ const error = (
     success: false,
     code,
     message,
-    data: null,
   });
 
 module.exports = { ok, created, error };
