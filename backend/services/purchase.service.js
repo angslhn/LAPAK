@@ -7,6 +7,7 @@ const StockMutationModel = require('../models/stock_mutation.model');
 
 const { getPool } = require('../lib/mysql');
 const { getLocalDate } = require('../helpers/datetime');
+const { makeReceiptNumber } = require('../helpers/code_generator');
 
 const {
   PURCHASE_NOT_FOUND,
@@ -42,7 +43,7 @@ const create = async (data) => {
   const connection = await pool.getConnection();
 
   try {
-    const { supplier_id, receipt_number, date, due_date, items, note } = data;
+    const { supplier_id, date, due_date, items, note } = data;
 
     if (items.length < 1) throw new Error(VALIDATION_ERROR);
 
@@ -57,15 +58,22 @@ const create = async (data) => {
 
     await connection.beginTransaction();
 
-    const purchaseId = await PurchaseModel.create({
-      supplier_id,
-      receipt_number,
-      date,
-      due_date,
-      total,
-      status: 'unpaid',
-      note,
-    });
+    const nextSeq = await PurchaseModel.getNextReceiptSequence(connection);
+
+    const receipt_number = makeReceiptNumber(nextSeq);
+
+    const purchaseId = await PurchaseModel.create(
+      {
+        supplier_id,
+        receipt_number,
+        date,
+        due_date,
+        total,
+        status: 'unpaid',
+        note,
+      },
+      connection
+    );
 
     for (const { product_id, quantity, purchase_price } of items) {
       const product = await ProductModel.findById(product_id);
@@ -73,12 +81,15 @@ const create = async (data) => {
       const stock_before = product.stock;
       const stock_after = stock_before + quantity;
 
-      await PurchaseItemModel.create({
-        purchase_id: purchaseId,
-        product_id,
-        quantity,
-        purchase_price,
-      });
+      await PurchaseItemModel.create(
+        {
+          purchase_id: purchaseId,
+          product_id,
+          quantity,
+          purchase_price,
+        },
+        connection
+      );
 
       await ProductModel.updateStock({ id: product_id, quantity }, connection);
 
@@ -96,15 +107,18 @@ const create = async (data) => {
       );
     }
 
-    await CashLedgerModel.create({
-      date: getLocalDate(),
-      type: 'expense',
-      category: 'purchase',
-      amount: total,
-      reference_id: purchaseId,
-      reference_type: 'purchase',
-      note: 'Pembelian dari ' + receipt_number,
-    });
+    await CashLedgerModel.create(
+      {
+        date: getLocalDate(),
+        type: 'expense',
+        category: 'purchase',
+        amount: total,
+        reference_id: purchaseId,
+        reference_type: 'purchase',
+        note: 'Pembelian dari ' + receipt_number,
+      },
+      connection
+    );
 
     await connection.commit();
 
@@ -146,4 +160,10 @@ const markAsPaid = async (data) => {
   }
 };
 
-module.exports = { getAll, getById, create, getUnpaidTotal, markAsPaid };
+module.exports = {
+  getAll,
+  getById,
+  create,
+  getUnpaidTotal,
+  markAsPaid,
+};
