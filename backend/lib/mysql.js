@@ -20,6 +20,7 @@ const getPool = () => {
       password: dbPassword,
       port: dbPort,
       timezone: '+07:00',
+      decimalNumbers: true,
       waitForConnections: true,
       connectionLimit: isProduction ? 1 : 10,
       maxIdle: isProduction ? 1 : 10,
