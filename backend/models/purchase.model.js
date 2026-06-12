@@ -96,7 +96,26 @@ const findWithItems = async (id) => {
   }
 };
 
-const create = async (data) => {
+const getNextReceiptSequence = async (conn) => {
+  try {
+    const sql = `
+                SELECT COUNT(id) + 1 AS next_seq
+                FROM purchases
+                WHERE DATE(date) = CURDATE()
+                FOR UPDATE
+                `;
+
+    const [rows] = await conn.execute(sql);
+
+    return Number(rows[0].next_seq) || 1;
+  } catch (err) {
+    throw new Error(`[RECEIPT_NUMBER_SEQUENCE] ${err.message}`);
+  }
+};
+
+const create = async (data, conn = null) => {
+  const db = conn || pool;
+
   const fields = Object.keys(data).filter((field) =>
     ALLOWED_FIELDS.includes(field)
   );
@@ -108,7 +127,7 @@ const create = async (data) => {
   try {
     const sql = `INSERT INTO purchases (${fields.join(', ')}) VALUES (${fields.map(() => '?').join(', ')})`;
 
-    const [result] = await pool.execute(sql, values);
+    const [result] = await db.execute(sql, values);
 
     return result.insertId;
   } catch (err) {
@@ -171,6 +190,7 @@ module.exports = {
   findAllUnpaid,
   findAllWithSupplier,
   findWithItems,
+  getNextReceiptSequence,
   sumUnpaidTotal,
   sumPurchaseByCurrentMonth,
   create,
