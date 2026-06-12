@@ -34,6 +34,7 @@ const ERROR_CODES = {
 
   // Customer
   CUSTOMER_NOT_FOUND: 'CUSTOMER_NOT_FOUND', // pelanggan tidak ditemukan
+  CUSTOMER_UPDATE_FAILED: 'CUSTOMER_UPDATE_FAILED', // gagal memperbarui pelanggan
 
   // Transaction
   TRANSACTION_NOT_FOUND: 'TRANSACTION_NOT_FOUND', // transaksi tidak ditemukan
