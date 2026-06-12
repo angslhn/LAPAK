@@ -19,7 +19,7 @@ const login = async (data) => {
 
     const user = await UserModel.findByEmail(email);
 
-    if (!user) throw new Error(AUTH_INVALID_CREDENTIALS);
+    if (!user || !user.password) throw new Error(AUTH_INVALID_CREDENTIALS);
 
     const isMatch = await bcrypt.compare(password, user.password);
 
