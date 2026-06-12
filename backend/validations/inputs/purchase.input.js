@@ -8,18 +8,6 @@ function supplierId(value) {
   return null;
 }
 
-function receiptNumber(value) {
-  const trimmed = value?.trim();
-
-  if (!trimmed) return 'Nomor nota tidak boleh kosong';
-
-  if (trimmed.length < 3) return 'Nomor nota minimal 3 karakter';
-
-  if (trimmed.length > 50) return 'Nomor nota maksimal 50 karakter';
-
-  return null;
-}
-
 function date(value) {
   if (!value) return 'Tanggal pembelian tidak boleh kosong';
 
@@ -39,6 +27,8 @@ function dueDate(value) {
 
   if (!dateRegex.test(value))
     return 'Format tanggal jatuh tempo harus YYYY-MM-DD';
+
+  if (isNaN(Date.parse(value))) return 'Tanggal pembelian tidak valid';
 
   return null;
 }
