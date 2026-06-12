@@ -1,11 +1,11 @@
 const ERROR_MESSAGES = {
   // Auth
-  AUTH_INVALID_CREDENTIALS: 'Email atau password salah',
+  AUTH_INVALID_CREDENTIALS: 'Email atau kata sandi salah',
   AUTH_EMAIL_ALREADY_EXISTS: 'Email sudah terdaftar',
-  AUTH_TOKEN_EXPIRED: 'Sesi login telah berakhir, silakan login ulang',
+  AUTH_TOKEN_EXPIRED: 'Sesi masuk telah berakhir, silakan masuk kembali',
   AUTH_UNAUTHORIZED: 'Anda tidak memiliki akses',
   AUTH_INVALID_RESET_TOKEN:
-    'Token reset password tidak valid atau sudah kadaluarsa',
+    'Token perubahan kata sandi tidak valid atau sudah kadaluarsa',
 
   // General
   VALIDATION_ERROR: 'Data yang dikirim tidak valid',
@@ -35,6 +35,7 @@ const ERROR_MESSAGES = {
 
   // Customer
   CUSTOMER_NOT_FOUND: 'Pelanggan tidak ditemukan',
+  CUSTOMER_UPDATE_FAILED: 'Gagal memperbarui data pelanggan',
 
   // Transaction
   TRANSACTION_NOT_FOUND: 'Transaksi tidak ditemukan',
