@@ -6,7 +6,7 @@ const CashLedgerModel = require('../models/cash_ledger.model');
 
 const { getPool } = require('../lib/mysql');
 const { getLocalDate, getLocalDateTime } = require('../helpers/datetime');
-const { makeInvoiceCode } = require('../helpers/invoice');
+const { makeInvoiceCode } = require('../helpers/code_generator');
 
 const {
   TRANSACTION_NOT_FOUND,
