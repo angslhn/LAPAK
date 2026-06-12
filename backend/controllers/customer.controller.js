@@ -45,6 +45,28 @@ const createHandler = async (req, res) => {
   }
 };
 
+const updateHandler = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, phone } = req.body;
+
+    const data = await CustomerService.update({ id, name, phone });
+
+    return ok(res, data, 'Pelanggan berhasil diperbarui');
+  } catch (err) {
+    let code = err.message;
+
+    if (!ERROR_MESSAGES[code]) {
+      code = 'INTERNAL_SERVER_ERROR';
+    }
+
+    const message = ERROR_MESSAGES[code];
+    const httpStatus = ERROR_STATUS[code];
+
+    return error(res, code, message, httpStatus);
+  }
+};
+
 const getReceivablesHandler = async (req, res) => {
   try {
     const { id } = req.params;
@@ -66,4 +88,9 @@ const getReceivablesHandler = async (req, res) => {
   }
 };
 
-module.exports = { getAllHandler, createHandler, getReceivablesHandler };
+module.exports = {
+  getAllHandler,
+  createHandler,
+  updateHandler,
+  getReceivablesHandler,
+};
