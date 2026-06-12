@@ -1,14 +1,14 @@
 const { transporter } = require('../lib/nodemailer');
 
-const { clientURL } = require('../config/env');
+const { clientURL, smtpFrom } = require('../config/env');
 
 const sendResetPasswordEmail = async (email, token) => {
   const resetLink = `${clientURL}/reset-password?token=${token}`;
 
   await transporter.sendMail({
-    from: process.env.SMTP_FROM,
+    from: smtpFrom,
     to: email,
-    subject: 'Reset Password - LAPAK',
+    subject: 'Ubah Kata Sandi - LAPAK',
     html: `
       <table width="100%" cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #ffffff;">
         <tr>
@@ -19,12 +19,12 @@ const sendResetPasswordEmail = async (email, token) => {
         </tr>
         <tr>
           <td style="padding: 30px 20px;">
-            <h3 style="color: #333; margin-top: 0;">Reset Password</h3>
-            <p style="color: #666; line-height: 1.5;">Kami menerima permintaan untuk mereset password akun Anda. Klik tombol di bawah untuk melanjutkan:</p>
+            <h3 style="color: #333; margin-top: 0;">Ubah Kata Sandi</h3>
+            <p style="color: #666; line-height: 1.5;">Kami menerima permintaan untuk perubahan kata sandi akun Anda. Klik tombol di bawah untuk melanjutkan:</p>
             <table width="100%" cellpadding="0" cellspacing="0" style="margin: 25px 0;">
               <tr>
                 <td align="center">
-                  <a href="${resetLink}" style="background-color: #4CAF50; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Reset Password</a>
+                  <a href="${resetLink}" style="background-color: #4CAF50; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Ubah Kata Sandi</a>
                 </td>
               </tr>
             </table>
@@ -33,7 +33,7 @@ const sendResetPasswordEmail = async (email, token) => {
               <span style="color: #4CAF50; word-break: break-all;">${resetLink}</span>
             </p>
             <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
-            <p style="color: #999; font-size: 12px;">Link ini berlaku selama 1 jam. Jika Anda tidak meminta reset password, abaikan email ini.</p>
+            <p style="color: #999; font-size: 12px;">Link ini berlaku selama 1 jam. Jika Anda tidak meminta perubahan kata sandi, abaikan email ini.</p>
           </td>
         </tr>
         <tr>
