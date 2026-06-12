@@ -3,7 +3,7 @@ const ProductModel = require('../models/product.model');
 const TransactionModel = require('../models/transaction.model');
 const TransactionItemModel = require('../models/transaction_item.model');
 
-const { calculateTrend } = require('../helpers/calculate_trend');
+const calculateTrend = require('../helpers/calculate_trend');
 const {
   getLocalDate,
   getLocalPastDate,
