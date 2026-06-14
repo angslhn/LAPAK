@@ -1,5 +1,9 @@
 const CashLedgerModel = require('../models/cash_ledger.model');
+const DailyReportModel = require('../models/daily_report.model');
 
+const calculateTrend = require('../helpers/calculate_trend');
+
+const { getLocalPastDate, getLocalDate } = require('../helpers/datetime');
 const { VALIDATION_ERROR } = require('../helpers/error_codes');
 
 const getAll = async () => {
@@ -13,14 +17,35 @@ const getAll = async () => {
 const getByDate = async (data) => {
   try {
     const { date } = data;
+    const targetDate = date || getLocalDate();
+    const yesterdayDate = getLocalPastDate(1);
 
-    const cashLedger = await CashLedgerModel.findByDate(date);
+    const [cashLedger, currentSummary, yesterdaySummary, openingBalance] =
+      await Promise.all([
+        CashLedgerModel.findByDate(targetDate),
+        CashLedgerModel.getDailySummary(targetDate),
+        CashLedgerModel.getDailySummaryByDate(yesterdayDate),
+        CashLedgerModel.getClosingBalanceByDate(targetDate),
+      ]);
 
-    const summary = await CashLedgerModel.sumByType(date);
+    const closingBalance =
+      openingBalance + currentSummary.income - currentSummary.expense;
+    const incomeTrend = calculateTrend(
+      currentSummary.income,
+      yesterdaySummary.income
+    );
+    const expenseTrend = calculateTrend(
+      currentSummary.expense,
+      yesterdaySummary.expense
+    );
 
     const formattedSummary = {
-      income: summary.find((s) => s.type === 'income')?.total || 0,
-      expense: summary.find((s) => s.type === 'expense')?.total || 0,
+      opening_balance: openingBalance,
+      income: currentSummary.income,
+      expense: currentSummary.expense,
+      closing_balance: closingBalance,
+      income_trend_percentage: incomeTrend,
+      expense_trend_percentage: expenseTrend,
     };
 
     return { summary: formattedSummary, mutations: cashLedger };
