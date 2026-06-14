@@ -37,6 +37,65 @@ const findByDate = async (date) => {
   }
 };
 
+const getDailySummary = async (date) => {
+  try {
+    const sql = `
+      SELECT 
+        COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END), 0) AS total_income,
+        COALESCE(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END), 0) AS total_expense
+      FROM cash_ledger
+      WHERE date = ?
+    `;
+
+    const [rows] = await pool.execute(sql, [date]);
+
+    return {
+      income: Number(rows[0]?.total_income || 0),
+      expense: Number(rows[0]?.total_expense || 0),
+    };
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const getClosingBalanceByDate = async (date) => {
+  try {
+    const sql = `
+      SELECT 
+        COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END), 0) AS balance
+      FROM cash_ledger
+      WHERE date < ?
+    `;
+
+    const [rows] = await pool.execute(sql, [date]);
+
+    return Number(rows[0]?.balance || 0);
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const getDailySummaryByDate = async (date) => {
+  try {
+    const sql = `
+      SELECT 
+        COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END), 0) AS total_income,
+        COALESCE(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END), 0) AS total_expense
+      FROM cash_ledger
+      WHERE date = ?
+    `;
+
+    const [rows] = await pool.execute(sql, [date]);
+
+    return {
+      income: Number(rows[0]?.total_income || 0),
+      expense: Number(rows[0]?.total_expense || 0),
+    };
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
 const create = async (data, conn = null) => {
   const db = conn || pool;
 
@@ -100,4 +159,13 @@ const sumExpensesByRange = async (from, to) => {
   }
 };
 
-module.exports = { findAll, findByDate, create, sumByType, sumExpensesByRange };
+module.exports = {
+  findAll,
+  findByDate,
+  getDailySummary,
+  getClosingBalanceByDate,
+  getDailySummaryByDate,
+  create,
+  sumByType,
+  sumExpensesByRange,
+};
