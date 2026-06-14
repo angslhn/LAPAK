@@ -189,7 +189,7 @@ const buildDropdown = () => {
   allCategories.forEach((cat) => {
     const opt = document.createElement('div');
     opt.className = 'cat-option' + (activeCategory === cat.id ? ' active' : '');
-    opt.innerHTML = `${cat.category_name} <span class="cat-count">${cat.total_product}</span>`;
+    opt.innerHTML = `${cat.name} <span class="cat-count">${cat.product_count}</span>`;
     opt.addEventListener('click', () => {
       activeCategory = cat.id;
       updateFilterBtn();
@@ -209,7 +209,7 @@ const updateFilterBtn = () => {
   // Update teks tanpa hapus arrow SVG
   const textNode = btn.childNodes[0];
   if (textNode && textNode.nodeType === 3) {
-    textNode.textContent = (cat ? cat.category_name : 'Semua Kategori') + ' ';
+    textNode.textContent = (cat ? cat.name : 'Semua Kategori') + ' ';
   }
 };
 
@@ -235,9 +235,9 @@ const fetchProducts = async () => {
   return json.data ?? [];
 };
 
-// Endpoint 4.2: /categories/total-product — mengembalikan { id, category_name, total_product }
+// Endpoint 4.2: /categories/product-count — mengembalikan { id, name, product_count }
 const fetchCategories = async () => {
-  const res = await fetch(`${API_BASE}/categories/total-product`, {
+  const res = await fetch(`${API_BASE}/categories/product-count`, {
     credentials: 'include',
   });
   if (!res.ok) throw new Error(`Categories API error: ${res.status}`);
