@@ -24,6 +24,25 @@ const getAllHandler = async (req, res) => {
   }
 };
 
+const getAllWithTotalProductHandler = async (req, res) => {
+  try {
+    const data = await CategoryService.getAllWithTotalProduct();
+
+    return ok(res, data);
+  } catch (err) {
+    let code = err.message;
+
+    if (!ERROR_MESSAGES[code]) {
+      code = 'INTERNAL_SERVER_ERROR';
+    }
+
+    const message = ERROR_MESSAGES[code];
+    const httpStatus = ERROR_STATUS[code];
+
+    return error(res, code, message, httpStatus);
+  }
+};
+
 const createHandler = async (req, res) => {
   try {
     const { name } = req.body;
@@ -67,4 +86,9 @@ const updateHandler = async (req, res) => {
   }
 };
 
-module.exports = { getAllHandler, createHandler, updateHandler };
+module.exports = {
+  getAllHandler,
+  getAllWithTotalProductHandler,
+  createHandler,
+  updateHandler,
+};
