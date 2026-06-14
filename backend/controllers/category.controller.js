@@ -24,9 +24,9 @@ const getAllHandler = async (req, res) => {
   }
 };
 
-const getAllWithTotalProductHandler = async (req, res) => {
+const getAllWithProductCountHandler = async (req, res) => {
   try {
-    const data = await CategoryService.getAllWithTotalProduct();
+    const data = await CategoryService.getAllWithProductCount();
 
     return ok(res, data);
   } catch (err) {
@@ -88,7 +88,7 @@ const updateHandler = async (req, res) => {
 
 module.exports = {
   getAllHandler,
-  getAllWithTotalProductHandler,
+  getAllWithProductCountHandler,
   createHandler,
   updateHandler,
 };
