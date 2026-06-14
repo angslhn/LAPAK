@@ -112,8 +112,6 @@ const create = async (data) => {
           transaction_id: transactionId,
           product_id,
           quantity,
-          stock_before,
-          stock_after,
           selling_price,
           subtotal,
         },
