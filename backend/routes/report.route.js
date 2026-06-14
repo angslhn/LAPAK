@@ -28,6 +28,7 @@ router.get(
   validation(
     [
       ['limit', 'string'],
+      ['period', 'string'],
       ['from', 'string'],
       ['to', 'string'],
     ],
