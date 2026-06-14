@@ -45,8 +45,8 @@ const findAllWithTotalProduct = async () => {
     const sql = `
                 SELECT 
                   c.id, 
-                  c.name AS category_name, 
-                  COUNT(p.id) AS total_product
+                  c.name, 
+                  COUNT(p.id) AS product_count
                 FROM categories c
                 LEFT JOIN products p ON c.id = p.category_id
                 GROUP BY c.id, c.name
