@@ -179,3 +179,12 @@ CREATE TABLE IF NOT EXISTS password_resets (
   INDEX idx_email (email),
   INDEX idx_token (token)
 );
+
+-- Performance indexes
+CREATE INDEX idx_transactions_date_status ON transactions(date, status);
+CREATE INDEX idx_transactions_customer_status ON transactions(customer_id, status);
+CREATE INDEX idx_transaction_items_transaction ON transaction_items(transaction_id);
+CREATE INDEX idx_products_category ON products(category_id);
+CREATE INDEX idx_purchases_supplier_status ON purchases(supplier_id, status);
+CREATE INDEX idx_stock_mutations_product ON stock_mutations(product_id);
+CREATE INDEX idx_cash_ledger_date_type ON cash_ledger(date, type);
