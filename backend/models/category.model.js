@@ -40,7 +40,7 @@ const findAll = async () => {
   }
 };
 
-const findAllWithTotalProduct = async () => {
+const findAllWithProductCount = async () => {
   try {
     const sql = `
                 SELECT 
@@ -108,7 +108,7 @@ module.exports = {
   findById,
   findByName,
   findAll,
-  findAllWithTotalProduct,
+  findAllWithProductCount,
   create,
   update,
 };
