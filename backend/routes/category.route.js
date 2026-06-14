@@ -6,11 +6,13 @@ const CategoryValidation = require('../validations/category.validation');
 
 const {
   getAllHandler,
+  getAllWithTotalProductHandler,
   createHandler,
   updateHandler,
 } = require('../controllers/category.controller');
 
 router.get('/', getAllHandler);
+router.get('/total-product', getAllWithTotalProductHandler);
 router.post(
   '/',
   validation([['name', 'string']], CategoryValidation.create),
