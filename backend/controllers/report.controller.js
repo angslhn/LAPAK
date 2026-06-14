@@ -28,9 +28,14 @@ const getRevenueHandler = async (req, res) => {
 
 const getTopProductsHandler = async (req, res) => {
   try {
-    const { limit, from, to } = req.query;
+    const { limit, period, from, to } = req.query;
 
-    const data = await ReportService.getTopProducts({ limit, from, to });
+    const data = await ReportService.getTopProducts({
+      limit,
+      period,
+      from,
+      to,
+    });
 
     return ok(res, data);
   } catch (err) {
