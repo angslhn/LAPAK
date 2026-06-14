@@ -28,7 +28,17 @@ const morganStream = {
   },
 };
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", 'https://cdnjs.cloudflare.com'],
+        imgSrc: ["'self'", 'data:', 'https://res.cloudinary.com'],
+      },
+    },
+  })
+);
 app.use(cors(corsOptions));
 app.use(morgan(morganFormat, { stream: morganStream }));
 app.use(cookieParser());
