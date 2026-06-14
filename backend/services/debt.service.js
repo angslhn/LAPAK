@@ -105,8 +105,7 @@ const paySupplierDebt = async (data) => {
 
     if (!purchase) throw new Error(PURCHASE_NOT_FOUND);
 
-    if (transaction.status === 'paid')
-      throw new Error(DEBT_SUPPLIER_ALREADY_PAID);
+    if (purchase.status === 'paid') throw new Error(DEBT_SUPPLIER_ALREADY_PAID);
 
     await connection.beginTransaction();
 
