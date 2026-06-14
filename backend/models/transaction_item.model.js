@@ -29,6 +29,7 @@ const findTopProductsToday = async (limit = 5) => {
                   p.id,
                   p.name,
                   c.name AS category,
+                  p.unit,
                   SUM(ti.quantity) AS qty_sold,
                   SUM(ti.subtotal) AS total_revenue
                 FROM transaction_items ti
@@ -87,6 +88,7 @@ const findTopProductsAllTime = async (limit = 5) => {
                 SELECT
                   p.id,
                   p.name,
+                  p.image_url,
                   p.sku,
                   c.name AS category,
                   SUM(ti.quantity) AS qty_sold,
@@ -102,6 +104,37 @@ const findTopProductsAllTime = async (limit = 5) => {
                 `;
 
     const [rows] = await pool.query(sql);
+
+    return rows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const findTopProductsByDateRange = async (fromDate, toDate, limit = 5) => {
+  try {
+    const sql = `
+                SELECT
+                  p.id,
+                  p.name,
+                  p.image_url,
+                  p.sku,
+                  c.name AS category,
+                  SUM(ti.quantity) AS qty_sold,
+                  SUM(ti.subtotal) AS total_revenue
+                FROM transaction_items ti
+                JOIN products p ON ti.product_id = p.id
+                JOIN categories c ON p.category_id = c.id
+                JOIN transactions t ON ti.transaction_id = t.id
+                WHERE t.date >= ? 
+                  AND t.date < DATE_ADD(?, INTERVAL 1 DAY)
+                  AND t.status = 'paid'
+                GROUP BY p.id, p.name, c.name, p.sku
+                ORDER BY qty_sold DESC
+                LIMIT ${parseInt(limit)}
+                `;
+
+    const [rows] = await pool.execute(sql, [fromDate, toDate]);
 
     return rows;
   } catch (err) {
@@ -269,6 +302,7 @@ module.exports = {
   findTopProductsToday,
   findTopProductsByRange,
   findTopProductsAllTime,
+  findTopProductsByDateRange,
   findRevenueByCategory,
   create,
   sumTodayHPP,
