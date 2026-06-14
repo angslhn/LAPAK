@@ -14,9 +14,9 @@ const getAll = async () => {
   }
 };
 
-const getAllWithTotalProduct = async () => {
+const getAllWithProductCount = async () => {
   try {
-    return await CategoryModel.findAllWithTotalProduct();
+    return await CategoryModel.findAllWithProductCount();
   } catch (err) {
     throw new Error(err.message);
   }
@@ -56,4 +56,4 @@ const update = async (data) => {
   }
 };
 
-module.exports = { getAll, getAllWithTotalProduct, create, update };
+module.exports = { getAll, getAllWithProductCount, create, update };
