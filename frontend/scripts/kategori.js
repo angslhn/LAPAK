@@ -20,7 +20,7 @@ const ICON_DELETE = `<svg width="14" height="15" viewBox="0 0 14 15" fill="none"
 // ── FETCH ──
 async function fetchCategories() {
   try {
-    const res = await fetch('/api/v1/categories/total-product', {
+    const res = await fetch('/api/v1/categories/product-count', {
       credentials: 'include',
     });
     const json = await res.json();
@@ -60,16 +60,16 @@ function renderTable(data, offset) {
       (cat, i) => `
     <tr data-id="${cat.id}">
       <td class="no-val center">${offset + i + 1}</td>
-      <td class="center"><span class="kat-name">${cat.category_name}</span></td>
+      <td class="center"><span class="kat-name">${cat.name}</span></td>
       <td class="center">
-        <span class="jumlah-badge">${cat.total_product} produk</span>
+        <span class="jumlah-badge">${cat.product_count} produk</span>
       </td>
       <td class="center">
         <div class="aksi-cell">
-          <button class="aksi-btn edit" title="Edit" data-id="${cat.id}" data-name="${cat.category_name}">
+          <button class="aksi-btn edit" title="Edit" data-id="${cat.id}" data-name="${cat.name}">
             ${ICON_EDIT}
           </button>
-          <button class="aksi-btn delete" title="Hapus" data-id="${cat.id}" data-name="${cat.category_name}">
+          <button class="aksi-btn delete" title="Hapus" data-id="${cat.id}" data-name="${cat.name}">
             ${ICON_DELETE}
           </button>
         </div>
