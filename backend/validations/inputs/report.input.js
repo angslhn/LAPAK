@@ -17,7 +17,7 @@ function limit(value) {
 function period(value) {
   if (!value) return 'Periode tidak boleh kosong';
 
-  const allowed = ['week', 'month', 'custom'];
+  const allowed = ['week', 'month', 'year', 'custom'];
 
   if (!allowed.includes(value)) {
     return `Periode harus salah satu dari: ${allowed.join(', ')}`;
