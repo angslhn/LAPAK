@@ -10,13 +10,9 @@ const {
 
 const { VALIDATION_ERROR } = require('../helpers/error_codes');
 
-const PERIOD = ['week', 'month', 'custom'];
-
 const getRevenue = async (data) => {
   try {
     const { period, from, to } = data;
-
-    if (!PERIOD.includes(period)) throw new Error(VALIDATION_ERROR);
 
     let fromDate;
     let toDate;
@@ -24,9 +20,7 @@ const getRevenue = async (data) => {
     if (period === 'week') {
       fromDate = getLocalPastDate(6);
       toDate = getLocalDate();
-    }
-
-    if (period === 'month') {
+    } else if (period === 'month') {
       const now = new Date();
 
       fromDate = new Date(
@@ -36,11 +30,18 @@ const getRevenue = async (data) => {
       ).toLocaleDateString('sv-SE', { timeZone: 'Asia/Jakarta' });
 
       toDate = getLocalDate();
-    }
-
-    if (period === 'custom') {
+    } else if (period === 'year') {
+      const now = new Date();
+      fromDate = new Date(now.getFullYear(), 0, 1).toLocaleDateString('sv-SE', {
+        timeZone: 'Asia/Jakarta',
+      });
+      toDate = getLocalDate();
+    } else if (period === 'custom') {
       fromDate = from;
       toDate = to;
+    } else {
+      fromDate = getLocalPastDate(6);
+      toDate = getLocalDate();
     }
 
     const [revenue, hpp, expenses] = await Promise.all([
@@ -109,13 +110,49 @@ const getRevenue = async (data) => {
 
 const getTopProducts = async (data) => {
   try {
-    const { limit = 5, from, to } = data;
+    const { limit = 5, period, from, to } = data;
 
-    if (from && to) {
-      return await TransactionItemModel.findTopProductsByRange(from, to, limit);
+    let fromDate, toDate;
+
+    if (period === 'week') {
+      fromDate = getLocalPastDate(6);
+      toDate = getLocalDate();
+    } else if (period === 'month') {
+      const now = new Date();
+
+      fromDate = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        1
+      ).toLocaleDateString('sv-SE', {
+        timeZone: 'Asia/Jakarta',
+      });
+
+      toDate = getLocalDate();
+    } else if (period === 'year') {
+      const now = new Date();
+
+      fromDate = new Date(now.getFullYear(), 0, 1).toLocaleDateString('sv-SE', {
+        timeZone: 'Asia/Jakarta',
+      });
+
+      toDate = getLocalDate();
+    } else if (period === 'custom') {
+      fromDate = from;
+      toDate = to;
+    } else {
+      return await TransactionItemModel.findTopProductsAllTime(limit);
     }
 
-    return await TransactionItemModel.findTopProductsAllTime(limit);
+    if (!fromDate || !toDate) {
+      return await TransactionItemModel.findTopProductsAllTime(limit);
+    }
+
+    return await TransactionItemModel.findTopProductsByDateRange(
+      fromDate,
+      toDate,
+      limit
+    );
   } catch (err) {
     throw new Error(err.message);
   }
