@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="/scripts/beranda.js" defer></script>
-    <link rel="stylesheet" href="/styles/beranda.css" />
-    <title>LAPAK — Beranda</title>
+    <link rel="stylesheet" href="/styles/stok_barang.css" />
+    <script src="/scripts/stok_barang.js" defer></script>
+    <title>LAPAK — Stok Barang</title>
   </head>
   <body>
     <div class="shell">
@@ -21,7 +21,7 @@
           </div>
         </div>
         <nav class="nav">
-          <a class="nav-item active" href="/beranda"
+          <a class="nav-item" href="/beranda"
             ><span class="nav-icon"
               ><svg
                 width="18"
@@ -145,7 +145,7 @@
             </span>
             Produk</a
           >
-          <a class="nav-item" href="/stok-barang"
+          <a class="nav-item active" href="/stok-barang"
             ><span class="nav-icon"
               ><svg
                 width="20"
@@ -291,227 +291,119 @@
         <!-- Topbar -->
         <div class="topbar">
           <div class="topbar-left">
-            <h1>Selamat Datang, Djaya 👋</h1>
-            <p>Berikut ringkasan bisnis hari ini</p>
+            <h1>Stok Barang</h1>
+            <p>Pantau ketersediaan dan kondisi stok produk Anda.</p>
           </div>
-          <div class="topbar-date" id="date"></div>
+          <div class="topbar-actions">
+            <button class="btn-primary">＋ Tambah Produk</button>
+          </div>
         </div>
 
-        <!-- Page Body -->
+        <!-- Body -->
         <div class="page-body">
-          <!-- Stat Cards -->
+          <!-- ─── Stat Cards ─── -->
           <div class="stat-grid">
             <div class="stat-card">
-              <div class="stat-header">
-                <span class="stat-label">Omzet Hari Ini</span>
-                <div class="stat-icon icon-green">
-                  <svg
-                    width="13"
-                    height="10"
-                    viewBox="0 0 13 10"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M7.58333 5.25C7.09722 5.25 6.68403 5.07986 6.34375 4.73958C6.00347 4.39931 5.83333 3.98611 5.83333 3.5C5.83333 3.01389 6.00347 2.60069 6.34375 2.26042C6.68403 1.92014 7.09722 1.75 7.58333 1.75C8.06944 1.75 8.48264 1.92014 8.82292 2.26042C9.16319 2.60069 9.33333 3.01389 9.33333 3.5C9.33333 3.98611 9.16319 4.39931 8.82292 4.73958C8.48264 5.07986 8.06944 5.25 7.58333 5.25ZM3.5 7C3.17917 7 2.90451 6.88576 2.67604 6.65729C2.44757 6.42882 2.33333 6.15417 2.33333 5.83333V1.16667C2.33333 0.845833 2.44757 0.571181 2.67604 0.342708C2.90451 0.114236 3.17917 0 3.5 0H11.6667C11.9875 0 12.2622 0.114236 12.4906 0.342708C12.7191 0.571181 12.8333 0.845833 12.8333 1.16667V5.83333C12.8333 6.15417 12.7191 6.42882 12.4906 6.65729C12.2622 6.88576 11.9875 7 11.6667 7H3.5ZM4.66667 5.83333H10.5C10.5 5.5125 10.6142 5.23785 10.8427 5.00938C11.0712 4.7809 11.3458 4.66667 11.6667 4.66667V2.33333C11.3458 2.33333 11.0712 2.2191 10.8427 1.99063C10.6142 1.76215 10.5 1.4875 10.5 1.16667H4.66667C4.66667 1.4875 4.55243 1.76215 4.32396 1.99063C4.09549 2.2191 3.82083 2.33333 3.5 2.33333V4.66667C3.82083 4.66667 4.09549 4.7809 4.32396 5.00938C4.55243 5.23785 4.66667 5.5125 4.66667 5.83333ZM11.0833 9.33333H1.16667C0.845833 9.33333 0.571181 9.2191 0.342708 8.99063C0.114236 8.76215 0 8.4875 0 8.16667V1.75H1.16667V8.16667H11.0833V9.33333ZM3.5 5.83333V1.16667V5.83333Z"
-                      fill="#006049"
-                    />
-                  </svg>
-                </div>
+              <div>
+                <div class="stat-label">Total Produk</div>
+                <div class="stat-value" id="total-product">0</div>
               </div>
-              <div class="stat-value" style="font-size: 22px" id="revenue">
-                Rp 0
-              </div>
-              <div class="stat-footer" id="revenue-percentage"></div>
-            </div>
-
-            <div class="stat-card">
-              <div class="stat-header">
-                <span class="stat-label">Total Transaksi</span>
-                <div class="stat-icon icon-green">
-                  <svg
-                    width="11"
-                    height="12"
-                    viewBox="0 0 11 12"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M1.75 11.6667C1.26389 11.6667 0.850694 11.4965 0.510417 11.1562C0.170139 10.816 0 10.4028 0 9.91667V8.16667H1.75V0L2.625 0.875L3.5 0L4.375 0.875L5.25 0L6.125 0.875L7 0L7.875 0.875L8.75 0L9.625 0.875L10.5 0V9.91667C10.5 10.4028 10.3299 10.816 9.98958 11.1562C9.64931 11.4965 9.23611 11.6667 8.75 11.6667H1.75ZM8.75 10.5C8.91528 10.5 9.05382 10.4441 9.16562 10.3323C9.27743 10.2205 9.33333 10.0819 9.33333 9.91667V1.75H2.91667V8.16667H8.16667V9.91667C8.16667 10.0819 8.22257 10.2205 8.33438 10.3323C8.44618 10.4441 8.58472 10.5 8.75 10.5ZM3.5 4.08333V2.91667H7V4.08333H3.5ZM3.5 5.83333V4.66667H7V5.83333H3.5ZM8.16667 4.08333C8.00139 4.08333 7.86285 4.02743 7.75104 3.91563C7.63924 3.80382 7.58333 3.66528 7.58333 3.5C7.58333 3.33472 7.63924 3.19618 7.75104 3.08437C7.86285 2.97257 8.00139 2.91667 8.16667 2.91667C8.33194 2.91667 8.47049 2.97257 8.58229 3.08437C8.6941 3.19618 8.75 3.33472 8.75 3.5C8.75 3.66528 8.6941 3.80382 8.58229 3.91563C8.47049 4.02743 8.33194 4.08333 8.16667 4.08333ZM8.16667 5.83333C8.00139 5.83333 7.86285 5.77743 7.75104 5.66563C7.63924 5.55382 7.58333 5.41528 7.58333 5.25C7.58333 5.08472 7.63924 4.94618 7.75104 4.83437C7.86285 4.72257 8.00139 4.66667 8.16667 4.66667C8.33194 4.66667 8.47049 4.72257 8.58229 4.83437C8.6941 4.94618 8.75 5.08472 8.75 5.25C8.75 5.41528 8.6941 5.55382 8.58229 5.66563C8.47049 5.77743 8.33194 5.83333 8.16667 5.83333ZM1.75 10.5H7V9.33333H1.16667V9.91667C1.16667 10.0819 1.22257 10.2205 1.33438 10.3323C1.44618 10.4441 1.58472 10.5 1.75 10.5ZM1.16667 10.5C1.16667 10.5 1.16667 10.4441 1.16667 10.3323C1.16667 10.2205 1.16667 10.0819 1.16667 9.91667V9.33333V10.5Z"
-                      fill="#006049"
-                    />
-                  </svg>
-                </div>
-              </div>
-              <div class="stat-value small" id="transaction-total">0</div>
-              <div class="stat-footer" id="transaction-total-percentage"></div>
-            </div>
-
-            <div class="stat-card">
-              <div class="stat-header">
-                <span class="stat-label">Laba Bersih</span>
-                <div class="stat-icon icon-green">
-                  <svg
-                    width="12"
-                    height="11"
-                    viewBox="0 0 12 11"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M1.16667 9.33333V1.16667C1.16667 1.16667 1.16667 1.38299 1.16667 1.81562C1.16667 2.24826 1.16667 2.80972 1.16667 3.5V7C1.16667 7.69028 1.16667 8.25174 1.16667 8.68437C1.16667 9.11701 1.16667 9.33333 1.16667 9.33333ZM1.16667 10.5C0.845833 10.5 0.571181 10.3858 0.342708 10.1573C0.114236 9.92882 0 9.65417 0 9.33333V1.16667C0 0.845833 0.114236 0.571181 0.342708 0.342708C0.571181 0.114236 0.845833 0 1.16667 0H9.33333C9.65417 0 9.92882 0.114236 10.1573 0.342708C10.3858 0.571181 10.5 0.845833 10.5 1.16667V2.625H9.33333V1.16667H1.16667V9.33333H9.33333V7.875H10.5V9.33333C10.5 9.65417 10.3858 9.92882 10.1573 10.1573C9.92882 10.3858 9.65417 10.5 9.33333 10.5H1.16667ZM5.83333 8.16667C5.5125 8.16667 5.23785 8.05243 5.00938 7.82396C4.7809 7.59549 4.66667 7.32083 4.66667 7V3.5C4.66667 3.17917 4.7809 2.90451 5.00938 2.67604C5.23785 2.44757 5.5125 2.33333 5.83333 2.33333H9.91667C10.2375 2.33333 10.5122 2.44757 10.7406 2.67604C10.9691 2.90451 11.0833 3.17917 11.0833 3.5V7C11.0833 7.32083 10.9691 7.59549 10.7406 7.82396C10.5122 8.05243 10.2375 8.16667 9.91667 8.16667H5.83333ZM9.91667 7V3.5H5.83333V7H9.91667ZM7.58333 6.125C7.82639 6.125 8.03299 6.03993 8.20312 5.86979C8.37326 5.69965 8.45833 5.49306 8.45833 5.25C8.45833 5.00694 8.37326 4.80035 8.20312 4.63021C8.03299 4.46007 7.82639 4.375 7.58333 4.375C7.34028 4.375 7.13368 4.46007 6.96354 4.63021C6.7934 4.80035 6.70833 5.00694 6.70833 5.25C6.70833 5.49306 6.7934 5.69965 6.96354 5.86979C7.13368 6.03993 7.34028 6.125 7.58333 6.125Z"
-                      fill="#006049"
-                    />
-                  </svg>
-                </div>
-              </div>
-              <div class="stat-value" style="font-size: 22px" id="net-profit">
-                Rp 0
-              </div>
-              <div class="stat-footer" id="net-profit-percentage"></div>
-            </div>
-
-            <div class="stat-card">
-              <div class="stat-header">
-                <span class="stat-label">Produk Terjual</span>
-                <div class="stat-icon icon-green">
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M1.75 11.6667C1.42917 11.6667 1.15451 11.5524 0.926042 11.324C0.697569 11.0955 0.583333 10.8208 0.583333 10.5V3.92292C0.408333 3.81597 0.267361 3.67743 0.160417 3.50729C0.0534722 3.33715 0 3.14028 0 2.91667V1.16667C0 0.845833 0.114236 0.571181 0.342708 0.342708C0.571181 0.114236 0.845833 0 1.16667 0H10.5C10.8208 0 11.0955 0.114236 11.324 0.342708C11.5524 0.571181 11.6667 0.845833 11.6667 1.16667V2.91667C11.6667 3.14028 11.6132 3.33715 11.5063 3.50729C11.3993 3.67743 11.2583 3.81597 11.0833 3.92292V10.5C11.0833 10.8208 10.9691 11.0955 10.7406 11.324C10.5122 11.5524 10.2375 11.6667 9.91667 11.6667H1.75ZM1.75 4.08333V10.5H9.91667V4.08333H1.75ZM1.16667 2.91667H10.5V1.16667H1.16667V2.91667ZM4.08333 7H7.58333V5.83333H4.08333V7Z"
-                      fill="#006049"
-                    />
-                  </svg>
-                </div>
-              </div>
-              <div class="stat-value small" id="products-sold">0</div>
-              <div class="stat-footer" id="products-sold-percentage"></div>
-            </div>
-          </div>
-
-          <!-- Chart + Stok Kritis -->
-          <div class="two-col">
-            <!-- Chart -->
-            <div class="card">
-              <div class="card-header">
-                <span class="card-title">Omzet 7 Hari Terakhir</span>
-                <a class="card-link">Lihat Detail →</a>
-              </div>
-              <div class="chart-wrap">
+              <div class="stat-icon teal">
                 <svg
-                  id="chart"
-                  viewBox="0 0 600 160"
-                  xmlns="http://www.w3.org/2000/svg"
-                  preserveAspectRatio="none"
-                ></svg>
-                <div class="chart-labels" id="labels"></div>
-                <div class="tooltip" id="tooltip"></div>
-              </div>
-            </div>
-
-            <!-- Stok Kritis -->
-            <div class="card">
-              <div class="stok-header">
-                <span style="font-size: 16px"
-                  ><svg
-                    width="22"
-                    height="19"
-                    viewBox="0 0 22 19"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 19L11 0L22 19H0ZM3.45 17H18.55L11 4L3.45 17ZM11 16C11.2833 16 11.5208 15.9042 11.7125 15.7125C11.9042 15.5208 12 15.2833 12 15C12 14.7167 11.9042 14.4792 11.7125 14.2875C11.5208 14.0958 11.2833 14 11 14C10.7167 14 10.4792 14.0958 10.2875 14.2875C10.0958 14.4792 10 14.7167 10 15C10 15.2833 10.0958 15.5208 10.2875 15.7125C10.4792 15.9042 10.7167 16 11 16ZM10 13H12V8H10V13Z"
-                      fill="#BA1A1A"
-                    />
-                  </svg>
-                </span>
-                <span class="stok-title">Stok Kritis</span>
-              </div>
-              <p class="stok-sub">Produk dengan stok di bawah 5 item.</p>
-              <div class="stok-list" id="stok-list"></div>
-              <button class="btn-restok">Restok Semua</button>
-            </div>
-          </div>
-
-          <!-- Terlaris + Ringkasan -->
-          <div class="two-col-bottom">
-            <!-- Produk Terlaris -->
-            <div class="card">
-              <div class="card-header">
-                <span class="card-title">Produk Terlaris Hari Ini</span>
-                <button class="more-btn">···</button>
-              </div>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Nama Produk</th>
-                    <th>Kategori</th>
-                    <th>Terjual</th>
-                    <th>Total Pendapatan</th>
-                  </tr>
-                </thead>
-                <tbody id="top-selling-product-list"></tbody>
-              </table>
-            </div>
-
-            <!-- Ringkasan Harian -->
-            <div class="ringkasan-card">
-              <div class="ringkasan-title">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 18 18"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M4 14H6V9H4V14ZM12 14H14V4H12V14ZM8 14H10V11H8V14ZM8 9H10V7H8V9ZM2 18C1.45 18 0.979167 17.8042 0.5875 17.4125C0.195833 17.0208 0 16.55 0 16V2C0 1.45 0.195833 0.979167 0.5875 0.5875C0.979167 0.195833 1.45 0 2 0H16C16.55 0 17.0208 0.195833 17.4125 0.5875C17.8042 0.979167 18 1.45 18 2V16C18 16.55 17.8042 17.0208 17.4125 17.4125C17.0208 17.8042 16.55 18 16 18H2ZM2 16H16V2H2V16ZM2 2V16V2Z"
-                    fill="white"
-                  />
-                </svg>
-                Ringkasan Harian
-              </div>
-              <div class="ringkasan-row">
-                <span class="label">Total Transaksi</span>
-                <span class="val" id="transaction-count-daily">0</span>
-              </div>
-              <div class="ringkasan-row">
-                <span class="label">Omzet Kotor</span>
-                <span class="val" id="gross-revenue-daily">Rp 0</span>
-              </div>
-              <div class="ringkasan-row">
-                <span class="label">Total Pengeluaran</span>
-                <span class="val" id="total-expenses-daily">Rp 0</span>
-              </div>
-              <div class="ringkasan-row laba">
-                <span class="label">Laba Bersih</span>
-                <span class="val" id="net-profit-daily">Rp 0</span>
-              </div>
-              <button class="btn-cetak">
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 11"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8.16667 2.91667V1.16667H3.5V2.91667H2.33333V0H9.33333V2.91667H8.16667ZM1.16667 4.08333C1.16667 4.08333 1.22257 4.08333 1.33438 4.08333C1.44618 4.08333 1.58472 4.08333 1.75 4.08333H9.91667C10.0819 4.08333 10.2205 4.08333 10.3323 4.08333C10.4441 4.08333 10.5 4.08333 10.5 4.08333H9.33333H2.33333H1.16667ZM9.33333 5.54167C9.49861 5.54167 9.63715 5.48576 9.74896 5.37396C9.86076 5.26215 9.91667 5.12361 9.91667 4.95833C9.91667 4.79306 9.86076 4.65451 9.74896 4.54271C9.63715 4.4309 9.49861 4.375 9.33333 4.375C9.16806 4.375 9.02951 4.4309 8.91771 4.54271C8.8059 4.65451 8.75 4.79306 8.75 4.95833C8.75 5.12361 8.8059 5.26215 8.91771 5.37396C9.02951 5.48576 9.16806 5.54167 9.33333 5.54167ZM8.16667 9.33333V7H3.5V9.33333H8.16667ZM9.33333 10.5H2.33333V8.16667H0V4.66667C0 4.17083 0.170139 3.75521 0.510417 3.41979C0.850694 3.08437 1.26389 2.91667 1.75 2.91667H9.91667C10.4125 2.91667 10.8281 3.08437 11.1635 3.41979C11.499 3.75521 11.6667 4.17083 11.6667 4.66667V8.16667H9.33333V10.5ZM10.5 7V4.66667C10.5 4.50139 10.4441 4.36285 10.3323 4.25104C10.2205 4.13924 10.0819 4.08333 9.91667 4.08333H1.75C1.58472 4.08333 1.44618 4.13924 1.33438 4.25104C1.22257 4.36285 1.16667 4.50139 1.16667 4.66667V7H2.33333V5.83333H9.33333V7H10.5Z"
+                    d="M3 20C2.45 20 1.97917 19.8042 1.5875 19.4125C1.19583 19.0208 1 18.55 1 18V6.725C0.7 6.54167 0.458333 6.30417 0.275 6.0125C0.0916667 5.72083 0 5.38333 0 5V2C0 1.45 0.195833 0.979167 0.5875 0.5875C0.979167 0.195833 1.45 0 2 0H18C18.55 0 19.0208 0.195833 19.4125 0.5875C19.8042 0.979167 20 1.45 20 2V5C20 5.38333 19.9083 5.72083 19.725 6.0125C19.5417 6.30417 19.3 6.54167 19 6.725V18C19 18.55 18.8042 19.0208 18.4125 19.4125C18.0208 19.8042 17.55 20 17 20H3ZM3 7V18H17V7H3ZM2 5H18V2H2V5ZM7 12H13V10H7V12Z"
                     fill="#006049"
                   />
                 </svg>
-                Cetak Laporan
-              </button>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div>
+                <div class="stat-label">Stok Menipis</div>
+                <div class="stat-value warn" id="low-stock">0</div>
+              </div>
+              <div class="stat-icon orange">
+                <svg
+                  width="22"
+                  height="19"
+                  viewBox="0 0 22 19"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 19L11 0L22 19H0ZM3.45 17H18.55L11 4L3.45 17ZM11 16C11.2833 16 11.5208 15.9042 11.7125 15.7125C11.9042 15.5208 12 15.2833 12 15C12 14.7167 11.9042 14.4792 11.7125 14.2875C11.5208 14.0958 11.2833 14 11 14C10.7167 14 10.4792 14.0958 10.2875 14.2875C10.0958 14.4792 10 14.7167 10 15C10 15.2833 10.0958 15.5208 10.2875 15.7125C10.4792 15.9042 10.7167 16 11 16ZM10 13H12V8H10V13Z"
+                    fill="#755B00"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div>
+                <div class="stat-label">Stok Kritis</div>
+                <div class="stat-value danger" id="critical-stock">0</div>
+              </div>
+              <div class="stat-icon red">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10 15C10.2833 15 10.5208 14.9042 10.7125 14.7125C10.9042 14.5208 11 14.2833 11 14C11 13.7167 10.9042 13.4792 10.7125 13.2875C10.5208 13.0958 10.2833 13 10 13C9.71667 13 9.47917 13.0958 9.2875 13.2875C9.09583 13.4792 9 13.7167 9 14C9 14.2833 9.09583 14.5208 9.2875 14.7125C9.47917 14.9042 9.71667 15 10 15ZM9 11H11V5H9V11ZM10 20C8.61667 20 7.31667 19.7375 6.1 19.2125C4.88333 18.6875 3.825 17.975 2.925 17.075C2.025 16.175 1.3125 15.1167 0.7875 13.9C0.2625 12.6833 0 11.3833 0 10C0 8.61667 0.2625 7.31667 0.7875 6.1C1.3125 4.88333 2.025 3.825 2.925 2.925C3.825 2.025 4.88333 1.3125 6.1 0.7875C7.31667 0.2625 8.61667 0 10 0C11.3833 0 12.6833 0.2625 13.9 0.7875C15.1167 1.3125 16.175 2.025 17.075 2.925C17.975 3.825 18.6875 4.88333 19.2125 6.1C19.7375 7.31667 20 8.61667 20 10C20 11.3833 19.7375 12.6833 19.2125 13.9C18.6875 15.1167 17.975 16.175 17.075 17.075C16.175 17.975 15.1167 18.6875 13.9 19.2125C12.6833 19.7375 11.3833 20 10 20ZM10 18C12.2333 18 14.125 17.225 15.675 15.675C17.225 14.125 18 12.2333 18 10C18 7.76667 17.225 5.875 15.675 4.325C14.125 2.775 12.2333 2 10 2C7.76667 2 5.875 2.775 4.325 4.325C2.775 5.875 2 7.76667 2 10C2 12.2333 2.775 14.125 4.325 15.675C5.875 17.225 7.76667 18 10 18Z"
+                    fill="#BA1A1A"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
+          <!-- /stat cards -->
+
+          <!-- ─── Table Card ─── -->
+          <div class="table-card">
+            <!-- Tab Bar -->
+            <div class="tab-bar">
+              <div class="tab-item active" data-tab="current">
+                Stok Saat Ini
+              </div>
+              <div class="tab-item" data-tab="history">Riwayat Stok</div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-inner">
+              <div class="table-title" id="table-title">Daftar Stok Produk</div>
+              <table>
+                <thead>
+                  <tr id="table-head-stock">
+                    <th>Nama Produk</th>
+                    <th>Kategori</th>
+                    <th class="center">Stok Saat Ini</th>
+                    <th class="center">Batas Minimum</th>
+                    <th class="center">Status</th>
+                  </tr>
+                  <tr id="table-head-history" style="display: none">
+                    <th>Nama Produk</th>
+                    <th class="center">Tipe</th>
+                    <th class="center">Jumlah</th>
+                    <th class="center">Stok Akhir</th>
+                    <th class="center">Keterangan</th>
+                  </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+              </table>
+            </div>
+            <!-- /table inner -->
+          </div>
+          <!-- /table card -->
         </div>
-        <!-- /page-body -->
+        <!-- /page body -->
       </div>
       <!-- /main -->
     </div>
