@@ -1,5 +1,7 @@
 const { getPool } = require('../lib/mysql');
 
+const sanitize = require('../helpers/sanitize');
+
 const ALLOWED_FIELDS = [
   'supplier_id',
   'receipt_number',
@@ -116,7 +118,9 @@ const getNextReceiptSequence = async (conn) => {
 const create = async (data, conn = null) => {
   const db = conn || pool;
 
-  const fields = Object.keys(data).filter((field) =>
+  const cleanData = sanitize(data);
+
+  const fields = Object.keys(cleanData).filter((field) =>
     ALLOWED_FIELDS.includes(field)
   );
 

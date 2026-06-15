@@ -1,5 +1,7 @@
 const { getPool } = require('../lib/mysql');
 
+const sanitize = require('../helpers/sanitize');
+
 const ALLOWED_FIELDS = [
   'name',
   'email',
@@ -48,7 +50,9 @@ const findAll = async () => {
 };
 
 const create = async (data) => {
-  const fields = Object.keys(data).filter((field) =>
+  const cleanData = sanitize(data);
+
+  const fields = Object.keys(cleanData).filter((field) =>
     ALLOWED_FIELDS.includes(field)
   );
 

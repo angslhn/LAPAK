@@ -1,5 +1,7 @@
 const { getPool } = require('../lib/mysql');
 
+const sanitize = require('../helpers/sanitize');
+
 const ALLOWED_FIELDS = [
   'transaction_id',
   'product_id',
@@ -169,7 +171,9 @@ const findRevenueByCategory = async () => {
 const create = async (data, conn = null) => {
   const db = conn || pool;
 
-  const fields = Object.keys(data).filter((field) =>
+  const cleanData = sanitize(data);
+
+  const fields = Object.keys(cleanData).filter((field) =>
     ALLOWED_FIELDS.includes(field)
   );
 
