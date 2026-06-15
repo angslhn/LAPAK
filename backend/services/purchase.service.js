@@ -123,7 +123,7 @@ const create = async (data) => {
 
     await connection.commit();
 
-    return purchaseId;
+    return { id: purchaseId };
   } catch (err) {
     await connection.rollback();
     throw new Error(err.message);
