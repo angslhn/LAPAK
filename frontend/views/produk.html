@@ -383,6 +383,221 @@
 
           <!-- Grid -->
           <div class="prod-grid"></div>
+
+          <!-- ══ PRODUCT MODAL ══ -->
+          <div class="modal-overlay" id="productModal" style="display: none">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 id="modalTitle">Tambah Produk Baru</h2>
+                <button class="modal-close-btn" id="closeModalBtn">
+                  &times;
+                </button>
+              </div>
+              <div class="modal-body">
+                <!-- Foto Produk -->
+                <div class="form-group">
+                  <label>Foto Produk</label>
+                  <div class="upload-area" id="uploadArea">
+                    <svg
+                      width="36"
+                      height="36"
+                      viewBox="0 0 36 36"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M4 36C2.9 36 1.95833 35.6083 1.175 34.825C0.391667 34.0417 0 33.1 0 32V4C0 2.9 0.391667 1.95833 1.175 1.175C1.95833 0.391667 2.9 0 4 0H20C20 0.566667 20 1.18333 20 1.85C20 2.51667 20 3.23333 20 4H4V32H32V16C32.7667 16 33.4833 16 34.15 16C34.8167 16 35.4333 16 36 16V32C36 33.1 35.6083 34.0417 34.825 34.825C34.0417 35.6083 33.1 36 32 36H4ZM6 28H30L22.5 18L16.5 26L12 20L6 28ZM28 12V8H24V4H28V0H32V4H36V8H32V12H28Z"
+                        fill="#3E4944"
+                      />
+                    </svg>
+
+                    <p><strong>Unggah Foto</strong></p>
+                    <p class="upload-hint">
+                      Format: JPG, PNG, WEBP (Maks. 4MB)
+                    </p>
+                    <p class="upload-tip">
+                      Tips: Gunakan foto dengan latar belakang netral agar
+                      produk terlihat profesional di mata pelanggan.
+                    </p>
+                    <input
+                      type="file"
+                      id="imageInput"
+                      accept="image/jpeg,image/png,image/webp"
+                      style="display: none"
+                    />
+                  </div>
+                  <!-- Preview -->
+                  <div
+                    class="preview-container"
+                    id="previewContainer"
+                    style="display: none"
+                  >
+                    <img id="imagePreview" src="" alt="Preview" />
+                    <button
+                      class="btn-remove-img"
+                      id="removeImgBtn"
+                      type="button"
+                    >
+                      ✕ Hapus
+                    </button>
+                  </div>
+                  <small
+                    class="upload-error"
+                    id="uploadError"
+                    style="color: #e05252; display: none; font-size: 11px"
+                  ></small>
+                </div>
+
+                <!-- Nama Produk -->
+                <div class="form-group">
+                  <label for="productName">Nama Produk*</label>
+                  <input
+                    type="text"
+                    id="productName"
+                    class="form-input"
+                    placeholder="Contoh: Kopi Robusta Premium 250g"
+                    autocomplete="off"
+                    maxlength="150"
+                  />
+                </div>
+
+                <!-- Kategori -->
+                <div class="form-group">
+                  <label for="categorySelect">Kategori*</label>
+                  <div class="custom-select-wrapper" id="categorySelectWrapper">
+                    <select id="categorySelect" class="form-select">
+                      <option value="">Pilih Kategori</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- SKU & Barcode -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="productSku">SKU/Kode Barang</label>
+                    <div class="sku-input-wrap">
+                      <input
+                        type="text"
+                        id="productSku"
+                        class="form-input"
+                        placeholder="SKU-001"
+                        autocomplete="off"
+                        maxlength="50"
+                      />
+                      <button
+                        class="btn-generate-sku"
+                        id="generateSkuBtn"
+                        type="button"
+                      >
+                        Auto
+                      </button>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="productBarcode">Barcode</label>
+                    <input
+                      type="text"
+                      id="productBarcode"
+                      class="form-input"
+                      placeholder="899..."
+                      autocomplete="off"
+                      maxlength="50"
+                    />
+                  </div>
+                </div>
+
+                <!-- Harga Beli & Harga Jual -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="purchasePrice">Harga Beli*</label>
+                    <input
+                      type="text"
+                      id="purchasePrice"
+                      class="form-input"
+                      placeholder="Rp0"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="sellingPrice">Harga Jual*</label>
+                    <input
+                      type="text"
+                      id="sellingPrice"
+                      class="form-input"
+                      placeholder="Rp0"
+                      autocomplete="off"
+                    />
+                  </div>
+                </div>
+
+                <!-- Stok Awal & Minimal Stok -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="initialStock">Stok Awal*</label>
+                    <input
+                      type="number"
+                      id="initialStock"
+                      class="form-input"
+                      min="0"
+                      value="0"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="minStock">Minimal Stok*</label>
+                    <input
+                      type="number"
+                      id="minStock"
+                      class="form-input"
+                      min="0"
+                      value="0"
+                    />
+                  </div>
+                </div>
+
+                <!-- Satuan & Berat -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="unitSelect">Satuan*</label>
+                    <div class="custom-select-wrapper" id="unitSelectWrapper">
+                      <select id="unitSelect" class="form-select">
+                        <option value="pcs">Pcs</option>
+                        <option value="pack">Pack</option>
+                        <option value="bottle">Bottle</option>
+                        <option value="kg">Kg</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="productWeight">Berat (kg/liter)</label>
+                    <input
+                      type="number"
+                      id="productWeight"
+                      class="form-input"
+                      placeholder="0.1"
+                      min="0"
+                      step="0.001"
+                      autocomplete="off"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn-secondary" id="cancelModalBtn" type="button">
+                  Batal
+                </button>
+                <button
+                  class="btn-primary-modal"
+                  id="submitProductBtn"
+                  type="button"
+                >
+                  Simpan
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Toast Container -->
+          <div id="toastContainer" class="toast-container"></div>
         </div>
       </div>
     </div>

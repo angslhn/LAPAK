@@ -1,6 +1,7 @@
 // ── State ──
-let currentTab = 'current'; // 'current' | 'history'
+let currentTab = 'current';
 let stockData = null;
+let isSubmitting = false;
 
 // ── DOM refs ──
 const tableBody = document.getElementById('table-body');
@@ -12,15 +13,31 @@ const lowStockEl = document.getElementById('low-stock');
 const criticalStockEl = document.getElementById('critical-stock');
 const tabItems = document.querySelectorAll('.tab-item');
 
+// Modal refs
+const stockModal = document.getElementById('stockModal');
+const stockProductInput = document.getElementById('stockProductInput');
+const stockProductDatalist = document.getElementById('stock-product-datalist');
+const stockQuantityInput = document.getElementById('stockQuantity');
+const stockNoteInput = document.getElementById('stockNote');
+const submitStockBtn = document.getElementById('submitStockBtn');
+
+// ── Loading state ──
+function showLoading(message = 'Memuat data...') {
+  tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:24px;color:#aaa">${message}</td></tr>`;
+}
+
 // ── Fetch Stock Saat Ini ──
 async function fetchStock() {
+  showLoading('Memuat data stok...');
   try {
     const res = await fetch('/api/v1/stock', { credentials: 'include' });
     const json = await res.json();
     if (!json.success) throw new Error(json.message);
     stockData = json.data;
     renderSummary(stockData.summary_metrics);
-    renderStockTable(stockData.stock_items);
+    if (currentTab === 'current') {
+      renderStockTable(stockData.stock_items);
+    }
   } catch (err) {
     tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:24px;color:#e05252">Gagal memuat stok: ${err.message}</td></tr>`;
   }
@@ -28,6 +45,7 @@ async function fetchStock() {
 
 // ── Fetch Riwayat Mutasi ──
 async function fetchMutations() {
+  showLoading('Memuat riwayat mutasi...');
   try {
     const res = await fetch('/api/v1/stock/mutations', {
       credentials: 'include',
@@ -57,7 +75,7 @@ function renderStockTable(items) {
 
   tableBody.innerHTML = items
     .map((item) => {
-      const status = item.status; // 'ok' | 'low' | 'critical' | 'out'
+      const status = item.status;
       const stockClass = status === 'ok' ? 'stok-normal' : 'stok-danger';
       const badge = getStatusBadge(status);
 
@@ -118,12 +136,10 @@ function switchTab(tab) {
   if (currentTab === tab) return;
   currentTab = tab;
 
-  // Update active tab
   tabItems.forEach((item) => {
     item.classList.toggle('active', item.dataset.tab === tab);
   });
 
-  // Update table header
   if (tab === 'current') {
     headStock.style.display = '';
     headHistory.style.display = 'none';
@@ -141,9 +157,109 @@ function switchTab(tab) {
   }
 }
 
+// ── MODAL LOGIC ──
+function openStockModal() {
+  stockProductInput.value = '';
+  stockQuantityInput.value = 1;
+  stockNoteInput.value = '';
+  document.querySelector('input[name="stockType"][value="in"]').checked = true;
+
+  if (stockData && stockData.stock_items) {
+    stockProductDatalist.innerHTML = stockData.stock_items
+      .map(
+        (item) =>
+          `<option value="${item.name} (Stok Tersedia: ${item.stock})"></option>`
+      )
+      .join('');
+  }
+
+  stockModal.style.display = 'flex';
+  setTimeout(() => stockProductInput.focus(), 100);
+}
+
+function closeStockModal() {
+  stockModal.style.display = 'none';
+}
+
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+async function submitStockAdjustment() {
+  if (isSubmitting) return;
+
+  const productNameRaw = stockProductInput.value.trim();
+  const type = document.querySelector('input[name="stockType"]:checked').value;
+  const quantity = parseInt(stockQuantityInput.value) || 0;
+  const note = stockNoteInput.value.trim();
+
+  if (!productNameRaw)
+    return showToast('Pilih produk terlebih dahulu', 'error');
+  if (quantity < 1) return showToast('Jumlah harus minimal 1', 'error');
+
+  // Regex match format "Nama Produk (Stok tersedia: 10)"
+  const productName = productNameRaw
+    .replace(/\s*\(Stok Tersedia:.*\)$/, '')
+    .trim();
+
+  const product = stockData.stock_items.find(
+    (p) => p.name.toLowerCase() === productName.toLowerCase()
+  );
+  if (!product)
+    return showToast('Produk tidak valid. Silakan pilih dari daftar.', 'error');
+
+  isSubmitting = true;
+  submitStockBtn.disabled = true;
+  submitStockBtn.textContent = 'Menyimpan...';
+
+  try {
+    const res = await fetch(`/api/v1/stock/${product.id}`, {
+      method: 'PATCH',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type, quantity, note: note || undefined }),
+    });
+
+    const json = await res.json();
+    if (!json.success) throw new Error(json.message || 'Gagal mengubah stok');
+
+    showToast(`Stok ${product.name} berhasil diperbarui`);
+    closeStockModal();
+    await fetchStock();
+    if (currentTab === 'history') await fetchMutations();
+  } catch (err) {
+    showToast(err.message, 'error');
+  } finally {
+    isSubmitting = false;
+    submitStockBtn.disabled = false;
+    submitStockBtn.textContent = 'Simpan';
+  }
+}
+
 // ── Event: Tab click ──
 tabItems.forEach((item) => {
   item.addEventListener('click', () => switchTab(item.dataset.tab));
+});
+
+// ── Event: Modal ──
+document
+  .getElementById('btnTambahStok')
+  .addEventListener('click', openStockModal);
+document
+  .getElementById('closeStockModalBtn')
+  .addEventListener('click', closeStockModal);
+document
+  .getElementById('cancelStockModalBtn')
+  .addEventListener('click', closeStockModal);
+submitStockBtn.addEventListener('click', submitStockAdjustment);
+
+stockModal.addEventListener('click', (e) => {
+  if (e.target === stockModal) closeStockModal();
 });
 
 // ── Init ──

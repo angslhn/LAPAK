@@ -295,7 +295,9 @@
             <p>Pantau ketersediaan dan kondisi stok produk Anda.</p>
           </div>
           <div class="topbar-actions">
-            <button class="btn-primary">＋ Tambah Produk</button>
+            <button class="btn-primary" id="btnTambahStok">
+              ＋ Tambah Stok Produk
+            </button>
           </div>
         </div>
 
@@ -379,25 +381,27 @@
             <!-- Table -->
             <div class="table-inner">
               <div class="table-title" id="table-title">Daftar Stok Produk</div>
-              <table>
-                <thead>
-                  <tr id="table-head-stock">
-                    <th>Nama Produk</th>
-                    <th>Kategori</th>
-                    <th class="center">Stok Saat Ini</th>
-                    <th class="center">Batas Minimum</th>
-                    <th class="center">Status</th>
-                  </tr>
-                  <tr id="table-head-history" style="display: none">
-                    <th>Nama Produk</th>
-                    <th class="center">Tipe</th>
-                    <th class="center">Jumlah</th>
-                    <th class="center">Stok Akhir</th>
-                    <th class="center">Keterangan</th>
-                  </tr>
-                </thead>
-                <tbody id="table-body"></tbody>
-              </table>
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr id="table-head-stock">
+                      <th>Nama Produk</th>
+                      <th>Kategori</th>
+                      <th class="center">Stok Saat Ini</th>
+                      <th class="center">Batas Minimum</th>
+                      <th class="center">Status</th>
+                    </tr>
+                    <tr id="table-head-history" style="display: none">
+                      <th>Nama Produk</th>
+                      <th class="center">Tipe</th>
+                      <th class="center">Jumlah</th>
+                      <th class="center">Stok Akhir</th>
+                      <th class="center">Keterangan</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-body"></tbody>
+                </table>
+              </div>
             </div>
             <!-- /table inner -->
           </div>
@@ -408,5 +412,106 @@
       <!-- /main -->
     </div>
     <!-- /shell -->
+
+    <!-- ══ STOCK MODAL ══ -->
+    <div class="modal-overlay" id="stockModal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Tambah Stok Produk</h2>
+          <button class="modal-close-btn" id="closeStockModalBtn">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Pilih Produk -->
+          <div class="form-group">
+            <label for="stockProductInput">Pilih Produk*</label>
+            <input
+              type="text"
+              id="stockProductInput"
+              class="form-input"
+              list="stock-product-datalist"
+              placeholder="Ketik nama produk..."
+              autocomplete="off"
+              required
+            />
+            <datalist id="stock-product-datalist"></datalist>
+          </div>
+
+          <!-- Tipe Mutasi -->
+          <div class="form-group">
+            <label>Tipe Mutasi*</label>
+            <div class="radio-group">
+              <label class="radio-pill">
+                <input type="radio" name="stockType" value="in" checked />
+                <span class="radio-pill-label"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 640 640"
+                    width="17"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M303.5 569L320.5 586L337.5 569L505.5 401L522.5 384L488.6 350.1L471.6 367.1L344.6 494.1L344.6 64L296.6 64L296.6 494.1L169.6 367.1L152.6 350.1L118.7 384L135.7 401L303.7 569z"
+                    />
+                  </svg>
+                  Stok Masuk</span
+                >
+              </label>
+              <label class="radio-pill">
+                <input type="radio" name="stockType" value="out" />
+                <span class="radio-pill-label"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 640 640"
+                    width="17"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M337.4 71L320.4 54L303.4 71L118.4 256L152.3 289.9L169.3 272.9L296.3 145.9L296.3 576L344.3 576L344.3 145.9L471.3 272.9L488.3 289.9L522.2 256L505.2 239L337.2 71z"
+                    />
+                  </svg>
+                  Stok Keluar
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Jumlah -->
+          <div class="form-group">
+            <label for="stockQuantity">Jumlah*</label>
+            <input
+              type="number"
+              id="stockQuantity"
+              class="form-input"
+              min="1"
+              value="1"
+              required
+            />
+          </div>
+
+          <!-- Catatan -->
+          <div class="form-group">
+            <label for="stockNote">Catatan</label>
+            <textarea
+              id="stockNote"
+              class="form-textarea"
+              placeholder="Tambahkan keterangan opsional..."
+              maxlength="500"
+            ></textarea>
+            <small style="font-size: 11px; color: #aaa; text-align: right"
+              >Maks. 500 karakter</small
+            >
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" id="cancelStockModalBtn">Batal</button>
+          <button class="btn-primary-modal" id="submitStockBtn">Simpan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
   </body>
 </html>
