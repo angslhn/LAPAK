@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS customers (
 CREATE TABLE IF NOT EXISTS products (
   id INT AUTO_INCREMENT PRIMARY KEY,
   category_id INT NOT NULL,
-  sku VARCHAR(50) DEFAULT NULL UNIQUE,
+  sku VARCHAR(50) DEFAULT NULL UNIQUE, -- Contoh: Power F Action -> POW-NFLNT
   barcode VARCHAR(50) DEFAULT NULL UNIQUE,
   weight DECIMAL(10,3) DEFAULT NULL,
   name VARCHAR(150) NOT NULL,
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS products (
 CREATE TABLE IF NOT EXISTS purchases (
   id INT AUTO_INCREMENT PRIMARY KEY,
   supplier_id INT NOT NULL,
-  receipt_number VARCHAR(50) NOT NULL UNIQUE,
+  receipt_number VARCHAR(50) NOT NULL UNIQUE, -- Contoh: PO/20260612/0001 (*Antrian per hari ini dan reset setiap hari)
   date DATE NOT NULL,
   due_date DATE DEFAULT NULL,
   total DECIMAL(15, 2) NOT NULL,
@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS transactions (
   id INT AUTO_INCREMENT PRIMARY KEY,
   customer_id INT DEFAULT NULL,
   user_id INT NOT NULL,
-  invoice_number VARCHAR(50) NOT NULL UNIQUE,
+  invoice_number VARCHAR(50) NOT NULL UNIQUE, -- Contoh: LPK/20260612/0001 (*Antrian per hari ini dan reset setiap hari)
   date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   discount DECIMAL(15,2) DEFAULT 0,
   tax DECIMAL(15,2) DEFAULT 0,
