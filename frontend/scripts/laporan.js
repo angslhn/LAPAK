@@ -4,6 +4,8 @@ let donutChart = null;
 
 const fmtRp = (n) => 'Rp ' + Number(n).toLocaleString('id-ID');
 const fmtShort = (n) => {
+  if (Math.abs(n) >= 1_000_000_000)
+    return `${+(n / 1_000_000_000).toFixed(1)}M`;
   if (Math.abs(n) >= 1_000_000) return `${+(n / 1_000_000).toFixed(1)} Jt`;
   if (Math.abs(n) >= 1_000) return `${+(n / 1_000).toFixed(1)} Rb`;
   return String(n);
@@ -51,41 +53,57 @@ async function fetchTopProducts() {
 
 // ── Fetch Categories Revenue ──
 async function fetchCategoriesRevenue() {
-  const res = await fetch('/api/v1/reports/categories/revenue', {
-    credentials: 'include',
-  });
-  const json = await res.json();
-  return json.success ? json.data : [];
+  try {
+    const res = await fetch('/api/v1/reports/categories/revenue', {
+      credentials: 'include',
+    });
+    const json = await res.json();
+    return json.success ? json.data : [];
+  } catch {
+    return [];
+  }
 }
 
 // ── Fetch Categories Quantity ──
 async function fetchCategoriesQuantity() {
-  const res = await fetch('/api/v1/reports/categories/quantity', {
-    credentials: 'include',
-  });
-  const json = await res.json();
-  return json.success ? json.data : [];
+  try {
+    const res = await fetch('/api/v1/reports/categories/quantity', {
+      credentials: 'include',
+    });
+    const json = await res.json();
+    return json.success ? json.data : [];
+  } catch {
+    return [];
+  }
 }
 
 // ── Render Omzet Chart ──
 function renderOmzetChart(data) {
-  const ctx = document.getElementById('omzetChart');
-  if (!ctx) return;
-  if (omzetChart) omzetChart.destroy();
+  const canvas = document.getElementById('omzetChart');
+  if (!canvas) return;
+
+  // Destroy existing chart properly
+  if (omzetChart) {
+    omzetChart.destroy();
+    omzetChart = null;
+  }
+
+  const ctx = canvas.getContext('2d');
 
   const labels = (data.labels || []).map((l) => l.dayname || l.date || '');
   const revenue = (data.revenue || []).map((r) => r.total || 0);
   const netProfit = (data.net_profit || []).map((p) => p.value || 0);
 
-  const gradOmzet = ctx.getContext('2d').createLinearGradient(0, 0, 0, 240);
-  gradOmzet.addColorStop(0, 'rgba(26, 71, 49, 0.18)');
-  gradOmzet.addColorStop(1, 'rgba(26, 71, 49, 0.01)');
+  // Gradients harus dibuat SETELAH canvas ada di DOM dan berukuran wajar
+  const gradOmzet = ctx.createLinearGradient(0, 0, 0, 260);
+  gradOmzet.addColorStop(0, 'rgba(26, 71, 49, 0.22)');
+  gradOmzet.addColorStop(1, 'rgba(26, 71, 49, 0.00)');
 
-  const gradLaba = ctx.getContext('2d').createLinearGradient(0, 0, 0, 240);
+  const gradLaba = ctx.createLinearGradient(0, 0, 0, 260);
   gradLaba.addColorStop(0, 'rgba(245, 166, 35, 0.18)');
-  gradLaba.addColorStop(1, 'rgba(245, 166, 35, 0.01)');
+  gradLaba.addColorStop(1, 'rgba(245, 166, 35, 0.00)');
 
-  omzetChart = new Chart(ctx, {
+  omzetChart = new Chart(canvas, {
     type: 'line',
     data: {
       labels,
@@ -97,6 +115,9 @@ function renderOmzetChart(data) {
           borderWidth: 2.5,
           pointRadius: 0,
           pointHoverRadius: 5,
+          pointHoverBackgroundColor: '#1a4731',
+          pointHoverBorderColor: '#fff',
+          pointHoverBorderWidth: 2,
           fill: true,
           backgroundColor: gradOmzet,
           tension: 0.45,
@@ -109,6 +130,9 @@ function renderOmzetChart(data) {
           borderDash: [6, 4],
           pointRadius: 0,
           pointHoverRadius: 5,
+          pointHoverBackgroundColor: '#f5a623',
+          pointHoverBorderColor: '#fff',
+          pointHoverBorderWidth: 2,
           fill: true,
           backgroundColor: gradLaba,
           tension: 0.45,
@@ -117,20 +141,40 @@ function renderOmzetChart(data) {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false,
+      maintainAspectRatio: false, // Wajib false agar mengikuti tinggi .chart-wrap
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { display: false },
         tooltip: {
+          backgroundColor: '#fff',
+          borderColor: '#e0e3eb',
+          borderWidth: 1,
+          titleColor: '#1a1a2e',
+          bodyColor: '#555',
+          padding: 12,
           callbacks: {
             label: (ctx) => ` ${ctx.dataset.label}: ${fmtRp(ctx.raw)}`,
           },
         },
       },
       scales: {
-        x: { grid: { display: false }, ticks: { color: '#aaa' } },
+        x: {
+          grid: { display: false },
+          border: { display: false },
+          ticks: {
+            color: '#aaa',
+            font: { size: 12 },
+            maxRotation: 0,
+          },
+        },
         y: {
-          ticks: { color: '#aaa', callback: (v) => fmtShort(v) },
+          border: { display: false },
+          ticks: {
+            color: '#aaa',
+            font: { size: 12 },
+            callback: (v) => fmtShort(v),
+            maxTicksLimit: 5,
+          },
           grid: { color: '#f0f0f5' },
         },
       },
@@ -154,11 +198,15 @@ function renderTopProducts(products) {
 
   tbody.innerHTML = products
     .map(
-      (p, i) => `
+      (p) => `
     <tr>
       <td>
         <div class="produk-cell">
-          <div class="produk-thumb">${p.image_url ? `<img src="${p.image_url}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;border-radius:6px" />` : thumbDefault} </div>
+          <div class="produk-thumb">${
+            p.image_url
+              ? `<img src="${p.image_url}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;border-radius:6px" />`
+              : thumbDefault
+          }</div>
           <div>
             <div class="produk-name">${p.name}</div>
             <div class="produk-sku">SKU: ${p.sku || '—'}</div>
@@ -184,24 +232,29 @@ async function renderDonutChart() {
     (sum, c) => sum + (c.total_quantity || 0),
     0
   );
-  document.getElementById('donut-total').textContent = totalQuantity;
+  document.getElementById('donut-total').textContent =
+    totalQuantity.toLocaleString('id-ID');
 
   const labels = revenueData.map((c) => c.category_name);
   const values = revenueData.map((c) => c.total);
   const colors = [
     '#1a4731',
-    '#f5a623',
-    '#bbb',
+    '#d4af37',
+    '#9ca3af',
     '#48c78e',
     '#e05252',
     '#8899aa',
   ];
 
-  const ctx = document.getElementById('distribusiChart');
-  if (!ctx) return;
-  if (donutChart) donutChart.destroy();
+  const canvas = document.getElementById('distribusiChart');
+  if (!canvas) return;
 
-  donutChart = new Chart(ctx, {
+  if (donutChart) {
+    donutChart.destroy();
+    donutChart = null;
+  }
+
+  donutChart = new Chart(canvas, {
     type: 'doughnut',
     data: {
       labels,
@@ -209,26 +262,41 @@ async function renderDonutChart() {
         {
           data: values,
           backgroundColor: colors.slice(0, labels.length),
-          borderWidth: 3,
+          borderWidth: 4, // Jarak antar segmen
           borderColor: '#fff',
-          hoverOffset: 6,
+          hoverOffset: 8,
+          hoverBorderWidth: 4,
         },
       ],
     },
     options: {
       responsive: true,
-      maintainAspectRatio: true,
-      cutout: '68%',
+      maintainAspectRatio: true, // true agar tetap bulat dalam container square
+      cutout: '70%', // Tebal donut ring
+      animation: {
+        animateRotate: true,
+        animateScale: false,
+        duration: 600,
+        easing: 'easeInOutQuart',
+      },
       plugins: {
         legend: { display: false },
         tooltip: {
-          callbacks: { label: (ctx) => ` ${ctx.label}: ${fmtRp(ctx.raw)}` },
+          backgroundColor: '#fff',
+          borderColor: '#e0e3eb',
+          borderWidth: 1,
+          titleColor: '#1a1a2e',
+          bodyColor: '#555',
+          padding: 10,
+          callbacks: {
+            label: (ctx) => ` ${ctx.label}: ${fmtRp(ctx.raw)}`,
+          },
         },
       },
     },
   });
 
-  // Legend
+  // Render legend manual
   const total = values.reduce((a, b) => a + b, 0) || 1;
   const legend = document.getElementById('distribusi-legend');
   legend.innerHTML = revenueData
@@ -310,6 +378,36 @@ document.addEventListener('click', (e) => {
     closeDropdown();
   }
 });
+
+// ── Toggle Legend Dataset ──
+function toggleDataset(index) {
+  if (!omzetChart) return;
+
+  const meta = omzetChart.getDatasetMeta(index);
+  meta.hidden = !meta.hidden;
+  omzetChart.update();
+
+  // Update tampilan legend (dim kalau hidden)
+  if (index === 0) {
+    const dot = document.getElementById('legend-omzet-dot');
+    const label = document.getElementById('legend-omzet');
+    if (dot) dot.style.opacity = meta.hidden ? '0.3' : '1';
+    if (label) label.style.opacity = meta.hidden ? '0.4' : '1';
+  } else {
+    const line = document.getElementById('legend-laba-line');
+    const label = document.getElementById('legend-laba');
+    if (line) line.style.opacity = meta.hidden ? '0.3' : '1';
+    if (label) label.style.opacity = meta.hidden ? '0.4' : '1';
+  }
+}
+
+// ── Legend Click ──
+document
+  .getElementById('legend-omzet')
+  ?.addEventListener('click', () => toggleDataset(0));
+document
+  .getElementById('legend-laba')
+  ?.addEventListener('click', () => toggleDataset(1));
 
 // ── Init ──
 fetchRevenue();

@@ -1,17 +1,14 @@
+let weeklyChart = null;
+
 // ── FETCH DATA ──
 async function fetchData() {
   try {
     const response = await fetch('/api/v1/dashboard', {
       credentials: 'include',
     });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const json = await response.json();
     if (!json.success) throw new Error(json.message);
-
     return json.data;
   } catch (err) {
     console.error('Gagal memuat dashboard:', err.message);
@@ -28,9 +25,16 @@ function rupiahFormatter(value) {
   }).format(value);
 }
 
+function fmtShort(n) {
+  const abs = Math.abs(n);
+  if (abs >= 1_000_000_000) return `${+(n / 1_000_000_000).toFixed(1)} M`;
+  if (abs >= 1_000_000) return `${+(n / 1_000_000).toFixed(1)} Jt`;
+  if (abs >= 1_000) return `${+(n / 1_000).toFixed(1)} Rb`;
+  return String(n);
+}
+
 function getLocalDate() {
-  const now = new Date();
-  return now.toLocaleDateString('id-ID', {
+  return new Date().toLocaleDateString('id-ID', {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -41,29 +45,24 @@ function getLocalDate() {
 // ── TREND BADGES ──
 function profit(value) {
   return `<span class="badge up">
-            <svg width="9" height="5" viewBox="0 0 9 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0.583333 5L0 4.41667L3.08333 1.3125L4.75 2.97917L6.91667 0.833333H5.83333V0H8.33333V2.5H7.5V1.41667L4.75 4.16667L3.08333 2.5L0.583333 5Z" fill="#4CAF50"/>
-            </svg>
-            +${value}%
-          </span>`;
+    <svg width="9" height="5" viewBox="0 0 9 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0.583333 5L0 4.41667L3.08333 1.3125L4.75 2.97917L6.91667 0.833333H5.83333V0H8.33333V2.5H7.5V1.41667L4.75 4.16667L3.08333 2.5L0.583333 5Z" fill="#4CAF50"/>
+    </svg>
+    +${value}%
+  </span>`;
 }
 
 function loss(value) {
   return `<span class="badge down">
-            <svg width="9" height="5" viewBox="0 0 9 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M5.83333 5V4.16667H6.91667L4.75 2.02083L3.08333 3.6875L0 0.583333L0.583333 0L3.08333 2.5L4.75 0.833333L7.5 3.58333V2.5H8.33333V5H5.83333Z" fill="#BA1A1A"/>
-            </svg>
-            -${value}%
-          </span>`;
+    <svg width="9" height="5" viewBox="0 0 9 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5.83333 5V4.16667H6.91667L4.75 2.02083L3.08333 3.6875L0 0.583333L0.583333 0L3.08333 2.5L4.75 0.833333L7.5 3.58333V2.5H8.33333V5H5.83333Z" fill="#BA1A1A"/>
+    </svg>
+    -${value}%
+  </span>`;
 }
 
 function neutral() {
-  return `<span class="badge neutral">
-            <svg width="9" height="5" viewBox="0 0 9 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0 2.5H9" stroke="#757575" stroke-width="1.5"/>
-            </svg>
-            0%
-          </span>`;
+  return `<span class="badge neutral">— 0%</span>`;
 }
 
 function checkTrendPercentage(value) {
@@ -72,293 +71,113 @@ function checkTrendPercentage(value) {
   return neutral();
 }
 
-// ── RENDER SEMUA ──
-async function setValues() {
-  const data = await fetchData();
-  if (!data) return;
-
-  const {
-    summary_metrics,
-    daily_summary,
-    chart_weekly_revenue,
-    low_stock_products,
-    top_selling_products,
-  } = data;
-
-  // ── Date ──
-  const dateElement = document.getElementById('date');
-  if (dateElement) dateElement.textContent = getLocalDate();
-
-  // ── Summary Metrics ──
-  const revenueElement = document.getElementById('revenue');
-  const revenuePercentageElement =
-    document.getElementById('revenue-percentage');
-  const transactionTotalElement = document.getElementById('transaction-total');
-  const transactionTotalPercentageElement = document.getElementById(
-    'transaction-total-percentage'
-  );
-  const netProfitElement = document.getElementById('net-profit');
-  const netProfitPercentageElement = document.getElementById(
-    'net-profit-percentage'
-  );
-  const productSoldElement = document.getElementById('products-sold');
-  const productSoldPercentageElement = document.getElementById(
-    'products-sold-percentage'
-  );
-
-  // Revenue
-  if (revenueElement) {
-    revenueElement.textContent = rupiahFormatter(summary_metrics.revenue.value);
-  }
-  if (revenuePercentageElement) {
-    revenuePercentageElement.innerHTML = checkTrendPercentage(
-      summary_metrics.revenue.trend_percentage
-    );
-  }
-
-  // Transaction Total
-  if (transactionTotalElement) {
-    transactionTotalElement.textContent =
-      summary_metrics.transaction_count.value;
-  }
-  if (transactionTotalPercentageElement) {
-    transactionTotalPercentageElement.innerHTML = checkTrendPercentage(
-      summary_metrics.transaction_count.trend_percentage
-    );
-  }
-
-  // Net Profit
-  if (netProfitElement) {
-    netProfitElement.textContent = rupiahFormatter(
-      summary_metrics.net_profit.value
-    );
-  }
-  if (netProfitPercentageElement) {
-    netProfitPercentageElement.innerHTML = checkTrendPercentage(
-      summary_metrics.net_profit.trend_percentage
-    );
-  }
-
-  // Products Sold
-  if (productSoldElement) {
-    productSoldElement.textContent = summary_metrics.products_sold.value;
-  }
-  if (productSoldPercentageElement) {
-    productSoldPercentageElement.innerHTML = checkTrendPercentage(
-      summary_metrics.products_sold.trend_percentage
-    );
-  }
-
-  // ── Chart Weekly Revenue ──
-  renderChart(chart_weekly_revenue);
-
-  // ── Low Stock Products ──
-  renderLowStock(low_stock_products);
-
-  // ── Top Selling Products ──
-  renderTopSelling(top_selling_products);
-
-  // ── Daily Summary ──
-  renderDailySummary(daily_summary);
-}
-
-// ── RENDER CHART ──
+// ── RENDER CHART (Chart.js) ──
 function renderChart(chart_weekly_revenue) {
-  const W = 600,
-    H = 160;
-  const PAD_L = 36,
-    PAD_R = 20,
-    PAD_T = 14,
-    PAD_B = 8;
-  const PLOT_W = W - PAD_L - PAD_R;
-  const PLOT_H = H - PAD_T - PAD_B;
-
-  const maxVal = Math.max(...chart_weekly_revenue.map((d) => d.total));
-  const ceiling = maxVal === 0 ? 4000 : Math.ceil(maxVal / 1000) * 1000 * 1.25;
-
-  function toX(i) {
-    return PAD_L + (i / (chart_weekly_revenue.length - 1)) * PLOT_W;
-  }
-  function toY(v) {
-    return PAD_T + PLOT_H - (v / ceiling) * PLOT_H;
-  }
-
-  function niceSteps(max, count) {
-    const raw = max / count;
-    const mag = Math.pow(10, Math.floor(Math.log10(raw)));
-    const nice = [1, 2, 2.5, 5, 10].map((f) => f * mag).find((f) => f >= raw);
-    return nice || raw;
-  }
-
-  const step = niceSteps(ceiling, 4);
-  const ticks = [];
-  for (let v = step; v <= ceiling; v += step) ticks.push(v);
-
-  const pts = chart_weekly_revenue.map((d, i) => ({
-    x: toX(i),
-    y: toY(d.total),
-    v: d.total,
-    day: d.day,
-  }));
-
-  const svg = document.getElementById('chart');
-  svg.innerHTML = '';
-  const ns = 'http://www.w3.org/2000/svg';
-
-  function el(tag, attrs) {
-    const e = document.createElementNS(ns, tag);
-    Object.entries(attrs).forEach(([k, v]) => e.setAttribute(k, v));
-    return e;
-  }
-
-  // Gradient
-  const defs = el('defs', {});
-  const grad = el('linearGradient', {
-    id: 'cg',
-    x1: '0',
-    y1: '0',
-    x2: '0',
-    y2: '1',
-  });
-  const s1 = el('stop', {
-    offset: '0%',
-    'stop-color': '#00604a',
-    'stop-opacity': '0.18',
-  });
-  const s2 = el('stop', {
-    offset: '100%',
-    'stop-color': '#00604a',
-    'stop-opacity': '0',
-  });
-  grad.append(s1, s2);
-  defs.append(grad);
-  svg.append(defs);
-
-  function fmtShort(v) {
-    if (v === 0) return '0';
-    const abs = Math.abs(v);
-    if (abs >= 1_000_000_000) return `${+(v / 1_000_000_000).toPrecision(3)} M`;
-    if (abs >= 1_000_000) return `${+(v / 1_000_000).toPrecision(3)} Jt`;
-    if (abs >= 1_000) return `${+(v / 1_000).toPrecision(3)} Rb`;
-    return String(v);
-  }
-  function fmtFull(v) {
-    return 'Rp ' + v.toLocaleString('id-ID');
-  }
-
-  // Grid & Y labels
-  ticks.forEach((v) => {
-    const y = toY(v);
-    svg.append(
-      el('line', {
-        x1: PAD_L,
-        y1: y,
-        x2: W - PAD_R,
-        y2: y,
-        stroke: '#f0f0f5',
-        'stroke-width': '1',
-      })
-    );
-    const t = el('text', {
-      x: PAD_L - 4,
-      y: y + 4,
-      'font-size': '10',
-      fill: '#ccc',
-      'text-anchor': 'end',
-    });
-    t.textContent = fmtShort(v);
-    svg.append(t);
-  });
-
-  // Baseline
-  svg.append(
-    el('line', {
-      x1: PAD_L,
-      y1: PAD_T + PLOT_H,
-      x2: W - PAD_R,
-      y2: PAD_T + PLOT_H,
-      stroke: '#e8eaf0',
-      'stroke-width': '1',
-    })
-  );
-
-  // Area fill
-  const areaBase = PAD_T + PLOT_H;
-  const areaPts = pts.map((p) => `${p.x},${p.y}`).join(' ');
-  const lastX = pts[pts.length - 1].x;
-  const firstX = pts[0].x;
-  svg.append(
-    el('polygon', {
-      points: `${areaPts} ${lastX},${areaBase} ${firstX},${areaBase}`,
-      fill: 'url(#cg)',
-    })
-  );
-
-  // Line
-  svg.append(
-    el('polyline', {
-      points: areaPts,
-      fill: 'none',
-      stroke: '#00604a',
-      'stroke-width': '2.5',
-      'stroke-linejoin': 'round',
-      'stroke-linecap': 'round',
-    })
-  );
-
-  // Dots + hit areas
-  const tooltip = document.getElementById('tooltip');
+  // Hapus elemen SVG lama dari HTML dan ganti canvas
   const chartWrap = document.querySelector('.chart-wrap');
+  if (!chartWrap) return;
 
-  pts.forEach((p, i) => {
-    const isPeak = p.v === maxVal && maxVal > 0;
+  // Bersihkan isi chart-wrap (SVG manual + label lama)
+  chartWrap.innerHTML = '';
 
-    const dot = el('circle', {
-      cx: p.x,
-      cy: p.y,
-      r: isPeak ? 5 : 4,
-      fill: isPeak ? '#00604a' : '#fff',
-      stroke: '#00604a',
-      'stroke-width': '2',
-    });
-    svg.append(dot);
+  // Hapus .chart-labels jika ada di luar chart-wrap
+  const oldLabels = document.getElementById('labels');
+  if (oldLabels) oldLabels.remove();
 
-    const hit = el('circle', {
-      cx: p.x,
-      cy: p.y,
-      r: 14,
-      fill: 'transparent',
-      style: 'cursor:pointer',
-    });
-    hit.addEventListener('mouseenter', () => {
-      const rect = chartWrap.getBoundingClientRect();
-      const svgRect = svg.getBoundingClientRect();
-      const scaleX = svgRect.width / W;
-      const scaleY = svgRect.height / H;
-      const px = svgRect.left - rect.left + p.x * scaleX;
-      const py = svgRect.top - rect.top + p.y * scaleY;
-      tooltip.textContent = `${p.day}: ${fmtFull(p.v)}`;
-      tooltip.style.left = px + 'px';
-      tooltip.style.top = py + 'px';
-      tooltip.classList.add('visible');
-      dot.setAttribute('r', isPeak ? 6 : 5);
-      dot.setAttribute('fill', '#00604a');
-    });
-    hit.addEventListener('mouseleave', () => {
-      tooltip.classList.remove('visible');
-      dot.setAttribute('r', isPeak ? 5 : 4);
-      dot.setAttribute('fill', isPeak ? '#00604a' : '#fff');
-    });
-    svg.append(hit);
-  });
+  // Buat container canvas
+  const canvasWrap = document.createElement('div');
+  canvasWrap.style.cssText = 'position:relative;width:100%;height:180px;';
 
-  // Day labels
-  const labelsEl = document.getElementById('labels');
-  labelsEl.innerHTML = '';
-  chart_weekly_revenue.forEach((d) => {
-    const s = document.createElement('span');
-    s.textContent = d.day;
-    labelsEl.append(s);
+  const canvas = document.createElement('canvas');
+  canvas.id = 'weeklyChart';
+  canvasWrap.appendChild(canvas);
+  chartWrap.appendChild(canvasWrap);
+
+  if (weeklyChart) {
+    weeklyChart.destroy();
+    weeklyChart = null;
+  }
+
+  const ctx = canvas.getContext('2d');
+  const labels = chart_weekly_revenue.map((d) => d.day);
+  const values = chart_weekly_revenue.map((d) => d.total);
+
+  // Peak index untuk dot khusus
+  const maxVal = Math.max(...values);
+
+  const grad = ctx.createLinearGradient(0, 0, 0, 180);
+  grad.addColorStop(0, 'rgba(0, 96, 74, 0.15)');
+  grad.addColorStop(1, 'rgba(0, 96, 74, 0.00)');
+
+  weeklyChart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          data: values,
+          borderColor: '#00604a',
+          borderWidth: 2.5,
+          // Dot: filled hanya untuk titik tertinggi, sisanya outline
+          pointRadius: values.map((v) => (v === maxVal && maxVal > 0 ? 5 : 4)),
+          pointHoverRadius: values.map((v) =>
+            v === maxVal && maxVal > 0 ? 6 : 5
+          ),
+          pointBackgroundColor: values.map((v) =>
+            v === maxVal && maxVal > 0 ? '#00604a' : '#fff'
+          ),
+          pointBorderColor: '#00604a',
+          pointBorderWidth: 2,
+          pointHoverBackgroundColor: '#00604a',
+          pointHoverBorderColor: '#fff',
+          pointHoverBorderWidth: 2,
+          fill: true,
+          backgroundColor: grad,
+          tension: 0.4,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a2e22',
+          titleColor: 'rgba(255,255,255,0.6)',
+          bodyColor: '#fff',
+          padding: 10,
+          cornerRadius: 6,
+          displayColors: false,
+          callbacks: {
+            title: (items) => items[0].label,
+            label: (item) => rupiahFormatter(item.raw),
+          },
+        },
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          border: { display: false },
+          ticks: {
+            color: '#aaa',
+            font: { size: 11 },
+            maxRotation: 0,
+          },
+        },
+        y: {
+          border: { display: false },
+          grid: { color: '#f0f0f5' },
+          ticks: {
+            color: '#ccc',
+            font: { size: 10 },
+            callback: (v) => fmtShort(v),
+            maxTicksLimit: 4,
+          },
+        },
+      },
+    },
   });
 }
 
@@ -366,6 +185,11 @@ function renderChart(chart_weekly_revenue) {
 function renderLowStock(low_stock_products) {
   const stockListElement = document.getElementById('stok-list');
   if (!stockListElement || !low_stock_products) return;
+
+  if (!low_stock_products.length) {
+    stockListElement.innerHTML = `<p style="font-size:12px;color:#aaa;text-align:center;padding:16px 0">Tidak ada produk stok kritis</p>`;
+    return;
+  }
 
   const stockElement = (product) => `
     <div class="stok-item">
@@ -398,13 +222,17 @@ function renderTopSelling(top_selling_products) {
   );
   if (!tableProductElement || !top_selling_products) return;
 
+  if (!top_selling_products.length) {
+    tableProductElement.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:24px;color:#aaa">Belum ada data produk terlaris hari ini</td></tr>`;
+    return;
+  }
+
   const productElement = (product, index) => {
     const initial = product.name
       ? product.name.substring(0, 2).toUpperCase()
       : 'PR';
     const rank = index + 1;
     const badgeClass = rank <= 5 ? `b${rank}` : 'b5';
-
     return `
       <tr>
         <td>
@@ -426,35 +254,74 @@ function renderTopSelling(top_selling_products) {
 
 // ── RENDER DAILY SUMMARY ──
 function renderDailySummary(daily_summary) {
-  const transactionCountDailyElement = document.getElementById(
-    'transaction-count-daily'
-  );
-  const grossRevenueDailyElement = document.getElementById(
-    'gross-revenue-daily'
-  );
-  const totalExpensesDailyElement = document.getElementById(
-    'total-expenses-daily'
-  );
-  const netProfitDailyElement = document.getElementById('net-profit-daily');
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
+  set('transaction-count-daily', daily_summary.transaction_count);
+  set('gross-revenue-daily', rupiahFormatter(daily_summary.gross_revenue));
+  set('total-expenses-daily', rupiahFormatter(daily_summary.total_expenses));
+  set('net-profit-daily', rupiahFormatter(daily_summary.net_profit));
+}
 
-  if (transactionCountDailyElement) {
-    transactionCountDailyElement.textContent = daily_summary.transaction_count;
-  }
-  if (grossRevenueDailyElement) {
-    grossRevenueDailyElement.textContent = rupiahFormatter(
-      daily_summary.gross_revenue
-    );
-  }
-  if (totalExpensesDailyElement) {
-    totalExpensesDailyElement.textContent = rupiahFormatter(
-      daily_summary.total_expenses
-    );
-  }
-  if (netProfitDailyElement) {
-    netProfitDailyElement.textContent = rupiahFormatter(
-      daily_summary.net_profit
-    );
-  }
+// ── RENDER SEMUA ──
+async function setValues() {
+  const data = await fetchData();
+  if (!data) return;
+
+  const {
+    summary_metrics,
+    daily_summary,
+    chart_weekly_revenue,
+    low_stock_products,
+    top_selling_products,
+  } = data;
+
+  // Date
+  const dateEl = document.getElementById('date');
+  if (dateEl) dateEl.textContent = getLocalDate();
+
+  // Summary Metrics
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = val;
+  };
+  const setText = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
+
+  setText('revenue', rupiahFormatter(summary_metrics.revenue.value));
+  set(
+    'revenue-percentage',
+    checkTrendPercentage(summary_metrics.revenue.trend_percentage)
+  );
+
+  setText('transaction-total', summary_metrics.transaction_count.value);
+  set(
+    'transaction-total-percentage',
+    checkTrendPercentage(summary_metrics.transaction_count.trend_percentage)
+  );
+
+  setText('net-profit', rupiahFormatter(summary_metrics.net_profit.value));
+  set(
+    'net-profit-percentage',
+    checkTrendPercentage(summary_metrics.net_profit.trend_percentage)
+  );
+
+  setText('products-sold', summary_metrics.products_sold.value);
+  set(
+    'products-sold-percentage',
+    checkTrendPercentage(summary_metrics.products_sold.trend_percentage)
+  );
+
+  // Chart
+  renderChart(chart_weekly_revenue);
+
+  // Sections
+  renderLowStock(low_stock_products);
+  renderTopSelling(top_selling_products);
+  renderDailySummary(daily_summary);
 }
 
 // ── INIT ──

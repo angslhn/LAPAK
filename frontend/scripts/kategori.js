@@ -170,14 +170,21 @@ function openModal(isEdit = false, category = null) {
     modalTitle.textContent = 'Edit Kategori';
     categoryNameInput.value = category.name;
     submitBtn.textContent = 'Perbarui';
+
+    setTimeout(() => {
+      categoryNameInput.focus();
+      const len = categoryNameInput.value.length;
+      categoryNameInput.setSelectionRange(len, len);
+    }, 100);
   } else {
     editingId = null;
     modalTitle.textContent = 'Tambah Kategori';
     categoryNameInput.value = '';
     submitBtn.textContent = 'Simpan';
+
+    setTimeout(() => categoryNameInput.focus(), 100);
   }
   modal.style.display = 'flex';
-  setTimeout(() => categoryNameInput.focus(), 100);
 }
 
 function closeModal() {

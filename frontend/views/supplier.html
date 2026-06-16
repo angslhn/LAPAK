@@ -296,5 +296,218 @@
         </div>
       </div>
     </div>
+
+    <!-- ══ MODAL TAMBAH/EDIT SUPPLIER ══ -->
+    <div class="modal-overlay" id="supplierModal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modalTitle">Tambah Supplier</h2>
+          <button class="modal-close-btn" id="closeModalBtn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="supplierName">Nama Supplier *</label>
+            <div class="input-with-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                viewBox="0 0 640 640"
+              >
+                <path
+                  fill="#aaa"
+                  d="M110.6 96L529.1 96L534.7 112.1L582.3 248.1L589.7 269.2C576.8 274.8 561.6 281.3 544.1 288.9L544.1 544L96.1 544L96.1 289C78.3 281.3 62.9 274.7 50.1 269.1L57.4 248.1L105 112.1L110.6 96zM319.8 281.6L264 302.5L254.8 306L245.8 302L201 282L144 302.6L144 384.1L496 384.1L496 302.7L495.8 302.6L438.5 281.9L393.7 301.9L384.7 305.9L375.5 302.4L319.7 281.5zM144.7 144L110.1 242.8L136.4 254.2L179.6 238.6L189.1 144L144.6 144zM412 241.2L402.3 144L344 144L344 239.4L383.2 254.1L412 241.2zM460 238.6L503.2 254.2L529.5 242.8L494.9 144L450.4 144L459.9 238.6zM144 432L144 496L496 496L496 432L144 432zM295.6 239.4L295.6 144L237.3 144L227.6 241.2L256.4 254.1L295.6 239.4z"
+                />
+              </svg>
+              <input
+                type="text"
+                id="supplierName"
+                class="form-input"
+                placeholder="Nama supplier"
+                autocomplete="off"
+                maxlength="150"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="supplierPhone">Nomor Telepon</label>
+            <div class="input-with-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                viewBox="0 0 640 640"
+              >
+                <path
+                  fill="#aaa"
+                  d="M252.6 259L304.4 208L208.4 48L64.4 128L64.4 144C64.4 382.6 257.8 576 496.4 576L512.4 576L592.4 432L432.4 336L381.4 387.8C322.2 365 275.4 318.2 252.6 259zM440.1 396.6L527.9 449.3L484.3 527.8C281.9 521.5 118.9 358.6 112.6 156.1L191.1 112.5L243.8 200.3C226.8 217.1 211 232.6 196.5 246.9L207.8 276.3C235.5 348.2 292.3 404.9 364.1 432.6L393.5 443.9C407.8 429.4 423.3 413.6 440.1 396.6z"
+                />
+              </svg>
+              <input
+                type="text"
+                id="supplierPhone"
+                class="form-input"
+                placeholder="081234567890"
+                autocomplete="off"
+                maxlength="15"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="supplierEmail">Email</label>
+            <div class="input-with-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                viewBox="0 0 640 640"
+              >
+                <path
+                  fill="#aaa"
+                  d="M88 128L64 128L64 512L576 512L576 128L88 128zM528 192L528 196.1L320 353.9L112 196.1L112 176L528 176L528 192zM528 256.3L528 464L112 464L112 256.3L305.5 403.1L320 414.1L334.5 403.1L528 256.3z"
+                />
+              </svg>
+              <input
+                type="email"
+                id="supplierEmail"
+                class="form-input"
+                placeholder="supplier@email.com"
+                autocomplete="off"
+                maxlength="255"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="supplierContactPerson">Kontak Person</label>
+            <div class="input-with-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="18"
+                viewBox="0 0 640 640"
+              >
+                <path
+                  fill="#aaa"
+                  d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z"
+                />
+              </svg>
+              <input
+                type="text"
+                id="supplierContactPerson"
+                class="form-input"
+                placeholder="Nama kontak person"
+                autocomplete="off"
+                maxlength="100"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="supplierAddress">Alamat</label>
+            <div class="input-with-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                viewBox="0 0 640 640"
+              >
+                <path
+                  fill="#aaa"
+                  d="M176 252.6C176 280.7 185.1 313.6 201.6 349.1C217.9 384.2 240 419.2 262.9 450.6C283.2 478.6 303.7 503.1 320.1 521.7C336.5 503.1 356.9 478.6 377.3 450.6C400.2 419.2 422.3 384.2 438.6 349.1C455 313.6 464.2 280.7 464.2 252.6C464.2 175.8 400.5 112 320.2 112C239.9 112 176 175.7 176 252.6zM512 252.6C512 363.8 407.7 495.4 352.9 557C342.7 568.5 334.2 577.5 328.4 583.5C323.1 589 320 592 320 592C320 592 317 589 311.6 583.5C305.8 577.5 297.3 568.4 287.1 557C232.3 495.4 128 363.8 128 252.6C128 148.4 214 64 320 64C426 64 512 148.4 512 252.6zM352 256C352 238.3 337.7 224 320 224C302.3 224 288 238.3 288 256C288 273.7 302.3 288 320 288C337.7 288 352 273.7 352 256zM240 256C240 211.8 275.8 176 320 176C364.2 176 400 211.8 400 256C400 300.2 364.2 336 320 336C275.8 336 240 300.2 240 256z"
+                />
+              </svg>
+              <input
+                type="text"
+                id="supplierAddress"
+                class="form-input"
+                placeholder="Alamat lengkap"
+                autocomplete="off"
+                maxlength="500"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="supplierNote">Catatan</label>
+            <textarea
+              id="supplierNote"
+              class="form-textarea"
+              placeholder="Catatan tambahan..."
+              maxlength="500"
+            ></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" id="cancelModalBtn">Batal</button>
+          <button class="btn-primary-modal" id="submitSupplierBtn">
+            Simpan
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MODAL DETAIL SUPPLIER ══ -->
+    <div class="modal-overlay" id="detailSupplierModal" style="display: none">
+      <div class="modal-content" style="width: 440px">
+        <div class="modal-header">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div
+              style="
+                width: 36px;
+                height: 36px;
+                background: #f2f7f5;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                viewBox="0 0 640 640"
+              >
+                <path
+                  fill="#aaa"
+                  d="M110.6 96L529.1 96L534.7 112.1L582.3 248.1L589.7 269.2C576.8 274.8 561.6 281.3 544.1 288.9L544.1 544L96.1 544L96.1 289C78.3 281.3 62.9 274.7 50.1 269.1L57.4 248.1L105 112.1L110.6 96zM319.8 281.6L264 302.5L254.8 306L245.8 302L201 282L144 302.6L144 384.1L496 384.1L496 302.7L495.8 302.6L438.5 281.9L393.7 301.9L384.7 305.9L375.5 302.4L319.7 281.5zM144.7 144L110.1 242.8L136.4 254.2L179.6 238.6L189.1 144L144.6 144zM412 241.2L402.3 144L344 144L344 239.4L383.2 254.1L412 241.2zM460 238.6L503.2 254.2L529.5 242.8L494.9 144L450.4 144L459.9 238.6zM144 432L144 496L496 496L496 432L144 432zM295.6 239.4L295.6 144L237.3 144L227.6 241.2L256.4 254.1L295.6 239.4z"
+                />
+              </svg>
+            </div>
+            <h2 style="font-size: 16px; font-weight: 700">Detail Supplier</h2>
+          </div>
+          <button class="modal-close-btn" id="closeDetailModalBtn">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="detail-field">
+            <div class="detail-label">Nama Supplier</div>
+            <div class="detail-value" id="detailName">—</div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-label">Nomor Telepon</div>
+            <div class="detail-value" id="detailPhone">—</div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-label">Email</div>
+            <div class="detail-value" id="detailEmail">—</div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-label">Kontak Person</div>
+            <div class="detail-value" id="detailContactPerson">—</div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-label">Alamat</div>
+            <div class="detail-value" id="detailAddress">—</div>
+          </div>
+          <div class="detail-field">
+            <div class="detail-label">Catatan</div>
+            <div class="detail-value" id="detailNote">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MODAL KONFIRMASI HAPUS ══ -->
+    <div class="modal-overlay" id="deleteConfirmModal" style="display: none">
+      <div class="confirm-dialog" id="deleteConfirmDialog"></div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
   </body>
 </html>

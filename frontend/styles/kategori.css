@@ -396,15 +396,18 @@ tbody td.center {
 .form-input {
   width: 100%;
   padding: 10px 14px;
-  border: 1px solid #e0e3eb;
-  border-radius: 8px;
+  border: 2px solid #e0e3eb;
+  border-radius: 10px;
   font-size: 14px;
   color: #333;
   outline: none;
-  transition: border-color 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 }
 .form-input:focus {
   border-color: #48c78e;
+  box-shadow: 0 0 0 3px rgba(72, 199, 142, 0.15);
 }
 
 .modal-footer {
