@@ -51,6 +51,7 @@ const ERROR_MESSAGES = {
   PURCHASE_MARK_PAID_FAILED: 'Tanda lunas pembelian gagal',
 
   // Debt
+  DEBT_NOT_FULLY_PAID: 'Tidak dapat menandai lunas karena hutang masih tersisa',
   DEBT_CUSTOMER_ALREADY_PAID: 'Transaksi ini sudah lunas',
   DEBT_CUSTOMER_ALREADY_CANCELLED: 'Transaksi ini sudah dibatalkan',
   DEBT_SUPPLIER_ALREADY_PAID: 'Pembelian ini sudah lunas',

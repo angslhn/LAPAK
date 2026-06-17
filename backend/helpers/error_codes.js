@@ -50,6 +50,7 @@ const ERROR_CODES = {
   PURCHASE_MARK_PAID_FAILED: 'PURCHASE_MARK_PAID_FAILED', // tanda lunas gagal
 
   // Debt
+  DEBT_NOT_FULLY_PAID: 'DEBT_NOT_FULLY_PAID', // hutang belum sepenuhnya terlunasi
   DEBT_CUSTOMER_ALREADY_PAID: 'DEBT_CUSTOMER_ALREADY_PAID', // piutang dari pelanggan sudah lunas
   DEBT_CUSTOMER_ALREADY_CANCELLED: 'DEBT_CUSTOMER_ALREADY_CANCELLED', // piutang dari pelanggan sudah dibatalkan
   DEBT_SUPPLIER_ALREADY_PAID: 'DEBT_SUPPLIER_ALREADY_PAID', // hutang ke supplier sudah lunas
