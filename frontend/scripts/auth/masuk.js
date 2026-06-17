@@ -28,8 +28,8 @@ function validateEmail(val) {
 }
 
 function validatePassword(val) {
-  if (!val) return 'Password tidak boleh kosong.';
-  if (val.length < 6) return 'Password minimal 6 karakter.';
+  if (!val) return 'Kata sandi tidak boleh kosong.';
+  if (val.length < 6) return 'Kata sandi minimal 6 karakter.';
   return '';
 }
 

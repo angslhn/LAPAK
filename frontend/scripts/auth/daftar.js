@@ -105,37 +105,37 @@ form.addEventListener('submit', async (e) => {
 
   // Validasi password
   if (!password) {
-    showFieldError('password', 'Password wajib diisi.');
+    showFieldError('password', 'Kata sandi wajib diisi.');
     valid = false;
   } else if (password.length < 8) {
-    showFieldError('password', 'Password minimal 8 karakter.');
+    showFieldError('password', 'Kata sandi minimal 8 karakter.');
     valid = false;
   } else if (!/[A-Z]/.test(password)) {
     showFieldError(
       'password',
-      'Password harus mengandung minimal 1 huruf besar.'
+      'Kata sandi harus mengandung minimal 1 huruf besar.'
     );
     valid = false;
   } else if (!/[a-z]/.test(password)) {
     showFieldError(
       'password',
-      'Password harus mengandung minimal 1 huruf kecil.'
+      'Kata sandi harus mengandung minimal 1 huruf kecil.'
     );
     valid = false;
   } else if (!/[0-9]/.test(password)) {
-    showFieldError('password', 'Password harus mengandung minimal 1 angka.');
+    showFieldError('password', 'Kata sandi harus mengandung minimal 1 angka.');
     valid = false;
   } else if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
-    showFieldError('password', 'Password harus mengandung minimal 1 simbol.');
+    showFieldError('password', 'Kata sandi harus mengandung minimal 1 simbol.');
     valid = false;
   }
 
-  // Validasi konfirmasi password
+  // Validasi konfirmasi kata sandi
   if (!konfirmasi) {
-    showFieldError('konfirmasi', 'Konfirmasi password wajib diisi.');
+    showFieldError('konfirmasi', 'Konfirmasi kata sandi wajib diisi.');
     valid = false;
   } else if (password !== konfirmasi) {
-    showFieldError('konfirmasi', 'Konfirmasi password tidak cocok.');
+    showFieldError('konfirmasi', 'Konfirmasi kata sandi tidak cocok.');
     valid = false;
   }
 

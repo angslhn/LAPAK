@@ -583,6 +583,41 @@ tbody td.right {
   gap: 12px;
 }
 
+#laporan-table-body td.right {
+  text-align: right;
+}
+#laporan-table-body td.center {
+  text-align: center;
+}
+.laporan-tgl {
+  font-weight: 600;
+  color: #1a1a2e;
+}
+.laporan-nominal {
+  font-weight: 600;
+  color: #1a1a2e;
+}
+.aksi-link {
+  background: none;
+  border: none;
+  color: #00604a;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.aksi-link:hover {
+  background: #edf9f4;
+}
+.aksi-link.tutup {
+  color: #e05252;
+}
+.aksi-link.tutup:hover {
+  background: #fff0f0;
+}
+
 .btn-secondary-outline {
   padding: 10px 20px;
   background: #fff;

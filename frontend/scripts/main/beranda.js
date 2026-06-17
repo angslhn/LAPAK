@@ -1,17 +1,18 @@
 let weeklyChart = null;
 
 // ── FETCH DATA ──
-async function fetchData() {
+async function fetchData(url, options = {}) {
   try {
-    const response = await fetch('/api/v1/dashboard', {
+    const response = await fetch(url, {
       credentials: 'include',
+      ...options,
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const json = await response.json();
     if (!json.success) throw new Error(json.message);
     return json.data;
   } catch (err) {
-    console.error('Gagal memuat dashboard:', err.message);
+    console.error('Gagal memuat data:', err.message);
     return null;
   }
 }
@@ -36,6 +37,15 @@ function fmtShort(n) {
 function getLocalDate() {
   return new Date().toLocaleDateString('id-ID', {
     weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+
+function fmtDateShort(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('id-ID', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -73,18 +83,14 @@ function checkTrendPercentage(value) {
 
 // ── RENDER CHART (Chart.js) ──
 function renderChart(chart_weekly_revenue) {
-  // Hapus elemen SVG lama dari HTML dan ganti canvas
   const chartWrap = document.querySelector('.chart-wrap');
   if (!chartWrap) return;
 
-  // Bersihkan isi chart-wrap (SVG manual + label lama)
   chartWrap.innerHTML = '';
 
-  // Hapus .chart-labels jika ada di luar chart-wrap
   const oldLabels = document.getElementById('labels');
   if (oldLabels) oldLabels.remove();
 
-  // Buat container canvas
   const canvasWrap = document.createElement('div');
   canvasWrap.style.cssText = 'position:relative;width:100%;height:180px;';
 
@@ -102,7 +108,6 @@ function renderChart(chart_weekly_revenue) {
   const labels = chart_weekly_revenue.map((d) => d.day);
   const values = chart_weekly_revenue.map((d) => d.total);
 
-  // Peak index untuk dot khusus
   const maxVal = Math.max(...values);
 
   const grad = ctx.createLinearGradient(0, 0, 0, 180);
@@ -118,7 +123,6 @@ function renderChart(chart_weekly_revenue) {
           data: values,
           borderColor: '#00604a',
           borderWidth: 2.5,
-          // Dot: filled hanya untuk titik tertinggi, sisanya outline
           pointRadius: values.map((v) => (v === maxVal && maxVal > 0 ? 5 : 4)),
           pointHoverRadius: values.map((v) =>
             v === maxVal && maxVal > 0 ? 6 : 5
@@ -264,9 +268,104 @@ function renderDailySummary(daily_summary) {
   set('net-profit-daily', rupiahFormatter(daily_summary.net_profit));
 }
 
+// ── TOAST ──
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toastContainer');
+  if (!container) return;
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// ── RENDER CLOSURE BANNER ──
+function renderClosureBanner(daily_closure) {
+  const banner = document.getElementById('closureBanner');
+  if (!banner || !daily_closure) return;
+
+  // Cek localStorage buat dismiss
+  const dismissed = localStorage.getItem('closureBannerDismissed');
+  if (dismissed) {
+    const dismissedTime = parseInt(dismissed, 10);
+    const now = Date.now();
+    // Sembunyiin 24 jam
+    if (now - dismissedTime < 24 * 60 * 60 * 1000) {
+      banner.style.display = 'none';
+      return;
+    } else {
+      localStorage.removeItem('closureBannerDismissed');
+    }
+  }
+
+  if (!daily_closure.hasPendingClosures) {
+    banner.style.display = 'none';
+    return;
+  }
+
+  banner.style.display = 'flex';
+
+  document.getElementById('closureBannerTitle').textContent =
+    `Ada ${daily_closure.count} hari yang belum ditutup bukunya`;
+  document.getElementById('closureBannerSub').textContent =
+    `Mulai dari tanggal ${fmtDateShort(daily_closure.earliestDate)}`;
+
+  // Handler tombol
+  document.getElementById('btnClosureDismiss').onclick = () => {
+    localStorage.setItem('closureBannerDismissed', Date.now().toString());
+    banner.style.display = 'none';
+  };
+
+  document.getElementById('btnClosureCloseAll').onclick = async () => {
+    const btn = document.getElementById('btnClosureCloseAll');
+    btn.disabled = true;
+    btn.textContent = 'Memproses...';
+
+    try {
+      const res = await fetch('/api/v1/daily-reports/close-all', {
+        method: 'POST',
+        credentials: 'include',
+      });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.message);
+
+      showToast('Semua laporan berhasil ditutup!', 'success');
+      banner.style.display = 'none';
+      localStorage.removeItem('closureBannerDismissed');
+      // Refresh dashboard
+      setTimeout(() => location.reload(), 500);
+    } catch (err) {
+      showToast('Gagal menutup buku: ' + err.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = `<svg width="10" height="13" viewBox="0 0 10 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.16667 12.25C0.845833 12.25 0.571181 12.1358 0.342708 11.9073C0.114236 11.6788 0 11.4042 0 11.0833V5.25C0 4.92917 0.114236 4.65451 0.342708 4.42604C0.571181 4.19757 0.845833 4.08333 1.16667 4.08333H1.75V2.91667C1.75 2.10972 2.03438 1.42188 2.60313 0.853125C3.17188 0.284375 3.85972 0 4.66667 0C5.47361 0 6.16146 0.284375 6.73021 0.853125C7.29896 1.42188 7.58333 2.10972 7.58333 2.91667V4.08333H8.16667C8.4875 4.08333 8.76215 4.19757 8.99063 4.42604C9.2191 4.65451 9.33333 4.92917 9.33333 5.25V11.0833C9.33333 11.4042 9.2191 11.6788 8.99063 11.9073C8.76215 12.1358 8.4875 12.25 8.16667 12.25H1.16667ZM1.16667 11.0833H8.16667V5.25H1.16667V11.0833ZM4.66667 9.33333C4.9875 9.33333 5.26215 9.2191 5.49062 8.99063C5.7191 8.76215 5.83333 8.4875 5.83333 8.16667C5.83333 7.84583 5.7191 7.57118 5.49062 7.34271C5.26215 7.11424 4.9875 7 4.66667 7C4.34583 7 4.07118 7.11424 3.84271 7.34271C3.61424 7.57118 3.5 7.84583 3.5 8.16667C3.5 8.4875 3.61424 8.76215 3.84271 8.99063C4.07118 9.2191 4.34583 9.33333 4.66667 9.33333ZM2.91667 4.08333H6.41667V2.91667C6.41667 2.43056 6.24653 2.01736 5.90625 1.67708C5.56597 1.33681 5.15278 1.16667 4.66667 1.16667C4.18056 1.16667 3.76736 1.33681 3.42708 1.67708C3.08681 2.01736 2.91667 2.43056 2.91667 2.91667V4.08333ZM1.16667 11.0833V5.25V11.0833Z" fill="white"/></svg>Tutup Semua`;
+    }
+  };
+}
+
+// ── RENDER TODAY STATUS ──
+async function renderTodayStatus() {
+  const statusEl = document.getElementById('ringkasanStatus');
+  if (!statusEl) return;
+
+  const todayData = await fetchData('/api/v1/daily-reports/today');
+  if (!todayData) {
+    statusEl.textContent = '';
+    return;
+  }
+
+  if (todayData.status === 'closed') {
+    statusEl.textContent = '🟢 Sudah Ditutup';
+    statusEl.className = 'ringkasan-status closed';
+  } else {
+    statusEl.textContent = '🔴 Belum Ditutup';
+    statusEl.className = 'ringkasan-status open';
+  }
+}
+
 // ── RENDER SEMUA ──
 async function setValues() {
-  const data = await fetchData();
+  const data = await fetchData('/api/v1/dashboard');
   if (!data) return;
 
   const {
@@ -275,6 +374,7 @@ async function setValues() {
     chart_weekly_revenue,
     low_stock_products,
     top_selling_products,
+    daily_closure,
   } = data;
 
   // Date
@@ -322,6 +422,9 @@ async function setValues() {
   renderLowStock(low_stock_products);
   renderTopSelling(top_selling_products);
   renderDailySummary(daily_summary);
+  renderClosureBanner(daily_closure);
+
+  await renderTodayStatus();
 }
 
 // ── INIT ──

@@ -99,28 +99,12 @@ document
     e.target.value = '';
   });
 
-// ── Edit Profil (TODO: modal) ──
-document.getElementById('btn-edit-profil').addEventListener('click', () => {
-  alert('Fitur edit profil akan segera hadir.');
-});
-
-// ── Ubah Password (TODO: modal) ──
 document.getElementById('btn-ubah-password').addEventListener('click', () => {
-  alert('Fitur ubah password akan segera hadir.');
+  window.location.href = '/pengaturan/ubah-kata-sandi';
 });
 
-// ── Sign Out ──
-document.getElementById('btn-signout').addEventListener('click', async () => {
-  if (!confirm('Anda yakin ingin keluar?')) return;
-  try {
-    await fetch('/api/v1/auth/logout', {
-      method: 'POST',
-      credentials: 'include',
-    });
-    window.location.href = '/masuk';
-  } catch (err) {
-    alert('Gagal logout: ' + err.message);
-  }
+document.getElementById('btn-edit-profil').addEventListener('click', () => {
+  window.location.href = '/pengaturan/edit-profil';
 });
 
 // ── Init ──

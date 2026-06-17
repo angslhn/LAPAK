@@ -150,6 +150,42 @@ body {
   gap: 22px;
 }
 
+/* ═══ BANNER TUTUP BUKU ═══ */
+.closure-banner {
+  background: #fff8e1;
+  border: 1px solid #ffc107;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  animation: modalSlideUp 0.3s ease;
+}
+.closure-banner-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+}
+.closure-banner-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #5c4b00;
+  margin-bottom: 2px;
+}
+.closure-banner-sub {
+  display: block;
+  font-size: 12px;
+  color: #8b7300;
+}
+.closure-banner-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 /* ─── Stat Cards ─── */
 .stat-grid {
   display: grid;
@@ -549,6 +585,16 @@ tbody td:last-child {
 }
 .ringkasan-row:last-of-type {
   border-bottom: none;
+}
+.ringkasan-status {
+  font-size: 12px;
+  font-weight: 600;
+}
+.ringkasan-status.open {
+  color: #ff8a8a;
+}
+.ringkasan-status.closed {
+  color: #48c78e;
 }
 .ringkasan-row .label {
   color: rgba(255, 255, 255, 0.6);

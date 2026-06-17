@@ -4,71 +4,78 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/styles/global.css" />
-    <link rel="stylesheet" href="/styles/ubah_kata_sandi.css" />
-    <script src="/scripts/ubah_kata_sandi.js" defer></script>
-    <title>LAPAK — Ubah Kata Sandi</title>
+    <link rel="stylesheet" href="/styles/auth/daftar.css" />
+    <script src="/scripts/auth/daftar.js" defer></script>
+    <title>LAPAK — Buat Akun Baru</title>
   </head>
   <body>
     <div class="bg">
       <div class="card">
-        <!-- Brand -->
-        <div class="brand">
-          <span class="brand__name">LAPAK</span>
-          <span class="brand__sub">Business Management</span>
-        </div>
-
-        <!-- Lapak Logo -->
-        <div class="logo">
-          <img src="/assets/images/lapak.png" width="65" alt="Lapak Logo" />
-        </div>
-
-        <!-- Heading -->
-        <h1 class="card__title">Buat Kata Sandi Baru</h1>
-        <p class="card__subtitle">Masukkan kata sandi baru untuk akun Anda.</p>
+        <h1 class="card__title">Buat Akun Baru</h1>
+        <p class="card__subtitle">
+          Daftarkan akun untuk mulai mengelola bisnis Anda.
+        </p>
 
         <!-- Alert error -->
         <div class="alert-error" id="alert-error" style="display: none"></div>
 
-        <!-- Alert success -->
-        <div class="alert-success" id="alert-success" style="display: none">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-            <polyline points="22 4 12 14.01 9 11.01" />
-          </svg>
-          <span id="success-message">Kata sandi berhasil diperbarui!</span>
-        </div>
-
-        <!-- Form -->
-        <form class="form" id="form-ubah-password" novalidate>
-          <div class="field">
-            <label class="label" for="password">Kata Sandi Baru</label>
-            <div class="input-wrapper">
-              <span class="input-icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="18"
-                  viewBox="0 0 14 18"
-                  fill="none"
-                >
-                  <path
-                    d="M7 13C7.55 13 8.02083 12.8042 8.4125 12.4125C8.80417 12.0208 9 11.55 9 11C9 10.45 8.80417 9.97917 8.4125 9.5875C8.02083 9.19583 7.55 9 7 9C6.45 9 5.97917 9.19583 5.5875 9.5875C5.19583 9.97917 5 10.45 5 11C5 11.55 5.19583 12.0208 5.5875 12.4125C5.97917 12.8042 6.45 13 7 13ZM2 18C1.45 18 0.979167 17.8042 0.5875 17.4125C0.195833 17.0208 0 16.55 0 16V6C0 5.45 0.195833 4.97917 0.5875 4.5875C0.979167 4.19583 1.45 4 2 4H3V2C3 1.45 3.19583 0.979167 3.5875 0.5875C3.97917 0.195833 4.45 0 5 0H9C9.55 0 10.0208 0.195833 10.4125 0.5875C10.8042 0.979167 11 1.45 11 2V4H12C12.55 4 13.0208 4.19583 13.4125 4.5875C13.8042 4.97917 14 5.45 14 6V16C14 16.55 13.8042 17.0208 13.4125 17.4125C13.0208 17.8042 12.55 18 12 18H2ZM5 4H9V2H5V4ZM2 16H12V6H2V16Z"
-                    fill="#9AA0A6"
-                  />
-                </svg>
-              </span>
+        <form class="form" id="form-daftar" novalidate>
+          <div class="row-two">
+            <div class="field">
+              <label class="label" for="nama">Nama Lengkap</label>
               <input
-                class="input input--padded input--icon-right"
+                class="input"
+                id="nama"
+                name="name"
+                type="text"
+                placeholder="Masukkan nama lengkap"
+                required
+              />
+              <span class="field-error" id="error-nama"></span>
+            </div>
+            <div class="field">
+              <label class="label" for="toko">Nama Toko</label>
+              <input
+                class="input"
+                id="toko"
+                name="store_name"
+                type="text"
+                placeholder="Masukkan nama toko"
+              />
+              <span class="field-error" id="error-toko"></span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="email">Email</label>
+            <input
+              class="input"
+              id="email"
+              name="email"
+              type="email"
+              placeholder="contoh@email.com"
+              required
+            />
+            <span class="field-error" id="error-email"></span>
+          </div>
+
+          <div class="field">
+            <label class="label" for="telepon">Nomor Telepon</label>
+            <input
+              class="input"
+              id="telepon"
+              name="phone"
+              type="tel"
+              placeholder="08xxxxxxxxxx"
+            />
+            <span class="field-error" id="error-telepon"></span>
+          </div>
+
+          <div class="field">
+            <label class="label" for="password">Password</label>
+            <div class="input-wrapper">
+              <input
+                class="input input--icon"
                 id="password"
                 name="password"
                 type="password"
@@ -81,6 +88,7 @@
                 aria-label="Toggle password"
                 data-target="password"
               >
+                <!-- Ikon mata terbuka (default) -->
                 <svg
                   class="eye-icon eye-show"
                   width="20"
@@ -93,6 +101,7 @@
                     d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.4 78.1-95.4 92.9-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.8-35.7-46.1-87.7-92.9-131.1C433.5 68.8 368.8 32 288 32zM128 256a160 160 0 1 1 320 0 160 160 0 1 1 -320 0zm160-80a80 80 0 1 0 0 160 80 80 0 1 0 0-160z"
                   />
                 </svg>
+                <!-- Ikon mata tertutup (hidden default) -->
                 <svg
                   class="eye-icon eye-hide"
                   width="20"
@@ -112,30 +121,14 @@
           </div>
 
           <div class="field">
-            <label class="label" for="konfirmasi"
-              >Konfirmasi Kata Sandi Baru</label
-            >
+            <label class="label" for="konfirmasi">Konfirmasi Password</label>
             <div class="input-wrapper">
-              <span class="input-icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="18"
-                  viewBox="0 0 14 18"
-                  fill="none"
-                >
-                  <path
-                    d="M7 13C7.55 13 8.02083 12.8042 8.4125 12.4125C8.80417 12.0208 9 11.55 9 11C9 10.45 8.80417 9.97917 8.4125 9.5875C8.02083 9.19583 7.55 9 7 9C6.45 9 5.97917 9.19583 5.5875 9.5875C5.19583 9.97917 5 10.45 5 11C5 11.55 5.19583 12.0208 5.5875 12.4125C5.97917 12.8042 6.45 13 7 13ZM2 18C1.45 18 0.979167 17.8042 0.5875 17.4125C0.195833 17.0208 0 16.55 0 16V6C0 5.45 0.195833 4.97917 0.5875 4.5875C0.979167 4.19583 1.45 4 2 4H3V2C3 1.45 3.19583 0.979167 3.5875 0.5875C3.97917 0.195833 4.45 0 5 0H9C9.55 0 10.0208 0.195833 10.4125 0.5875C10.8042 0.979167 11 1.45 11 2V4H12C12.55 4 13.0208 4.19583 13.4125 4.5875C13.8042 4.97917 14 5.45 14 6V16C14 16.55 13.8042 17.0208 13.4125 17.4125C13.0208 17.8042 12.55 18 12 18H2ZM5 4H9V2H5V4ZM2 16H12V6H2V16Z"
-                    fill="#9AA0A6"
-                  />
-                </svg>
-              </span>
               <input
-                class="input input--padded input--icon-right"
+                class="input input--icon"
                 id="konfirmasi"
                 name="confirm_password"
                 type="password"
-                placeholder="Ulangi kata sandi baru"
+                placeholder="Ulangi password"
                 required
               />
               <button
@@ -144,6 +137,7 @@
                 aria-label="Toggle konfirmasi kata sandi"
                 data-target="konfirmasi"
               >
+                <!-- Ikon mata terbuka (default) -->
                 <svg
                   class="eye-icon eye-show"
                   width="20"
@@ -156,6 +150,7 @@
                     d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.4 78.1-95.4 92.9-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.8-35.7-46.1-87.7-92.9-131.1C433.5 68.8 368.8 32 288 32zM128 256a160 160 0 1 1 320 0 160 160 0 1 1 -320 0zm160-80a80 80 0 1 0 0 160 80 80 0 1 0 0-160z"
                   />
                 </svg>
+                <!-- Ikon mata tertutup (hidden default) -->
                 <svg
                   class="eye-icon eye-hide"
                   width="20"
@@ -174,8 +169,16 @@
             <span class="field-error" id="error-konfirmasi"></span>
           </div>
 
-          <button class="btn-primary" type="submit" id="ubah-btn">
-            <span id="btn-text">Simpan Kata Sandi Baru</span>
+          <div class="checkbox-row">
+            <input class="checkbox" id="syarat" type="checkbox" />
+            <label class="checkbox-label" for="syarat"
+              >Saya menyetujui syarat dan ketentuan</label
+            >
+          </div>
+          <span class="field-error" id="error-syarat"></span>
+
+          <button class="btn-primary" type="submit" id="btn-daftar">
+            <span id="btn-text">Daftar</span>
             <span id="btn-loader" style="display: none">
               <svg
                 width="18"
@@ -192,29 +195,46 @@
                   stroke-linecap="round"
                 />
               </svg>
-              Menyimpan...
+              Mendaftar...
             </span>
           </button>
 
-          <div class="back-link">
-            <a href="/masuk" class="back-link__anchor">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M19 12H5" />
-                <path d="m12 19-7-7 7-7" />
-              </svg>
-              Kembali ke Masuk
-            </a>
+          <div class="divider">
+            <span class="divider__text">ATAU</span>
           </div>
+
+          <button class="btn-google" type="button" id="btn-google">
+            <svg
+              class="google-icon"
+              width="20"
+              height="20"
+              viewBox="0 0 48 48"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill="#FFC107"
+                d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"
+              />
+              <path
+                fill="#FF3D00"
+                d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"
+              />
+              <path
+                fill="#4CAF50"
+                d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"
+              />
+              <path
+                fill="#1976D2"
+                d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
+              />
+            </svg>
+            Daftar dengan Google
+          </button>
+
+          <p class="login-link">
+            Sudah punya akun?
+            <a class="login-link__anchor" href="/masuk">Masuk</a>
+          </p>
         </form>
       </div>
     </div>

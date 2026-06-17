@@ -87,18 +87,18 @@ form.addEventListener('submit', async (e) => {
   let valid = true;
 
   if (!password) {
-    showFieldError('password', 'Password baru wajib diisi.');
+    showFieldError('password', 'Kata sandi baru wajib diisi.');
     valid = false;
   } else if (password.length < 8) {
-    showFieldError('password', 'Password minimal 8 karakter.');
+    showFieldError('password', 'Kata sandi minimal 8 karakter.');
     valid = false;
   }
 
   if (!konfirmasi) {
-    showFieldError('konfirmasi', 'Konfirmasi password wajib diisi.');
+    showFieldError('konfirmasi', 'Konfirmasi kata sandi wajib diisi.');
     valid = false;
   } else if (password !== konfirmasi) {
-    showFieldError('konfirmasi', 'Konfirmasi password tidak cocok.');
+    showFieldError('konfirmasi', 'Konfirmasi kata sandi tidak cocok.');
     valid = false;
   }
 
@@ -117,7 +117,7 @@ form.addEventListener('submit', async (e) => {
     const json = await res.json();
 
     if (!res.ok || !json.success) {
-      const msg = json.message || 'Gagal mengubah password.';
+      const msg = json.message || 'Gagal mengubah kata sandi';
       if (json.code === 'AUTH_INVALID_RESET_TOKEN') {
         showError(
           'Token tidak valid atau sudah kadaluarsa. Silakan request ulang.'
@@ -130,7 +130,7 @@ form.addEventListener('submit', async (e) => {
     }
 
     // Sukses
-    showSuccess(json.message || 'Password berhasil diperbarui!');
+    showSuccess(json.message || 'Kata sandi berhasil diperbarui!');
     document.getElementById('password').value = '';
     document.getElementById('konfirmasi').value = '';
 
