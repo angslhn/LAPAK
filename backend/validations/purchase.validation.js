@@ -1,7 +1,15 @@
 const PurchaseInput = require('./inputs/purchase.input');
 
 const create = (data) => {
-  const { supplier_id, receipt_number, date, due_date, items, note } = data;
+  const {
+    supplier_id,
+    receipt_number,
+    date,
+    due_date,
+    items,
+    note,
+    payment_status,
+  } = data;
 
   const checkSupplierId = PurchaseInput.supplierId(supplier_id);
   if (checkSupplierId) throw new Error(checkSupplierId);
@@ -17,6 +25,9 @@ const create = (data) => {
 
   const checkNote = PurchaseInput.note(note);
   if (checkNote) throw new Error(checkNote);
+
+  const checkPaymentStatus = PurchaseInput.paymentStatus(payment_status);
+  if (checkPaymentStatus) throw new Error(checkPaymentStatus);
 };
 
 module.exports = { create };
