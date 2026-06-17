@@ -78,4 +78,23 @@ function note(value) {
   return null;
 }
 
-module.exports = { supplierId, date, dueDate, items, note };
+function paymentStatus(value) {
+  if (!value) return null;
+
+  const allowed = ['paid', 'unpaid'];
+
+  if (!allowed.includes(value)) {
+    return `payment_status harus salah satu dari: ${allowed.join(', ')}`;
+  }
+
+  return null;
+}
+
+module.exports = {
+  supplierId,
+  date,
+  dueDate,
+  items,
+  note,
+  paymentStatus,
+};

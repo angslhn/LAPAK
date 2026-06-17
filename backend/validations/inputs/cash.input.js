@@ -32,8 +32,21 @@ function note(value) {
   return null;
 }
 
+function category(value) {
+  if (!value) return 'Kategori tidak boleh kosong';
+
+  const allowed = ['sale', 'purchase', 'operational', 'credit_payment'];
+
+  if (!allowed.includes(value)) {
+    return `Kategori harus salah satu dari: ${allowed.join(', ')}`;
+  }
+
+  return null;
+}
+
 module.exports = {
   date,
   amount,
   note,
+  category,
 };
