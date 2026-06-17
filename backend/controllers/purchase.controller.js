@@ -47,7 +47,14 @@ const getByIdHandler = async (req, res) => {
 
 const createHandler = async (req, res) => {
   try {
-    const { supplier_id, date, due_date, items, note } = req.body;
+    const {
+      supplier_id,
+      date,
+      due_date,
+      items,
+      note,
+      payment_status = 'unpaid',
+    } = req.body;
 
     const data = await PurchaseService.create({
       supplier_id,
@@ -55,9 +62,15 @@ const createHandler = async (req, res) => {
       due_date,
       items,
       note,
+      payment_status,
     });
 
-    return created(res, data, 'Pembelian berhasil dibuat');
+    const message =
+      payment_status === 'paid'
+        ? 'Pembelian tunai berhasil disimpan'
+        : 'Pembelian hutang berhasil disimpan';
+
+    return created(res, data, message);
   } catch (err) {
     let code = err.message;
 

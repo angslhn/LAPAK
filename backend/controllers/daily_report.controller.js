@@ -85,9 +85,51 @@ const closeReportHandler = async (req, res) => {
   }
 };
 
+const getClosureStatusHandler = async (req, res) => {
+  try {
+    const data = await DailyReportService.getClosureStatus();
+
+    return ok(res, data);
+  } catch (err) {
+    let code = err.message;
+
+    if (!ERROR_MESSAGES[code]) {
+      code = 'INTERNAL_SERVER_ERROR';
+    }
+
+    const message = ERROR_MESSAGES[code];
+    const httpStatus = ERROR_STATUS[code];
+
+    return error(res, code, message, httpStatus);
+  }
+};
+
+const closeAllPendingHandler = async (req, res) => {
+  try {
+    const { id: user_id } = req.user;
+
+    const results = await DailyReportService.closeAllPending({ user_id });
+
+    return ok(res, results, 'Proses tutup buku selesai');
+  } catch (err) {
+    let code = err.message;
+
+    if (!ERROR_MESSAGES[code]) {
+      code = 'INTERNAL_SERVER_ERROR';
+    }
+
+    const message = ERROR_MESSAGES[code];
+    const httpStatus = ERROR_STATUS[code];
+
+    return error(res, code, message, httpStatus);
+  }
+};
+
 module.exports = {
   getAllHandler,
   getTodayHandler,
   getByIdHandler,
+  getClosureStatusHandler,
+  closeAllPendingHandler,
   closeReportHandler,
 };

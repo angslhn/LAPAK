@@ -1,4 +1,5 @@
 const DashboardService = require('../services/dashboard.service');
+const DailyReportService = require('../services/daily_report.service');
 
 const { ok, error } = require('../helpers/response');
 
@@ -7,9 +8,11 @@ const ERROR_STATUS = require('../helpers/error_status');
 
 const getSummaryHandler = async (req, res) => {
   try {
-    const data = await DashboardService.getSummary();
+    const dashboardData = await DashboardService.getSummary();
 
-    return ok(res, data);
+    const closureStatus = await DailyReportService.getClosureStatus();
+
+    return ok(res, { ...dashboardData, daily_closure: closureStatus });
   } catch (err) {
     let code = err.message;
 
