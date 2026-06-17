@@ -29,6 +29,8 @@ const authenticate = async (req, res, next) => {
 
       res.clearCookie(authCookieName);
 
+      res.redirect('/masuk');
+
       return error(res, code, ERROR_MESSAGES[code], ERROR_STATUS[code]);
     }
 
