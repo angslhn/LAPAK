@@ -40,7 +40,9 @@ router.get(
       maxAge: cookieMaxAge,
     });
 
-    res.redirect(clientURL + '/beranda');
+    const redirect = req.query.redirect || '/beranda';
+
+    res.redirect(clientURL + redirect);
   }
 );
 
