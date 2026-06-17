@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
 const validation = require('../middleware/validation');
+const checkDailyReport = require('../middleware/check_daily_report');
 
 const TransactionValidation = require('../validations/transaction.validation');
 
@@ -15,6 +16,7 @@ router.get('/', getAllHandler);
 router.get('/:id', getByIdHandler);
 router.post(
   '/',
+  checkDailyReport,
   validation(
     [
       ['customer_id', 'number'],
@@ -29,6 +31,6 @@ router.post(
   ),
   createHandler
 );
-router.patch('/:id/cancel', cancelHandler);
+router.patch('/:id/cancel', checkDailyReport, cancelHandler);
 
 module.exports = router;

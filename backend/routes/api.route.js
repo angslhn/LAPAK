@@ -16,6 +16,7 @@ const cashRoutes = require('./cash.route');
 const debtRoutes = require('./debt.route');
 const reportRoutes = require('./report.route');
 const dailyReportRoutes = require('./daily_report.route');
+const supplierDebtRoutes = require('./supplier_debt.route');
 
 router.use('/auth', authRoutes);
 router.use('/users', authenticate, userRoutes);
@@ -31,5 +32,6 @@ router.use('/cash', authenticate, cashRoutes);
 router.use('/debts', authenticate, debtRoutes);
 router.use('/reports', authenticate, reportRoutes);
 router.use('/daily-reports', authenticate, dailyReportRoutes);
+router.use('/supplier-debts', authenticate, supplierDebtRoutes);
 
 module.exports = router;
