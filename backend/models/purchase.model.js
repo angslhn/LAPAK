@@ -103,7 +103,7 @@ const getNextReceiptSequence = async (conn) => {
     const sql = `
                 SELECT COUNT(id) + 1 AS next_seq
                 FROM purchases
-                WHERE DATE(date) = CURDATE()
+                WHERE DATE(date) = DATE(CONVERT_TZ(NOW(), '+00:00', '+07:00'))
                 FOR UPDATE
                 `;
 
@@ -126,7 +126,7 @@ const create = async (data, conn = null) => {
 
   if (fields.length === 0) throw new Error('No valid fields provided');
 
-  const values = fields.map((field) => data[field]);
+  const values = fields.map((field) => cleanData[field]);
 
   try {
     const sql = `INSERT INTO purchases (${fields.join(', ')}) VALUES (${fields.map(() => '?').join(', ')})`;

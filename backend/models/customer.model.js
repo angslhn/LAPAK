@@ -2,7 +2,7 @@ const { getPool } = require('../lib/mysql');
 
 const sanitize = require('../helpers/sanitize');
 
-const ALLOWED_FIELDS = ['name', 'phone'];
+const ALLOWED_FIELDS = ['name', 'phone', 'address'];
 
 const pool = getPool();
 
@@ -39,7 +39,7 @@ const create = async (data) => {
 
   if (fields.length === 0) throw new Error('No valid fields provided');
 
-  const values = fields.map((field) => data[field]);
+  const values = fields.map((field) => cleanData[field]);
 
   try {
     const sql = `INSERT INTO customers (${fields.join(', ')}) VALUES (${fields.map(() => '?').join(', ')})`;

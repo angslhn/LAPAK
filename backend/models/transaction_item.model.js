@@ -179,7 +179,7 @@ const create = async (data, conn = null) => {
 
   if (fields.length === 0) throw new Error('No valid fields provided');
 
-  const values = fields.map((field) => data[field]);
+  const values = fields.map((field) => cleanData[field]);
 
   try {
     const sql = `INSERT INTO transaction_items (${fields.join(', ')}) VALUES (${fields.map(() => '?').join(', ')})`;
