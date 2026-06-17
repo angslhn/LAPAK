@@ -14,6 +14,16 @@ const ALLOWED_FIELDS = [
 
 const pool = getPool();
 
+const findById = async (id) => {
+  try {
+    const sql = 'SELECT * FROM cash_ledger WHERE id = ?';
+    const [rows] = await pool.execute(sql, [id]);
+    return rows[0] ?? null;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
 const findAll = async () => {
   try {
     const sql = 'SELECT * FROM cash_ledger ORDER BY created_at DESC';
@@ -109,7 +119,7 @@ const create = async (data, conn = null) => {
 
   if (fields.length === 0) throw new Error('No valid fields provided');
 
-  const values = fields.map((field) => data[field]);
+  const values = fields.map((field) => cleanData[field]);
 
   try {
     const sql = `INSERT INTO cash_ledger (${fields.join(', ')}) VALUES (${fields.map(() => '?').join(', ')})`;
@@ -163,13 +173,53 @@ const sumExpensesByRange = async (from, to) => {
   }
 };
 
+const updateById = async (id, data, conn = null) => {
+  const db = conn || pool;
+
+  const cleanData = sanitize(data);
+
+  const allowedForUpdate = ['amount', 'category', 'date', 'note'];
+
+  const fields = Object.keys(cleanData).filter((field) =>
+    allowedForUpdate.includes(field)
+  );
+
+  if (fields.length === 0) throw new Error('No valid fields provided');
+
+  const values = fields.map((field) => cleanData[field]);
+  const placeholders = fields.map((field) => `${field} = ?`).join(', ');
+
+  try {
+    const sql = `UPDATE cash_ledger SET ${placeholders} WHERE id = ?`;
+    const [result] = await db.execute(sql, [...values, id]);
+    return result.affectedRows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
+const deleteById = async (id) => {
+  try {
+    const sql = 'DELETE FROM cash_ledger WHERE id = ?';
+
+    const [result] = await pool.execute(sql, [id]);
+
+    return result.affectedRows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
 module.exports = {
   findAll,
+  findById,
   findByDate,
   getDailySummary,
   getClosingBalanceByDate,
   getDailySummaryByDate,
   create,
+  updateById,
+  deleteById,
   sumByType,
   sumExpensesByRange,
 };

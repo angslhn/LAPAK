@@ -10,6 +10,8 @@ const ALLOWED_FIELDS = [
   'discount',
   'tax',
   'total',
+  'paid',
+  'remaining',
   'payment_method',
   'status',
   'due_date',
@@ -130,7 +132,7 @@ const create = async (data, conn = null) => {
 
   if (fields.length === 0) throw new Error('No valid fields provided');
 
-  const values = fields.map((field) => data[field]);
+  const values = fields.map((field) => cleanData[field]);
 
   try {
     const sql = `INSERT INTO transactions (${fields.join(', ')}) VALUES (${fields.map(() => '?').join(', ')})`;
@@ -254,6 +256,34 @@ const getNextInvoiceSequence = async (conn) => {
   }
 };
 
+const update = async (data, conn = null) => {
+  const db = conn || pool;
+
+  const { id, ...updateData } = data;
+
+  const cleanData = sanitize(updateData);
+
+  const fields = Object.keys(cleanData).filter((field) =>
+    ALLOWED_FIELDS.includes(field)
+  );
+
+  if (fields.length === 0) throw new Error('No valid fields provided');
+
+  const values = fields.map((field) => cleanData[field]);
+
+  const placeholders = fields.map((field) => `${field} = ?`).join(', ');
+
+  try {
+    const sql = `UPDATE transactions SET ${placeholders} WHERE id = ?`;
+
+    const [result] = await db.execute(sql, [...values, id]);
+
+    return result.affectedRows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
 const updateStatus = async ({ id, status }, conn = null) => {
   const db = conn || pool;
 
@@ -287,5 +317,6 @@ module.exports = {
   countToday,
   countByDate,
   getNextInvoiceSequence,
+  update,
   updateStatus,
 };
