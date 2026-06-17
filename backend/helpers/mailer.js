@@ -3,7 +3,7 @@ const { transporter } = require('../lib/nodemailer');
 const { clientURL, smtpFrom } = require('../config/env');
 
 const sendResetPasswordEmail = async (email, token) => {
-  const resetLink = `${clientURL}/reset-password?token=${token}`;
+  const resetLink = `${clientURL}/ubah-kata-sandi?token=${token}`;
 
   await transporter.sendMail({
     from: smtpFrom,
