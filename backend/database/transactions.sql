@@ -7,6 +7,8 @@ CREATE TABLE IF NOT EXISTS transactions (
   discount DECIMAL(15,2) DEFAULT 0,
   tax DECIMAL(15,2) DEFAULT 0,
   total DECIMAL(15, 2) NOT NULL,
+  paid DECIMAL(15, 2) DEFAULT 0,
+  remaining DECIMAL(15, 2) NOT NULL DEFAULT 0,
   due_date DATE DEFAULT NULL,
   note TEXT DEFAULT NULL,
   payment_method ENUM('cash', 'qris', 'transfer', 'credit', 'debit') NOT NULL,
