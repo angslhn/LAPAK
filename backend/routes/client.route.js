@@ -5,34 +5,44 @@ const {
   redirectIfAuthenticated,
 } = require('../middleware/authorization');
 
-const { view } = require('../helpers/view');
+const { viewAuth, viewMain } = require('../helpers/view');
 
-router.get('/masuk', redirectIfAuthenticated, view('masuk.html'));
-router.get('/daftar', redirectIfAuthenticated, view('daftar.html'));
+router.get('/masuk', redirectIfAuthenticated, viewAuth('masuk.html'));
+router.get('/daftar', redirectIfAuthenticated, viewAuth('daftar.html'));
 router.get(
   '/lupa-kata-sandi',
   redirectIfAuthenticated,
-  view('lupa_kata_sandi.html')
+  viewAuth('lupa_kata_sandi.html')
 );
 router.get(
   '/ubah-kata-sandi',
   redirectIfAuthenticated,
-  view('ubah_kata_sandi.html')
+  viewAuth('ubah_kata_sandi.html')
 );
 
 router.get('/', (req, res) => res.redirect('/beranda'));
-router.get('/beranda', requireAuth, view('beranda.html'));
-router.get('/penjualan', requireAuth, view('penjualan.html'));
-router.get('/transaksi', requireAuth, view('transaksi.html'));
-router.get('/kategori', requireAuth, view('kategori.html'));
-router.get('/produk', requireAuth, view('produk.html'));
-router.get('/stok-barang', requireAuth, view('stok_barang.html'));
-router.get('/pembelian', requireAuth, view('pembelian.html'));
-router.get('/pelanggan', requireAuth, view('pelanggan.html'));
-router.get('/supplier', requireAuth, view('supplier.html'));
-router.get('/laporan', requireAuth, view('laporan.html'));
-router.get('/kas-dan-hutang', requireAuth, view('kas_dan_hutang.html'));
-router.get('/rekap-harian', requireAuth, view('rekap_harian.html'));
-router.get('/pengaturan', requireAuth, view('pengaturan.html'));
+router.get('/beranda', requireAuth, viewMain('beranda.html'));
+router.get('/penjualan', requireAuth, viewMain('penjualan.html'));
+router.get('/transaksi', requireAuth, viewMain('transaksi.html'));
+router.get('/kategori', requireAuth, viewMain('kategori.html'));
+router.get('/produk', requireAuth, viewMain('produk.html'));
+router.get('/stok-barang', requireAuth, viewMain('stok_barang.html'));
+router.get('/pembelian', requireAuth, viewMain('pembelian.html'));
+router.get('/pelanggan', requireAuth, viewMain('pelanggan.html'));
+router.get('/supplier', requireAuth, viewMain('supplier.html'));
+router.get('/laporan', requireAuth, viewMain('laporan.html'));
+router.get('/kas-dan-hutang', requireAuth, viewMain('kas_dan_hutang.html'));
+router.get('/rekap-harian', requireAuth, viewMain('rekap_harian.html'));
+router.get('/pengaturan', requireAuth, viewMain('pengaturan.html'));
+router.get(
+  '/pengaturan/edit-profil',
+  requireAuth,
+  viewMain('edit_profil.html')
+);
+router.get(
+  '/pengaturan/ubah-kata-sandi',
+  requireAuth,
+  viewMain('ubah_kata_sandi.html')
+);
 
 module.exports = router;
