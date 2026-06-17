@@ -267,10 +267,10 @@ button {
 .search-input {
   width: 100%;
   padding: 8px 12px 8px 36px;
-  border: 2px solid #e0e3eb;
-  border-radius: 10px;
+  border: 1.5px solid #e0e3eb;
+  border-radius: 8px;
   font-size: 13px;
-  color: #333;
+  color: #1a1a2e;
   background: #fff;
   outline: none;
   transition:
@@ -281,8 +281,8 @@ button {
   color: #bbb;
 }
 .search-input:focus {
-  border-color: #48c78e;
-  box-shadow: 0 0 0 3px rgba(72, 199, 142, 0.15);
+  border-color: #1a6b4a;
+  box-shadow: 0 0 0 3px rgba(26, 107, 74, 0.1);
 }
 
 .filter-btn {
@@ -591,7 +591,7 @@ tbody td.center {
   gap: 6px;
 }
 .form-field label {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   color: #595f67;
   text-transform: uppercase;
@@ -601,30 +601,35 @@ tbody td.center {
 .form-input-modern,
 .form-select-modern {
   width: 100%;
-  padding: 10px 14px;
-  border: 2px solid #e0e3eb;
-  border-radius: 10px;
-  font-size: 14px;
-  color: #333;
+  padding: 11px 14px;
+  border: 1.5px solid #e0e3eb;
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: #1a1a2e;
   background: #fff;
   outline: none;
   transition:
     border-color 0.15s,
     box-shadow 0.15s;
 }
+.form-input-modern::placeholder,
+.form-select-modern::placeholder {
+  color: #bbb;
+}
 .form-input-modern:focus,
 .form-select-modern:focus {
-  border-color: #48c78e;
-  box-shadow: 0 0 0 3px rgba(72, 199, 142, 0.15);
+  border-color: #1a6b4a;
+  box-shadow: 0 0 0 3px rgba(26, 107, 74, 0.1);
 }
 
 .form-textarea-modern {
   width: 100%;
-  padding: 10px 14px;
-  border: 2px solid #e0e3eb;
-  border-radius: 10px;
-  font-size: 14px;
-  color: #333;
+  padding: 11px 14px;
+  border: 1.5px solid #e0e3eb;
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: #1a1a2e;
+  background: #fff;
   resize: vertical;
   min-height: 80px;
   font-family: inherit;
@@ -633,9 +638,12 @@ tbody td.center {
     border-color 0.15s,
     box-shadow 0.15s;
 }
+.form-textarea-modern::placeholder {
+  color: #bbb;
+}
 .form-textarea-modern:focus {
-  border-color: #48c78e;
-  box-shadow: 0 0 0 3px rgba(72, 199, 142, 0.15);
+  border-color: #1a6b4a;
+  box-shadow: 0 0 0 3px rgba(26, 107, 74, 0.1);
 }
 
 /* Items Table */
@@ -681,8 +689,8 @@ tbody td.center {
 .custom-select-trigger {
   width: 100%;
   padding: 10px 36px 10px 14px;
-  border: 2px solid #e0e3eb;
-  border-radius: 10px;
+  border: 1.5px solid #e0e3eb;
+  border-radius: 8px;
   background: #fff;
   font-size: 14px;
   font-weight: 500;
@@ -695,15 +703,13 @@ tbody td.center {
   position: relative;
   user-select: none;
 }
-
 .custom-select-trigger:hover {
-  border-color: #48c78e;
+  border-color: #1a6b4a;
 }
-
 .custom-select-trigger.open {
-  border-color: #48c78e;
-  box-shadow: 0 0 0 3px rgba(72, 199, 142, 0.15);
-  border-radius: 10px 10px 0 0;
+  border-color: #1a6b4a;
+  box-shadow: 0 0 0 3px rgba(26, 107, 74, 0.1);
+  border-radius: 8px 8px 0 0;
 }
 
 .custom-select-trigger::after {
@@ -734,9 +740,9 @@ tbody td.center {
   left: 0;
   right: 0;
   background: #fff;
-  border: 2px solid #48c78e;
+  border: 1.5px solid #1a6b4a;
   border-top: none;
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 8px 8px;
   max-height: 200px;
   overflow-y: auto;
   z-index: 100;
@@ -919,8 +925,8 @@ tbody td.center {
 .input-tiny {
   width: 70px;
   padding: 6px 8px;
-  border: 2px solid #e0e3eb;
-  border-radius: 8px;
+  border: 1.5px solid #e0e3eb;
+  border-radius: 6px;
   font-size: 13px;
   text-align: right;
   outline: none;
@@ -929,8 +935,8 @@ tbody td.center {
     box-shadow 0.15s;
 }
 .input-tiny:focus {
-  border-color: #48c78e;
-  box-shadow: 0 0 0 3px rgba(72, 199, 142, 0.15);
+  border-color: #1a6b4a;
+  box-shadow: 0 0 0 3px rgba(26, 107, 74, 0.1);
 }
 
 .summary-total-box {
@@ -1144,7 +1150,7 @@ tbody td.center {
   margin-bottom: 16px;
 }
 .financial-total-label {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   color: #595f67;
   text-transform: uppercase;
@@ -1197,19 +1203,23 @@ tbody td.center {
 /* ─── PRODUCT SELECTOR (DYNAMIC) ─── */
 #productSelectorModal .form-input {
   width: 100%;
-  padding: 10px 14px;
-  border: 2px solid #e0e3eb;
-  border-radius: 10px;
-  font-size: 14px;
-  color: #333;
+  padding: 11px 14px;
+  border: 1.5px solid #e0e3eb;
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: #1a1a2e;
+  background: #fff;
   outline: none;
   transition:
     border-color 0.15s,
     box-shadow 0.15s;
 }
+#productSelectorModal .form-input::placeholder {
+  color: #bbb;
+}
 #productSelectorModal .form-input:focus {
-  border-color: #48c78e;
-  box-shadow: 0 0 0 3px rgba(72, 199, 142, 0.15);
+  border-color: #1a6b4a;
+  box-shadow: 0 0 0 3px rgba(26, 107, 74, 0.1);
 }
 
 /* ─── TOAST ─── */

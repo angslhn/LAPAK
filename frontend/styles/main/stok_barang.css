@@ -481,33 +481,40 @@ tbody td.center {
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   margin-bottom: 16px;
 }
 .form-group label {
   font-size: 12px;
   font-weight: 600;
-  color: #555;
+  letter-spacing: 0.6px;
+  color: #666;
+  margin-bottom: 6px;
 }
 
 .form-input,
 .form-textarea {
   width: 100%;
-  padding: 10px 14px;
-  border: 2px solid #e0e3eb;
-  border-radius: 10px;
-  font-size: 14px;
-  color: #333;
+  padding: 11px 14px;
+  border: 1.5px solid #e0e3eb;
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: #1a1a2e;
+  background: #fff;
   outline: none;
   transition:
     border-color 0.15s,
     box-shadow 0.15s;
   font-family: inherit;
 }
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #bbb;
+}
 .form-input:focus,
 .form-textarea:focus {
-  border-color: #48c78e;
-  box-shadow: 0 0 0 3px rgba(72, 199, 142, 0.15);
+  border-color: #1a6b4a;
+  box-shadow: 0 0 0 3px rgba(26, 107, 74, 0.1);
 }
 .form-textarea {
   resize: vertical;
@@ -532,7 +539,7 @@ tbody td.center {
   justify-content: center;
   gap: 3px;
   padding: 12px;
-  border: 2px solid #e0e3eb;
+  border: 1.5px solid #e0e3eb;
   border-radius: 10px;
   font-size: 13px;
   font-weight: 600;
@@ -545,7 +552,7 @@ tbody td.center {
   color: #006049;
 }
 .radio-pill-label:hover {
-  border-color: #48c78e;
+  border-color: #1a6b4a;
   background: #f0faf5;
 }
 

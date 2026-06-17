@@ -355,10 +355,10 @@ async function renderTodayStatus() {
   }
 
   if (todayData.status === 'closed') {
-    statusEl.textContent = '🟢 Sudah Ditutup';
+    statusEl.textContent = 'Sudah Ditutup';
     statusEl.className = 'ringkasan-status closed';
   } else {
-    statusEl.textContent = '🔴 Belum Ditutup';
+    statusEl.textContent = 'Belum Ditutup';
     statusEl.className = 'ringkasan-status open';
   }
 }

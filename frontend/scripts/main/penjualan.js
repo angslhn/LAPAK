@@ -136,6 +136,37 @@ function renderGrid(products) {
     );
 }
 
+// ── KONFIRMASI MODAL ──
+let confirmCallback = null;
+
+function showConfirm(title, message, onConfirm) {
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMessage').textContent = message;
+  confirmCallback = onConfirm;
+  document.getElementById('confirmModal').style.display = 'flex';
+}
+
+document.getElementById('btnConfirmYes').addEventListener('click', () => {
+  if (confirmCallback) confirmCallback();
+  document.getElementById('confirmModal').style.display = 'none';
+  confirmCallback = null;
+});
+
+// Auto-close confirm modal
+document.querySelectorAll('[data-close]').forEach((el) => {
+  el.addEventListener('click', () => {
+    const modalId = el.dataset.close;
+    document.getElementById(modalId).style.display = 'none';
+  });
+});
+
+document.getElementById('confirmModal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('confirmModal')) {
+    document.getElementById('confirmModal').style.display = 'none';
+    confirmCallback = null;
+  }
+});
+
 // ── CART LOGIC ──
 function addToCart(productId) {
   const product = allProducts.find((p) => p.id === productId);
@@ -272,7 +303,14 @@ document.querySelectorAll('.pay-btn').forEach((btn) => {
 // ── KOSONGKAN ──
 kosongkanBtn.addEventListener('click', () => {
   if (!cart.length) return;
-  if (confirm('Kosongkan semua pesanan?')) clearCart();
+  showConfirm(
+    'Kosongkan Pesanan?',
+    'Semua produk dalam keranjang akan dihapus.',
+    () => {
+      clearCart();
+      showToast('Keranjang berhasil dikosongkan', 'success');
+    }
+  );
 });
 
 // ── SEARCH ──
