@@ -1,7 +1,11 @@
 const path = require('path');
 
-const view = (file) => (req, res) => {
-  res.sendFile(path.join(__dirname, '../../frontend/views', file));
+const viewAuth = (file) => (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/views/auth', file));
 };
 
-module.exports = { view };
+const viewMain = (file) => (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/views/main', file));
+};
+
+module.exports = { viewAuth, viewMain };
