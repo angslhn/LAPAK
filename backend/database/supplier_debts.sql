@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS supplier_debts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  purchase_id INT DEFAULT NULL, -- NULL jika hutang manual
+  supplier_id INT NOT NULL,
+  receipt_number VARCHAR(50) DEFAULT NULL,
+  date DATE NOT NULL,
+  due_date DATE NOT NULL,
+  total DECIMAL(15, 2) NOT NULL,
+  paid DECIMAL(15, 2) NOT NULL DEFAULT 0,
+  remaining DECIMAL(15, 2) NOT NULL DEFAULT 0,
+  note TEXT DEFAULT NULL,
+  status ENUM('unpaid', 'partial', 'paid') NOT NULL DEFAULT 'unpaid',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (purchase_id) REFERENCES purchases(id) ON DELETE SET NULL,
+  FOREIGN KEY (supplier_id) REFERENCES suppliers(id) ON DELETE RESTRICT
+);
