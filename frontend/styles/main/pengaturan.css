@@ -423,7 +423,7 @@ body {
 
 .btn-danger-solid {
   padding: 10px 20px;
-  background: #e05252;
+  background: #ba1a1a;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -432,11 +432,9 @@ body {
   cursor: pointer;
   transition: all 0.15s;
 }
-
 .btn-danger-solid:hover {
-  background: #c62828;
+  background: #8b0000;
 }
-
 .btn-danger-solid:disabled {
   opacity: 0.6;
   cursor: not-allowed;

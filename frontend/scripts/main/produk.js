@@ -432,15 +432,6 @@ const closeModal = () => {
   resetModalForm();
 };
 
-const showToast = (message, type = 'success') => {
-  const container = document.getElementById('toastContainer');
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  toast.textContent = message;
-  container.appendChild(toast);
-  setTimeout(() => toast.remove(), 3000);
-};
-
 // ── API Calls ──
 const fetchProducts = async () => {
   const res = await fetch(`${API_BASE}/products`, { credentials: 'include' });

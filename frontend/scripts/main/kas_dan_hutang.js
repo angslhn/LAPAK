@@ -15,17 +15,6 @@ const fmtTime = (iso) => {
   return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 };
 
-// ── Toast ──
-function showToast(message, type = 'success') {
-  const container = document.getElementById('toastContainer');
-  if (!container) return;
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  toast.textContent = message;
-  container.appendChild(toast);
-  setTimeout(() => toast.remove(), 3000);
-}
-
 // ── Format Currency Input ──
 function formatCurrencyInput(input) {
   let value = input.value.replace(/[^0-9]/g, '');

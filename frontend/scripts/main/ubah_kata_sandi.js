@@ -15,36 +15,6 @@ function togglePassword(inputId, btn) {
   }
 }
 
-// ── TOAST ──
-function showToast(message, type = 'success') {
-  const container = document.getElementById('toastContainer');
-  if (!container) {
-    // Fallback kalau container belum ada
-    const toast = document.createElement('div');
-    toast.style.cssText = `
-      position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
-      background: ${type === 'error' ? '#e05252' : '#006049'};
-      color: #fff; padding: 12px 24px; border-radius: 8px;
-      font-size: 14px; font-weight: 600; z-index: 3000;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      animation: toastIn 0.3s ease;
-    `;
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    setTimeout(() => {
-      toast.style.animation = 'toastOut 0.3s ease forwards';
-      setTimeout(() => toast.remove(), 300);
-    }, 3000);
-    return;
-  }
-
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  toast.textContent = message;
-  container.appendChild(toast);
-  setTimeout(() => toast.remove(), 3000);
-}
-
 // ── FORM SUBMIT ──
 document
   .getElementById('changePasswordForm')

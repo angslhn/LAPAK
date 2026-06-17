@@ -26,17 +26,6 @@ const fmtDateShort = (iso) => {
 
 const todayStr = new Date().toISOString().slice(0, 10);
 
-// ── Toast ──
-function showToast(message, type = 'success') {
-  const container = document.getElementById('toastContainer');
-  if (!container) return;
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  toast.textContent = message;
-  container.appendChild(toast);
-  setTimeout(() => toast.remove(), 3000);
-}
-
 // ── Fetch Daily Report Today ──
 async function fetchDailyReport() {
   try {

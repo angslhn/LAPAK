@@ -268,17 +268,6 @@ function renderDailySummary(daily_summary) {
   set('net-profit-daily', rupiahFormatter(daily_summary.net_profit));
 }
 
-// ── TOAST ──
-function showToast(message, type = 'success') {
-  const container = document.getElementById('toastContainer');
-  if (!container) return;
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  toast.textContent = message;
-  container.appendChild(toast);
-  setTimeout(() => toast.remove(), 3000);
-}
-
 // ── RENDER CLOSURE BANNER ──
 function renderClosureBanner(daily_closure) {
   const banner = document.getElementById('closureBanner');

@@ -181,15 +181,6 @@ function closeStockModal() {
   stockModal.style.display = 'none';
 }
 
-function showToast(message, type = 'success') {
-  const container = document.getElementById('toastContainer');
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  toast.textContent = message;
-  container.appendChild(toast);
-  setTimeout(() => toast.remove(), 3000);
-}
-
 async function submitStockAdjustment() {
   if (isSubmitting) return;
 

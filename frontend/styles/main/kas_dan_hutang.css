@@ -1827,8 +1827,8 @@ tbody td.muted {
   gap: 12px;
 }
 .btn-danger-solid {
-  padding: 12px 24px;
-  background: #e05252;
+  padding: 10px 20px;
+  background: #ba1a1a;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -1838,7 +1838,7 @@ tbody td.muted {
   transition: all 0.15s;
 }
 .btn-danger-solid:hover {
-  background: #c62828;
+  background: #8b0000;
 }
 .btn-danger-solid:disabled {
   opacity: 0.6;
