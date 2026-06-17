@@ -564,13 +564,13 @@ async function submitPurchase() {
   const payload = {
     supplier_id: parseInt(supplierId),
     date: date,
-    due_date: null,
     items: purchaseItems.map((i) => ({
       product_id: i.product_id,
       quantity: i.quantity,
       purchase_price: i.purchase_price,
     })),
     note: note || null,
+    payment_status: paymentStatus,
   };
 
   if (paymentStatus === 'unpaid') {
@@ -579,9 +579,12 @@ async function submitPurchase() {
     if (!dueDate) return showToast('Tanggal jatuh tempo wajib diisi', 'error');
 
     payload.due_date = dueDate;
+  } else {
+    payload.due_date = null;
   }
 
   const btn = document.getElementById('submitPurchaseBtn');
+
   btn.disabled = true;
   btn.textContent = 'Menyimpan...';
 
@@ -593,17 +596,18 @@ async function submitPurchase() {
       body: JSON.stringify(payload),
     });
     const json = await res.json();
+
     if (!json.success) throw new Error(json.message);
 
-    if (paymentStatus === 'paid' && json.data?.id) {
-      await fetch(`/api/v1/purchases/${json.data.id}/paid`, {
-        method: 'PATCH',
-        credentials: 'include',
-      });
-    }
+    const message =
+      paymentStatus === 'paid'
+        ? 'Pembelian tunai berhasil disimpan'
+        : 'Pembelian hutang berhasil disimpan';
 
-    showToast('Pembelian berhasil disimpan');
+    showToast(message);
+
     closePurchaseModal();
+
     await fetchPurchases();
   } catch (err) {
     showToast(err.message, 'error');

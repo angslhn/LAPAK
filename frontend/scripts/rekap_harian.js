@@ -114,13 +114,29 @@ function renderExpenseTable(mutations) {
 }
 
 // ── Tutup Buku ──
+// ── Toast ──
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toastContainer');
+  if (!container) return;
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// ── Tutup Buku ──
+document.getElementById('btn-tutup-buku').addEventListener('click', () => {
+  document.getElementById('tutupBukuModal').style.display = 'flex';
+});
+
 document
-  .getElementById('btn-tutup-buku')
+  .getElementById('btnConfirmTutupBuku')
   .addEventListener('click', async () => {
-    if (
-      !confirm('Tutup buku hari ini? Saldo akan dikunci dan tidak bisa diubah.')
-    )
-      return;
+    const btn = document.getElementById('btnConfirmTutupBuku');
+    btn.disabled = true;
+    btn.textContent = 'Memproses...';
+
     try {
       const res = await fetch('/api/v1/daily-reports/close', {
         method: 'POST',
@@ -128,12 +144,32 @@ document
       });
       const json = await res.json();
       if (!json.success) throw new Error(json.message);
-      alert('Buku berhasil ditutup! ✅');
+
+      showToast('Buku berhasil ditutup!', 'success');
+      document.getElementById('tutupBukuModal').style.display = 'none';
       fetchDailyReport();
     } catch (err) {
-      alert('Gagal menutup buku: ' + err.message);
+      showToast('Gagal menutup buku: ' + err.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Ya, Tutup Buku';
     }
   });
+
+// ── Auto-close modal ──
+document.querySelectorAll('[data-close]').forEach((el) => {
+  el.addEventListener('click', () => {
+    const modalId = el.dataset.close;
+    document.getElementById(modalId).style.display = 'none';
+  });
+});
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach((modal) => {
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.style.display = 'none';
+  });
+});
 
 // ── Init ──
 fetchDailyReport();
