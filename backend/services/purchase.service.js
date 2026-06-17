@@ -4,17 +4,19 @@ const PurchaseModel = require('../models/purchase.model');
 const CashLedgerModel = require('../models/cash_ledger.model');
 const PurchaseItemModel = require('../models/purchase_item.model');
 const StockMutationModel = require('../models/stock_mutation.model');
+const SupplierDebtModel = require('../models/supplier_debt.model');
 
 const { getPool } = require('../lib/mysql');
 const { getLocalDate } = require('../helpers/datetime');
 const { makeReceiptNumber } = require('../helpers/code_generator');
 
 const {
-  VALIDATION_ERROR,
+  DEBT_NOT_FULLY_PAID,
   PURCHASE_NOT_FOUND,
   PURCHASE_ALREADY_PAID,
   PURCHASE_MARK_PAID_FAILED,
   SUPPLIER_NOT_FOUND,
+  VALIDATION_ERROR,
 } = require('../helpers/error_codes');
 
 const getAll = async () => {
@@ -44,7 +46,14 @@ const create = async (data) => {
   const connection = await pool.getConnection();
 
   try {
-    const { supplier_id, date, due_date, items, note } = data;
+    const {
+      supplier_id,
+      date,
+      due_date = null,
+      items,
+      note = null,
+      payment_status = 'unpaid',
+    } = data;
 
     if (items.length < 1) throw new Error(VALIDATION_ERROR);
 
@@ -59,18 +68,22 @@ const create = async (data) => {
 
     await connection.beginTransaction();
 
+    const localDate = getLocalDate();
+
     const nextSeq = await PurchaseModel.getNextReceiptSequence(connection);
 
     const receipt_number = makeReceiptNumber(nextSeq);
+
+    const purchaseStatus = payment_status === 'paid' ? 'paid' : 'unpaid';
 
     const purchaseId = await PurchaseModel.create(
       {
         supplier_id,
         receipt_number,
         date,
-        due_date,
+        due_date: payment_status === 'unpaid' ? due_date : null,
         total,
-        status: 'unpaid',
+        status: purchaseStatus,
         note,
       },
       connection
@@ -103,27 +116,52 @@ const create = async (data) => {
           stock_before,
           stock_after,
           reference_id: purchaseId,
+          note:
+            payment_status === 'paid'
+              ? `Pembelian tunai ${receipt_number}`
+              : `Pembelian hutang ${receipt_number}`,
         },
         connection
       );
     }
 
-    await CashLedgerModel.create(
-      {
-        date: getLocalDate(),
-        type: 'expense',
-        category: 'purchase',
-        amount: total,
-        reference_id: purchaseId,
-        reference_type: 'purchase',
-        note: 'Pembelian dari ' + receipt_number,
-      },
-      connection
-    );
+    if (payment_status === 'paid') {
+      await CashLedgerModel.create(
+        {
+          date: getLocalDate(),
+          type: 'expense',
+          category: 'purchase',
+          amount: total,
+          reference_id: purchaseId,
+          reference_type: 'purchase',
+          note: `Pembelian tunai ${receipt_number}`,
+        },
+        connection
+      );
+    } else {
+      await SupplierDebtModel.create(
+        {
+          purchase_id: purchaseId,
+          supplier_id,
+          receipt_number,
+          date,
+          due_date,
+          total,
+          paid: 0,
+          remaining: total,
+          status: 'unpaid',
+          note,
+        },
+        connection
+      );
+    }
 
     await connection.commit();
 
-    return { id: purchaseId };
+    return {
+      id: purchaseId,
+      status: payment_status === 'paid' ? 'paid' : 'unpaid',
+    };
   } catch (err) {
     await connection.rollback();
     throw new Error(err.message);
@@ -141,6 +179,9 @@ const getUnpaidTotal = async () => {
 };
 
 const markAsPaid = async (data) => {
+  const pool = getPool();
+  const connection = await pool.getConnection();
+
   try {
     const { id } = data;
 
@@ -150,6 +191,12 @@ const markAsPaid = async (data) => {
 
     if (purchase.status === 'paid') throw new Error(PURCHASE_ALREADY_PAID);
 
+    const debt = await SupplierDebtModel.findByPurchaseId(id);
+
+    if (debt && debt.remaining > 0) {
+      throw new Error(DEBT_NOT_FULLY_PAID);
+    }
+
     const affectedRows = await PurchaseModel.updateStatus({
       id,
       status: 'paid',
@@ -157,9 +204,14 @@ const markAsPaid = async (data) => {
 
     if (affectedRows === 0) throw new Error(PURCHASE_MARK_PAID_FAILED);
 
+    await connection.commit();
+
     return affectedRows;
   } catch (err) {
+    await connection.rollback();
     throw new Error(err.message);
+  } finally {
+    connection.release();
   }
 };
 

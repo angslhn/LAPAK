@@ -82,6 +82,8 @@ const create = async (data) => {
 
     const invoice_number = makeInvoiceCode(nextSeq);
 
+    const isCredit = payment_method === 'credit';
+
     const transactionId = await TransactionModel.create(
       {
         user_id,
@@ -91,9 +93,11 @@ const create = async (data) => {
         discount,
         tax,
         total,
+        paid: isCredit ? 0 : total,
+        remaining: isCredit ? total : 0,
         payment_method,
-        status: payment_method === 'credit' ? 'unpaid' : 'paid',
-        due_date: payment_method === 'credit' ? data.due_date : null,
+        status: isCredit ? 'unpaid' : 'paid',
+        due_date: isCredit ? data.due_date : null,
         note: data.note || null,
       },
       connection

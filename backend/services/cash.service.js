@@ -4,7 +4,7 @@ const DailyReportModel = require('../models/daily_report.model');
 const calculateTrend = require('../helpers/calculate_trend');
 
 const { getLocalPastDate, getLocalDate } = require('../helpers/datetime');
-const { VALIDATION_ERROR } = require('../helpers/error_codes');
+const { VALIDATION_ERROR, NOT_FOUND } = require('../helpers/error_codes');
 
 const getAll = async () => {
   try {
@@ -98,4 +98,47 @@ const createIncome = async (data) => {
   }
 };
 
-module.exports = { getAll, getByDate, createExpense, createIncome };
+const updateCashTransaction = async (data) => {
+  try {
+    const { id, amount, category, date, note } = data;
+
+    const existing = await CashLedgerModel.findById(id);
+    if (!existing) throw new Error(NOT_FOUND);
+
+    const affectedRows = await CashLedgerModel.updateById(id, {
+      amount,
+      category,
+      date,
+      note: note || null,
+    });
+
+    if (affectedRows === 0) throw new Error(NOT_FOUND);
+
+    return affectedRows;
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
+
+const deleteCashTransaction = async (id) => {
+  try {
+    const existing = await CashLedgerModel.findById(id);
+    if (!existing) throw new Error(NOT_FOUND);
+
+    const affectedRows = await CashLedgerModel.deleteById(id);
+    if (affectedRows === 0) throw new Error(NOT_FOUND);
+
+    return affectedRows;
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
+
+module.exports = {
+  getAll,
+  getByDate,
+  createExpense,
+  createIncome,
+  updateCashTransaction,
+  deleteCashTransaction,
+};
