@@ -110,7 +110,7 @@ const logoutHandler = async (req, res) => {
   try {
     await AuthService.logout();
 
-    res.clearCookie('auth_id', {
+    res.clearCookie(authCookieName, {
       httpOnly: true,
       secure: isProduction,
       sameSite: 'strict',
