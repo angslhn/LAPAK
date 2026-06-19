@@ -301,6 +301,26 @@ const sumHPPByRange = async (from, to) => {
   }
 };
 
+const sumHPPByDate = async (date) => {
+  try {
+    const sql = `
+                SELECT
+                  SUM(ti.quantity * p.purchase_price) AS total
+                FROM transaction_items ti
+                JOIN transactions t ON ti.transaction_id = t.id
+                JOIN products p ON ti.product_id = p.id
+                WHERE DATE(t.date) = ?
+                  AND t.status = 'paid'
+                `;
+
+    const [rows] = await pool.execute(sql, [date]);
+
+    return Number(rows[0]?.total || 0);
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
 module.exports = {
   findByTransaction,
   findTopProductsToday,
@@ -311,6 +331,7 @@ module.exports = {
   create,
   sumTodayHPP,
   sumHPPByRange,
+  sumHPPByDate,
   sumTodayQuantity,
   sumQuantityByCategory,
   sumQuantityByDate,
