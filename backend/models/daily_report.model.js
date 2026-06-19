@@ -2,7 +2,8 @@ const { getPool } = require('../lib/mysql');
 
 const sanitize = require('../helpers/sanitize');
 
-const ALLOWED_UPDATE_FIELDS = [
+const ALLOWED_FIELDS = [
+  'date',
   'total_revenue',
   'total_expense',
   'transaction_count',
@@ -79,7 +80,6 @@ const findOpenReports = async () => {
   }
 };
 
-// 🔥 BARU
 const findOpenReportsBeforeDate = async (date) => {
   try {
     const sql = `
