@@ -396,6 +396,13 @@ tbody td.center {
   font-weight: 600;
 }
 
+/* Hover row mutation */
+.mutation-row {
+  transition: background 0.1s;
+}
+.mutation-row:hover {
+  background: #fafbfc;
+}
 .mutation-in {
   color: #2d9e6b;
   font-weight: 600;
@@ -551,14 +558,15 @@ tbody td.center {
   color: #555;
   transition: all 0.15s;
 }
-.radio-pill input:checked + .radio-pill-label {
+.radio-pill input[value='in']:checked + .radio-pill-label {
   border-color: #006049;
-  background: #00604a1b;
+  background: #edf9f4;
   color: #006049;
 }
-.radio-pill-label:hover {
-  border-color: #1a6b4a;
-  background: #f0faf5;
+.radio-pill input[value='out']:checked + .radio-pill-label {
+  border-color: #ba1a1a;
+  background: #fff0f0;
+  color: #ba1a1a;
 }
 
 .modal-footer {

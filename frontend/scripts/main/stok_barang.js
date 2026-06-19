@@ -173,14 +173,25 @@ function renderMutationTable(mutations) {
       const typeLabel = m.type === 'in' ? 'Masuk' : 'Keluar';
       const typeClass = m.type === 'in' ? 'mutation-in' : 'mutation-out';
       const note = m.note || '—';
+
+      const icon =
+        m.type === 'in'
+          ? `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v10M4 8l4 4 4-4" stroke="#2d9e6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+          : `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14V4M4 8l4-4 4 4" stroke="#e05252" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
       return `
-      <tr>
-        <td><span class="produk-name">${m.product_name || `Produk #${m.product_id}`}</span></td>
-        <td class="center"><span class="${typeClass}">${typeLabel}</span></td>
-        <td class="center">${m.quantity}</td>
-        <td class="center">${m.stock_after}</td>
-        <td class="center">${note}</td>
-      </tr>`;
+    <tr class="mutation-row">
+      <td><span class="produk-name">${m.product_name || `Produk #${m.product_id}`}</span></td>
+      <td class="center">
+        <span class="${typeClass}" style="display:flex;align-items:center;justify-content:center;gap:4px">
+          ${icon}
+          ${typeLabel}
+        </span>
+      </td>
+      <td class="center">${m.quantity}</td>
+      <td class="center">${m.stock_after}</td>
+      <td class="center">${note}</td>
+    </tr>`;
     })
     .join('');
 
