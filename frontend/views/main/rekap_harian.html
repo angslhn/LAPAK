@@ -391,6 +391,7 @@
                 </div>
               </div>
 
+              <!-- ═══ TABLE: SEMUA PENGELUARAN HARIAN ═══ -->
               <div class="table-card">
                 <div class="table-card-header">
                   <span class="table-card-title"
@@ -408,6 +409,15 @@
                   </thead>
                   <tbody id="pengeluaran-table-body"></tbody>
                 </table>
+                <div class="pagination-row">
+                  <span class="pagination-info" id="expense-pagination-info"
+                    >Menampilkan 0–0 dari 0</span
+                  >
+                  <div
+                    class="pagination-ctrl"
+                    id="expense-pagination-ctrl"
+                  ></div>
+                </div>
               </div>
             </div>
 
@@ -488,16 +498,12 @@
               </div>
             </div>
           </div>
+
           <!-- ═══ TABLE: SEMUA LAPORAN HARIAN ═══ -->
           <div class="table-card">
             <div class="table-card-header">
-              <div>
-                <div class="table-card-title">📋 Semua Laporan Harian</div>
-                <small
-                  style="color: #aaa; font-size: 12px"
-                  id="laporan-info-header"
-                  >Memuat...</small
-                >
+              <div style="display: flex; justify-content: space-between">
+                <div class="table-card-title">Semua Laporan Harian</div>
               </div>
               <button class="btn-primary" id="btnCloseAllFromList">
                 <svg
@@ -518,16 +524,22 @@
             <table>
               <thead>
                 <tr>
-                  <th>Tanggal</th>
-                  <th class="right">Omzet</th>
-                  <th class="right">Pengeluaran</th>
-                  <th class="right">Laba</th>
+                  <th class="center">Tanggal</th>
+                  <th class="center">Omzet</th>
+                  <th class="center">Pengeluaran</th>
+                  <th class="center">Laba</th>
                   <th class="center">Status</th>
                   <th class="center">Aksi</th>
                 </tr>
               </thead>
               <tbody id="laporan-table-body"></tbody>
             </table>
+            <div class="pagination-row">
+              <span class="pagination-info" id="laporan-pagination-info"
+                >Menampilkan 0–0 dari 0</span
+              >
+              <div class="pagination-ctrl" id="laporan-pagination-ctrl"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -546,17 +558,14 @@
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M4 14H6V9H4V14ZM12 14H14V4H12V14ZM8 14H10V11H8V14ZM8 9H10V7H8V9ZM2 18C1.45 18 0.979167 17.8042 0.5875 17.4125C0.195833 17.0208 0 16.55 0 16V2C0 1.45 0.195833 0.979167 0.5875 0.5875C0.979167 0.195833 1.45 0 2 0H16C16.55 0 17.0208 0.195833 17.4125 0.5875C17.8042 0.979167 18 1.45 18 2V16C18 16.55 17.8042 17.0208 17.4125 17.4125C17.0208 17.8042 16.55 18 16 18H2ZM2 16H16V2H2V16Z"
+                d="M4 14H6V7H4V14ZM8 14H10V4H8V14ZM12 14H14V10H12V14ZM2 18C1.45 18 0.979167 17.8042 0.5875 17.4125C0.195833 17.0208 0 16.55 0 16V2C0 1.45 0.195833 0.979167 0.5875 0.5875C0.979167 0.195833 1.45 0 2 0H16C16.55 0 17.0208 0.195833 17.4125 0.5875C17.8042 0.979167 18 1.45 18 2V16C18 16.55 17.8042 17.0208 17.4125 17.4125C17.0208 17.8042 16.55 18 16 18H2ZM2 16H16V2H2V16ZM2 2V16V2Z"
                 fill="#006049"
-              />
+              ></path>
             </svg>
             <h3>
               Detail Laporan Harian - <span id="detailLaporanTanggal">—</span>
             </h3>
           </div>
-          <button class="modal-close-btn" data-close="detailLaporanModal">
-            &times;
-          </button>
         </div>
 
         <div class="detail-hero-card">
@@ -575,7 +584,7 @@
             </svg>
           </div>
           <div class="hero-info">
-            <div class="hero-label">LABA BERSIH</div>
+            <div class="hero-label">Laba Bersih</div>
             <div class="hero-value" id="detailHeroProfit">Rp 0</div>
           </div>
           <div class="hero-badge" id="detailHeroStatus">Open</div>
@@ -583,7 +592,7 @@
 
         <div class="detail-grid-info">
           <div class="detail-item">
-            <div class="detail-label">OMZET</div>
+            <div class="detail-label">Omzet</div>
             <div class="detail-val" id="detailRevenue">Rp 0</div>
           </div>
           <div class="detail-item">
@@ -591,19 +600,19 @@
             <div class="detail-val" id="detailExpense">Rp 0</div>
           </div>
           <div class="detail-item">
-            <div class="detail-label">TOTAL TRANSAKSI</div>
+            <div class="detail-label">Total Transaksi</div>
             <div class="detail-val" id="detailTransactionCount">0</div>
           </div>
           <div class="detail-item">
-            <div class="detail-label">LABA BERSIH</div>
+            <div class="detail-label">Laba Bersih</div>
             <div class="detail-val green" id="detailNetProfit">Rp 0</div>
           </div>
           <div class="detail-item">
-            <div class="detail-label">SALDO AWAL</div>
+            <div class="detail-label">Saldo Awal</div>
             <div class="detail-val" id="detailOpeningBalance">Rp 0</div>
           </div>
           <div class="detail-item">
-            <div class="detail-label">SALDO AKHIR</div>
+            <div class="detail-label">Saldo Akhir</div>
             <div class="detail-val" id="detailClosingBalance">Rp 0</div>
           </div>
         </div>
@@ -613,7 +622,7 @@
           id="detailClosedInfo"
           style="display: none"
         >
-          <div class="detail-label">DITUTUP OLEH</div>
+          <div class="detail-label">Keterangan</div>
           <div class="detail-val-text" id="detailClosedBy">—</div>
         </div>
 

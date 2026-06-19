@@ -68,9 +68,9 @@ function renderTable(data) {
 
       return `
       <tr data-id="${s.id}" style="cursor:pointer;">
-        <td><span class="supplier-name">${s.name}</span></td>
-        <td><span class="phone-val">${s.phone || '—'}</span></td>
-        <td><span class="alamat-val">${s.address || '—'}</span></td>
+        <td class="center"><span class="supplier-name">${s.name}</span></td>
+        <td class="center"><span class="phone-val">${s.phone || '—'}</span></td>
+        <td class="center"><span class="alamat-val">${s.address || '—'}</span></td>
         <td class="center"><span class="tgl-val">${lastDate}</span></td>
         <td class="center" onclick="event.stopPropagation();">
           <div class="aksi-cell">
@@ -118,6 +118,11 @@ function renderPaginationInfo(from, to, total) {
 }
 
 function renderPaginationCtrl(totalPages) {
+  if (totalPages <= 1) {
+    paginationCtrl.innerHTML = '';
+    return;
+  }
+
   const delta = 2;
   const left = Math.max(1, currentPage - delta);
   const right = Math.min(totalPages, currentPage + delta);

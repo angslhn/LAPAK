@@ -122,19 +122,19 @@ function renderTable(data) {
 
       return `
       <tr data-id="${t.id}" style="cursor:pointer">
-        <td><a class="trx-id">${t.invoice_number}</a></td>
-        <td>
+        <td class="center"><a class="trx-id">${t.invoice_number}</a></td>
+        <td class="center">
           <div class="tgl-main">${date}</div>
           <div class="tgl-time">${time}</div>
         </td>
-        <td>${customer}</td>
+        <td class="center">${customer}</td>
         <td>
           <div class="metode-cell">
             <span class="metode-ico">${icon}</span>
             <span class="metode-lbl">${label}</span>
           </div>
         </td>
-        <td class="right"><span class="total-val">${formatRp(t.total)}</span></td>
+        <td class="center"><span class="total-val">${formatRp(t.total)}</span></td>
         <td class="center">${badge}</td>
       </tr>`;
     })
@@ -157,6 +157,11 @@ function renderPaginationInfo(from, to, total) {
 
 // ── PAGINATION CTRL ──
 function renderPaginationCtrl(totalPages) {
+  if (totalPages <= 1) {
+    paginationCtrl.innerHTML = '';
+    return;
+  }
+
   const range = [];
   const delta = 2;
   const left = Math.max(1, currentPage - delta);

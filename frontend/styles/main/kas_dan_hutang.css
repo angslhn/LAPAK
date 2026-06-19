@@ -345,7 +345,6 @@ tbody td.muted {
   font-size: 12.5px;
 }
 .waktu-val {
-  font-family: 'Courier New', monospace;
   font-size: 13px;
   font-weight: 600;
   color: #555;
@@ -1909,11 +1908,6 @@ tbody td.muted {
 }
 .toast.error {
   background: #e05252;
-}
-.page-ellipsis {
-  padding: 0 4px;
-  color: #aaa;
-  align-self: center;
 }
 @keyframes toastIn {
   from {

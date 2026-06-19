@@ -231,6 +231,8 @@ function renderTopSelling(top_selling_products) {
     return;
   }
 
+  const top5 = top_selling_products.slice(0, 5);
+
   const productElement = (product, index) => {
     const initial = product.name
       ? product.name.substring(0, 2).toUpperCase()
@@ -251,7 +253,7 @@ function renderTopSelling(top_selling_products) {
       </tr>`;
   };
 
-  tableProductElement.innerHTML = top_selling_products
+  tableProductElement.innerHTML = top5
     .map((product, index) => productElement(product, index))
     .join('');
 }
@@ -415,6 +417,10 @@ async function setValues() {
 
   await renderTodayStatus();
 }
+
+document.querySelector('.btn-restok').addEventListener('click', () => {
+  window.location.href = '/stok-barang';
+});
 
 // ── INIT ──
 setValues();

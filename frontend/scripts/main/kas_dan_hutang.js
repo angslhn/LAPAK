@@ -136,13 +136,14 @@ function renderPagination(ctrlId, totalPages, onPageChange, current) {
   let html = `<button class="page-btn nav-arrow" data-page="prev" ${current === 1 ? 'disabled' : ''}>‹</button>`;
   if (left > 1) {
     html += `<button class="page-btn" data-page="1">1</button>`;
-    if (left > 2) html += `<span class="page-ellipsis">…</span>`;
+    if (left > 2) html += `<span style="padding:0 4px;color:#aaa;">…</span>`;
   }
   range.forEach((p) => {
     html += `<button class="page-btn ${p === current ? 'active' : ''}" data-page="${p}">${p}</button>`;
   });
   if (right < totalPages) {
-    if (right < totalPages - 1) html += `<span class="page-ellipsis">…</span>`;
+    if (right < totalPages - 1)
+      html += `<span style="padding:0 4px;color:#aaa;">…</span>`;
     html += `<button class="page-btn" data-page="${totalPages}">${totalPages}</button>`;
   }
   html += `<button class="page-btn nav-arrow" data-page="next" ${current === totalPages ? 'disabled' : ''}>›</button>`;
@@ -299,10 +300,10 @@ function renderKasPage() {
         const nc = m.type === 'income' ? 'nominal-masuk' : 'nominal-keluar';
         const pfx = m.type === 'income' ? '+ ' : '− ';
         return `<tr style="position:relative">
-        <td><span class="waktu-val">${fmtTime(m.created_at || m.date)}</span></td>
-        <td><span class="ket-val">${m.note || '—'}</span></td>
-        <td><span class="badge ${tc}">${tl}</span></td>
-        <td class="right"><span class="${nc}">${pfx}${rupiahFormatter(m.amount)}</span></td>
+        <td class="center"><span class="waktu-val">${fmtTime(m.created_at || m.date)}</span></td>
+        <td class="center"><span class="ket-val">${m.note || '—'}</span></td>
+        <td class="center"><span class="badge ${tc}">${tl}</span></td>
+        <td class="center"><span class="${nc}">${pfx}${rupiahFormatter(m.amount)}</span></td>
         <td class="center"><button class="aksi-btn kas-action-btn" data-idx="${idx}">⋮</button></td>
       </tr>`;
       })

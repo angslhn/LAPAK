@@ -184,6 +184,11 @@ function renderPaginationInfo(from, to, total) {
 }
 
 function renderPaginationCtrl(totalPages) {
+  if (totalPages <= 1) {
+    paginationCtrl.innerHTML = '';
+    return;
+  }
+
   const delta = 2;
   const left = Math.max(1, currentPage - delta);
   const right = Math.min(totalPages, currentPage + delta);

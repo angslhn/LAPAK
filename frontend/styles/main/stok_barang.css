@@ -158,9 +158,14 @@ button {
   flex: 1;
   overflow-y: auto;
   padding: 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+}
+
+.page-body > * {
+  margin-bottom: 18px;
+}
+
+.page-body > *:last-child {
+  margin-bottom: 0;
 }
 
 .stat-grid {
@@ -337,7 +342,7 @@ tbody tr:hover {
   background: #fafbfc;
 }
 tbody td {
-  padding: 16px 16px;
+  padding: 14px 16px;
   font-size: 13px;
   color: #333;
   vertical-align: middle;
@@ -599,6 +604,63 @@ tbody td.center {
 }
 .btn-secondary:hover {
   background: #f5f6fa;
+}
+
+/* ─── Pagination ─── */
+.pagination-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 20px 0px 20px;
+  border-top: 1px solid #f0f0f5;
+  flex-shrink: 0;
+}
+.pagination-info {
+  font-size: 13px;
+  color: #888;
+}
+.pagination-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.page-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  border: 1px solid #e0e3eb;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+.page-btn:hover {
+  background: #f5f6fa;
+  border-color: #c8ccd6;
+}
+.page-btn.active {
+  background: #00604a;
+  border-color: #00604a;
+  color: #fff;
+}
+.page-btn.nav-arrow {
+  font-size: 15px;
+  color: #aaa;
+}
+.page-btn.nav-arrow:hover {
+  color: #333;
+}
+.page-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 
 /* ─── Toast ─── */

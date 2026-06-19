@@ -2,6 +2,8 @@
 let currentTab = 'current';
 let stockData = null;
 let isSubmitting = false;
+let currentPage = 1;
+const PER_PAGE = 10;
 
 // ── DOM refs ──
 const tableBody = document.getElementById('table-body');
@@ -43,6 +45,53 @@ async function fetchStock() {
   }
 }
 
+function renderPaginationInfo(from, to, total) {
+  const infoEl = document.getElementById('stock-pagination-info');
+  if (infoEl) infoEl.textContent = `Menampilkan ${from}–${to} dari ${total}`;
+}
+
+function renderPaginationCtrl(totalPages, onPageChange) {
+  const ctrl = document.getElementById('stock-pagination-ctrl');
+
+  if (!ctrl) return;
+
+  if (totalPages <= 1) {
+    ctrl.innerHTML = '';
+    return;
+  }
+
+  const delta = 2;
+  const left = Math.max(1, currentPage - delta);
+  const right = Math.min(totalPages, currentPage + delta);
+  const range = [];
+  for (let i = left; i <= right; i++) range.push(i);
+
+  let html = `<button class="page-btn nav-arrow" data-page="prev" ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
+  if (left > 1) {
+    html += `<button class="page-btn" data-page="1">1</button>`;
+    if (left > 2) html += `<span style="padding:0 4px;color:#aaa;">…</span>`;
+  }
+  range.forEach((p) => {
+    html += `<button class="page-btn ${p === currentPage ? 'active' : ''}" data-page="${p}">${p}</button>`;
+  });
+  if (right < totalPages) {
+    if (right < totalPages - 1)
+      html += `<span style="padding:0 4px;color:#aaa;">…</span>`;
+    html += `<button class="page-btn" data-page="${totalPages}">${totalPages}</button>`;
+  }
+  html += `<button class="page-btn nav-arrow" data-page="next" ${currentPage === totalPages ? 'disabled' : ''}>›</button>`;
+
+  ctrl.innerHTML = html;
+  ctrl.querySelectorAll('[data-page]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const p = btn.dataset.page;
+      if (p === 'prev') onPageChange(currentPage - 1);
+      else if (p === 'next') onPageChange(currentPage + 1);
+      else onPageChange(Number(p));
+    });
+  });
+}
+
 // ── Fetch Riwayat Mutasi ──
 async function fetchMutations() {
   showLoading('Memuat riwayat mutasi...');
@@ -70,15 +119,22 @@ function renderSummary(metrics) {
 function renderStockTable(items) {
   if (!items || !items.length) {
     tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:32px;color:#aaa">Tidak ada data stok</td></tr>`;
+    renderPaginationInfo(0, 0, 0);
+    document.getElementById('stock-pagination-ctrl').innerHTML = '';
     return;
   }
 
-  tableBody.innerHTML = items
+  const total = items.length;
+  const pages = Math.max(1, Math.ceil(total / PER_PAGE));
+  if (currentPage > pages) currentPage = pages;
+  const start = (currentPage - 1) * PER_PAGE;
+  const slice = items.slice(start, start + PER_PAGE);
+
+  tableBody.innerHTML = slice
     .map((item) => {
       const status = item.status;
       const stockClass = status === 'ok' ? 'stok-normal' : 'stok-danger';
       const badge = getStatusBadge(status);
-
       return `
       <tr>
         <td><span class="produk-name">${item.name}</span></td>
@@ -89,21 +145,34 @@ function renderStockTable(items) {
       </tr>`;
     })
     .join('');
+
+  renderPaginationInfo(start + 1, Math.min(start + PER_PAGE, total), total);
+  renderPaginationCtrl(pages, (page) => {
+    currentPage = page;
+    renderStockTable(items);
+  });
 }
 
 // ── Render Tabel Mutasi ──
 function renderMutationTable(mutations) {
   if (!mutations || !mutations.length) {
     tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:32px;color:#aaa">Belum ada riwayat mutasi stok</td></tr>`;
+    renderPaginationInfo(0, 0, 0);
+    document.getElementById('stock-pagination-ctrl').innerHTML = '';
     return;
   }
 
-  tableBody.innerHTML = mutations
+  const total = mutations.length;
+  const pages = Math.max(1, Math.ceil(total / PER_PAGE));
+  if (currentPage > pages) currentPage = pages;
+  const start = (currentPage - 1) * PER_PAGE;
+  const slice = mutations.slice(start, start + PER_PAGE);
+
+  tableBody.innerHTML = slice
     .map((m) => {
       const typeLabel = m.type === 'in' ? 'Masuk' : 'Keluar';
       const typeClass = m.type === 'in' ? 'mutation-in' : 'mutation-out';
       const note = m.note || '—';
-
       return `
       <tr>
         <td><span class="produk-name">${m.product_name || `Produk #${m.product_id}`}</span></td>
@@ -114,6 +183,12 @@ function renderMutationTable(mutations) {
       </tr>`;
     })
     .join('');
+
+  renderPaginationInfo(start + 1, Math.min(start + PER_PAGE, total), total);
+  renderPaginationCtrl(pages, (page) => {
+    currentPage = page;
+    renderMutationTable(mutations);
+  });
 }
 
 // ── Status Badge Helper ──
