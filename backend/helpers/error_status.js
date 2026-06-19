@@ -57,6 +57,7 @@ const ERROR_STATUS = {
 
   // Daily Report
   REPORT_NOT_FOUND: 404,
+  REPORT_NO_PENDING: 400,
   REPORT_ALREADY_CLOSED: 400,
 };
 

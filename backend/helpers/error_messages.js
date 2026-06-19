@@ -58,6 +58,7 @@ const ERROR_MESSAGES = {
 
   // Daily Report
   REPORT_NOT_FOUND: 'Laporan harian tidak ditemukan',
+  REPORT_NO_PENDING: 'Tidak ada laporan yang perlu ditutup',
   REPORT_ALREADY_CLOSED: 'Laporan harian sudah ditutup',
 };
 

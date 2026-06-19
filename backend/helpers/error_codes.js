@@ -57,6 +57,7 @@ const ERROR_CODES = {
 
   // Daily Report
   REPORT_NOT_FOUND: 'REPORT_NOT_FOUND', // rekap tidak ditemukan
+  REPORT_NO_PENDING: 'REPORT_NO_PENDING', // tidak ada report yang perlu ditutup
   REPORT_ALREADY_CLOSED: 'REPORT_ALREADY_CLOSED', // rekap sudah ditutup
 };
 
