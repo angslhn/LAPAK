@@ -297,7 +297,7 @@ function renderClosureBanner(daily_closure) {
   banner.style.display = 'flex';
 
   document.getElementById('closureBannerTitle').textContent =
-    `Ada ${daily_closure.count} hari yang belum ditutup bukunya`;
+    `Ada ${daily_closure.count} hari buku kas yang belum ditutup`;
   document.getElementById('closureBannerSub').textContent =
     `Mulai dari tanggal ${fmtDateShort(daily_closure.earliestDate)}`;
 
@@ -324,7 +324,7 @@ function renderClosureBanner(daily_closure) {
       banner.style.display = 'none';
       localStorage.removeItem('closureBannerDismissed');
       // Refresh dashboard
-      setTimeout(() => location.reload(), 500);
+      // setTimeout(() => location.reload(), 500);
     } catch (err) {
       showToast('Gagal menutup buku: ' + err.message, 'error');
     } finally {
@@ -346,10 +346,10 @@ async function renderTodayStatus() {
   }
 
   if (todayData.status === 'closed') {
-    statusEl.textContent = 'Sudah Ditutup';
+    statusEl.textContent = 'Buku Kas Sudah Ditutup';
     statusEl.className = 'ringkasan-status closed';
   } else {
-    statusEl.textContent = 'Belum Ditutup';
+    statusEl.textContent = 'Buku Kas Belum Ditutup';
     statusEl.className = 'ringkasan-status open';
   }
 }

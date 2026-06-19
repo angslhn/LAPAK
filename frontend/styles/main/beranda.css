@@ -152,8 +152,8 @@ body {
 
 /* ═══ BANNER TUTUP BUKU ═══ */
 .closure-banner {
-  background: #fff8e1;
-  border: 1px solid #ffc107;
+  background: #f0faf5;
+  border: 1px solid #b3e8d0;
   border-radius: 12px;
   padding: 16px 20px;
   display: flex;
@@ -172,18 +172,60 @@ body {
   display: block;
   font-size: 13px;
   font-weight: 700;
-  color: #5c4b00;
+  color: #004d3a;
   margin-bottom: 2px;
 }
 .closure-banner-sub {
   display: block;
   font-size: 12px;
-  color: #8b7300;
+  color: #006049;
 }
+
 .closure-banner-actions {
   display: flex;
   gap: 8px;
   flex-shrink: 0;
+}
+
+.btn-secondary-outline {
+  padding: 8px 16px;
+  background: #fff;
+  color: #006049;
+  border: 1.5px solid #006049;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn-secondary-outline:hover {
+  background: #edf9f4;
+  border-color: #004d3a;
+  color: #004d3a;
+}
+
+.btn-primary-solid {
+  padding: 8px 16px;
+  background: #006049;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn-primary-solid:hover {
+  background: #004d3a;
+}
+.btn-primary-solid:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* ─── Stat Cards ─── */
@@ -599,10 +641,10 @@ tbody td:last-child {
   font-weight: 600;
 }
 .ringkasan-status.open {
-  color: #ff8a8a;
+  color: #e05252;
 }
 .ringkasan-status.closed {
-  color: #48c78e;
+  color: #006049;
 }
 .ringkasan-row .label {
   color: rgba(255, 255, 255, 0.6);
