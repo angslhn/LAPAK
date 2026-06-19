@@ -1,4 +1,5 @@
 const { getPool } = require('../lib/mysql');
+const { getLocalDate } = require('../helpers/datetime');
 
 const sanitize = require('../helpers/sanitize');
 
@@ -96,24 +97,31 @@ const findOpenReportsBeforeDate = async (date) => {
 
 const findMissingDates = async () => {
   try {
-    const sql = `
-      SELECT DISTINCT DATE(date) AS date 
-      FROM cash_ledger 
-      WHERE DATE(date) < CURDATE()
-      ORDER BY date ASC
-    `;
-    const [cashDates] = await pool.execute(sql);
+    const [firstCash] = await pool.execute(
+      'SELECT MIN(date) AS first_date FROM cash_ledger'
+    );
+
+    if (!firstCash[0]?.first_date) return [];
+
+    const firstDate = firstCash[0].first_date;
+    const endDate = getLocalDate();
+
+    const start = new Date(firstDate);
+    const end = new Date(endDate);
+
+    const [existingReports] = await pool.execute(
+      'SELECT date FROM daily_reports'
+    );
+
+    const existingSet = new Set(existingReports.map((r) => r.date));
 
     const missingDates = [];
 
-    for (const { date } of cashDates) {
-      const [report] = await pool.execute(
-        'SELECT id FROM daily_reports WHERE date = ?',
-        [date]
-      );
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      const dateStr = d.toISOString().split('T')[0];
 
-      if (report.length === 0) {
-        missingDates.push(date);
+      if (!existingSet.has(dateStr)) {
+        missingDates.push(dateStr);
       }
     }
 
@@ -160,7 +168,7 @@ const update = async (id, data) => {
   const cleanData = sanitize(data);
 
   const fields = Object.keys(cleanData).filter((field) =>
-    ALLOWED_UPDATE_FIELDS.includes(field)
+    ALLOWED_FIELDS.includes(field)
   );
 
   if (fields.length === 0) throw new Error('No valid fields provided');
