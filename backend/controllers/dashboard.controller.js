@@ -8,7 +8,9 @@ const ERROR_STATUS = require('../helpers/error_status');
 
 const getSummaryHandler = async (req, res) => {
   try {
-    const dashboardData = await DashboardService.getSummary();
+    const { id } = req.user;
+
+    const dashboardData = await DashboardService.getSummary(id);
 
     const closureStatus = await DailyReportService.getClosureStatus();
 
