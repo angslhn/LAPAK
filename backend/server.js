@@ -34,7 +34,12 @@ app.use(
       directives: {
         defaultSrc: ["'self'"],
         scriptSrc: ["'self'", 'https://cdnjs.cloudflare.com'],
-        imgSrc: ["'self'", 'data:', 'https://res.cloudinary.com'],
+        imgSrc: [
+          "'self'",
+          'data:',
+          'https://res.cloudinary.com',
+          'https://*.googleusercontent.com',
+        ],
       },
     },
   })
