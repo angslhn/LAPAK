@@ -36,7 +36,7 @@ router.get(
     res.cookie(authCookieName, token, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: 'strict',
+      sameSite: 'lax',
       maxAge: cookieMaxAge,
     });
 
