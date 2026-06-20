@@ -4,7 +4,7 @@ LAPAK adalah aplikasi *Point of Sale* (POS) berbasis web yang dirancang khusus u
 
 ## ✨ Fitur Utama
 
-* **🔐 Autentikasi** — Login/register aman dengan JWT, dan lupa password via email
+* **🔐 Autentikasi** — Login/register aman dengan JWT, dan lupa kata sandi via email
 * **🖼️ Upload Gambar** — Foto produk, avatar toko, dan QRIS via Cloudinary
 * **🛒 Kasir (POS)** — Proses transaksi cepat dengan panel keranjang belanja real-time, mendukung pembayaran **tunai, QRIS, transfer bank, dan piutang**
 * **🏦 Rekening & QRIS** — Kelola nomor rekening dan upload gambar QRIS untuk pembayaran customer
