@@ -72,8 +72,6 @@ const createHandler = async (req, res) => {
 
     return created(res, null, 'Transaksi berhasil dibuat');
   } catch (err) {
-    console.error(err);
-
     let code = err.message;
 
     if (!ERROR_MESSAGES[code]) {
