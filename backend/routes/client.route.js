@@ -44,5 +44,6 @@ router.get(
   requireAuth,
   viewMain('ubah_kata_sandi.html')
 );
+router.get('/pengaturan/bank-qris', requireAuth, viewMain('bank_qris.html'));
 
 module.exports = router;
