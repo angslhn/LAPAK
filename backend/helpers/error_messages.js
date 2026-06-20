@@ -19,6 +19,12 @@ const ERROR_MESSAGES = {
   USER_AVATAR_UPDATE_FAILED: 'Gagal memperbarui avatar pengguna',
   USER_UPDATE_FAILED: 'Gagal memperbarui detail pengguna',
 
+  // Bank
+  BANK_ACCOUNT_NOT_FOUND: 'Bank tidak ditemukan',
+  BANK_ACCOUNT_UPDATE_FAILED: 'Gagal memperbarui bank',
+  BANK_ACCOUNT_DELETE_FAILED: 'Gagal menghapus bank',
+  QRIS_NOT_FOUND: 'QRIS tidak ditemukan',
+
   // Product
   PRODUCT_SKU_ALREADY_EXISTS: 'Kode SKU sudah digunakan',
   PRODUCT_NOT_FOUND: 'Produk tidak ditemukan',

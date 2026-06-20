@@ -18,6 +18,12 @@ const ERROR_CODES = {
   USER_UPDATE_FAILED: 'USER_UPDATE_FAILED', // gagal memperbarui pengguna
   USER_AVATAR_UPDATE_FAILED: 'USER_AVATAR_UPDATE_FAILED', // gagal memperbarui avatar pengguna
 
+  // Bank Account
+  BANK_ACCOUNT_NOT_FOUND: 'BANK_ACCOUNT_NOT_FOUND', // akun bank tidak ditemukan
+  BANK_ACCOUNT_UPDATE_FAILED: 'BANK_ACCOUNT_UPDATE_FAILED', // gagal memperbarui data akun bank
+  BANK_ACCOUNT_DELETE_FAILED: 'BANK_ACCOUNT_DELETE_FAILED', // gagal menghapus data akun bank
+  QRIS_NOT_FOUND: 'QRIS_NOT_FOUND', // QRIS tidak ditemukan
+
   // Product
   PRODUCT_SKU_ALREADY_EXISTS: 'PRODUCT_SKU_ALREADY_EXISTS', // kode sku telah tersedia
   PRODUCT_NOT_FOUND: 'PRODUCT_NOT_FOUND', // produk tidak ditemukan
