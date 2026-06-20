@@ -3,10 +3,19 @@ const kirimBtn = document.getElementById('kirim-btn');
 const btnText = document.getElementById('btn-text');
 const btnLoader = document.getElementById('btn-loader');
 const alertError = document.getElementById('alert-error');
-const alertSuccess = document.getElementById('alert-success');
-const successMessage = document.getElementById('success-message');
 const emailInput = document.getElementById('email');
 const errorEmail = document.getElementById('error-email');
+
+// ── Success Modal (Email Berhasil Dikirim) ──
+const successModalOverlay = document.getElementById('success-modal-overlay');
+const successModalMessage = document.getElementById('success-modal-message');
+
+function showSuccessModal(message) {
+  if (successModalMessage && message) {
+    successModalMessage.textContent = message;
+  }
+  if (successModalOverlay) successModalOverlay.classList.add('is-visible');
+}
 
 if (formLupa) {
   // ── Clear error on input ──
@@ -19,13 +28,10 @@ if (formLupa) {
   formLupa.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Clear all alerts
+    // Clear alert error
     if (alertError) {
       alertError.style.display = 'none';
       alertError.textContent = '';
-    }
-    if (alertSuccess) {
-      alertSuccess.style.display = 'none';
     }
     if (errorEmail) errorEmail.textContent = '';
     emailInput.classList.remove('error');
@@ -50,7 +56,10 @@ if (formLupa) {
     // Loading
     kirimBtn.disabled = true;
     btnText.style.display = 'none';
-    btnLoader.style.display = '';
+    btnLoader.style.display = 'flex';
+    btnLoader.style.justifyContent = 'center';
+    btnLoader.style.alignItems = 'center';
+    btnLoader.style.gap = '6px';
 
     try {
       const res = await fetch('/api/v1/auth/forgot-password', {
@@ -60,10 +69,11 @@ if (formLupa) {
         body: JSON.stringify({ email }),
       });
 
-      const json = await res.json();
+      const json = await res.json().catch(() => null);
 
-      if (!res.ok || !json.success) {
-        const msg = json.message || 'Gagal mengirim email. Silakan coba lagi.';
+      if (!res.ok || !json || !json.success) {
+        const msg =
+          (json && json.message) || 'Gagal mengirim email. Silakan coba lagi.';
         if (alertError) {
           alertError.textContent = msg;
           alertError.style.display = '';
@@ -71,15 +81,11 @@ if (formLupa) {
         return;
       }
 
-      // Sukses — tampilkan alert success
-      if (successMessage) {
-        successMessage.textContent =
-          json.message ||
-          'Email untuk perubahan kata sandi telah dikirim. Silakan cek kotak masuk Anda.';
-      }
-      if (alertSuccess) {
-        alertSuccess.style.display = '';
-      }
+      const pesan =
+        json.message ||
+        'Kami telah mengirimkan tautan perubahan kata sandi ke email Anda. Silakan periksa kotak masuk atau folder spam.';
+
+      showSuccessModal(pesan);
       emailInput.value = '';
     } catch (err) {
       if (alertError) {

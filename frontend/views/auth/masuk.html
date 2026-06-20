@@ -73,7 +73,7 @@
 
             <!-- Password -->
             <div class="field-group">
-              <label for="password">PASSWORD</label>
+              <label for="password">Kata Sandi</label>
               <div class="input-wrap">
                 <span class="input-ico">
                   <svg
@@ -94,7 +94,7 @@
                   id="password"
                   name="password"
                   class="input-field"
-                  placeholder="Masukkan password Anda"
+                  placeholder="Masukkan kata sandi Anda"
                   autocomplete="current-password"
                   required
                 />
@@ -143,7 +143,7 @@
                 <span class="checkmark"></span>
                 Ingat Saya
               </label>
-              <a href="/lupa-kata-sandi" class="lupa-pw">Lupa Password?</a>
+              <a href="/lupa-kata-sandi" class="lupa-pw">Lupa Kata Sandi?</a>
             </div>
 
             <button type="submit" class="btn-masuk" id="btn-masuk">
@@ -202,6 +202,47 @@
             Belum punya akun? <a href="/daftar">Daftar sekarang</a>
           </p>
         </div>
+      </div>
+    </div>
+
+    <!-- ────── Success Modal — Login Berhasil ───── -->
+    <div
+      class="success-modal-overlay"
+      id="success-modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="success-modal-title"
+    >
+      <div class="success-modal-card">
+        <div class="success-modal-card-brand">LAPAK</div>
+        <div class="success-modal-card-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M5 13l4 4L19 7"
+              stroke="#0d5c47"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+        <h2 class="success-modal-card-title" id="success-modal-title">
+          Login Berhasil
+        </h2>
+        <p class="success-modal-card-message" id="success-modal-message">
+          Selamat datang kembali di LAPAK. Anda akan diarahkan ke beranda.
+        </p>
+        <button
+          class="success-modal-card-btn"
+          type="button"
+          id="success-modal-btn"
+        >
+          Lanjutkan
+        </button>
       </div>
     </div>
   </body>

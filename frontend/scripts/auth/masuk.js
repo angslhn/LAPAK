@@ -12,6 +12,26 @@ const icoHide = document.getElementById('ico-hide');
 const errorEmail = document.getElementById('error-email');
 const errorPass = document.getElementById('error-password');
 
+// ── Success Modal (Login Berhasil) ──
+const successModalOverlay = document.getElementById('success-modal-overlay');
+const successModalBtn = document.getElementById('success-modal-btn');
+const successModalMessage = document.getElementById('success-modal-message');
+
+const REDIRECT_DELAY_MS = 10000;
+
+function showSuccessModal(message) {
+  if (successModalMessage && message) {
+    successModalMessage.textContent = message;
+  }
+  if (successModalOverlay) successModalOverlay.classList.add('is-visible');
+}
+
+function goToBeranda() {
+  window.location.href = '/beranda';
+}
+
+if (successModalBtn) successModalBtn.addEventListener('click', goToBeranda);
+
 // ── Toggle Password Visibility ──
 togglePw.addEventListener('click', () => {
   const isPassword = passInput.type === 'password';
@@ -90,10 +110,10 @@ form.addEventListener('submit', async (e) => {
       body: JSON.stringify({ email, password }),
     });
 
-    const json = await res.json();
+    const json = await res.json().catch(() => null);
 
-    if (!res.ok || !json.success) {
-      const msg = json.message || 'Email atau password salah.';
+    if (!res.ok || !json || !json.success) {
+      const msg = (json && json.message) || 'Email atau password salah.';
       if (msg.toLowerCase().includes('email')) {
         setFieldError(emailInput, errorEmail, msg);
       } else if (
@@ -107,7 +127,13 @@ form.addEventListener('submit', async (e) => {
       return;
     }
 
-    window.location.href = '/beranda';
+    const namaUser = json.data && json.data.name ? json.data.name : '';
+    const pesan = namaUser
+      ? `Selamat datang kembali, ${namaUser}. Anda akan diarahkan ke beranda.`
+      : 'Selamat datang kembali di LAPAK. Anda akan diarahkan ke beranda.';
+
+    showSuccessModal(pesan);
+    setTimeout(goToBeranda, REDIRECT_DELAY_MS);
   } catch (err) {
     showAlert('Terjadi kesalahan jaringan. Silakan coba lagi.');
   } finally {

@@ -12,8 +12,8 @@
   <body>
     <div class="bg">
       <div class="card">
-        <h1 class="card__title">Buat Akun Baru</h1>
-        <p class="card__subtitle">
+        <h1 class="card-title">Buat Akun Baru</h1>
+        <p class="card-subtitle">
           Daftarkan akun untuk mulai mengelola bisnis Anda.
         </p>
 
@@ -73,7 +73,7 @@
           </div>
 
           <div class="field">
-            <label class="label" for="password">Password</label>
+            <label class="label" for="password">Kata Sandi</label>
             <div class="input-wrapper">
               <input
                 class="input input--icon"
@@ -122,14 +122,14 @@
           </div>
 
           <div class="field">
-            <label class="label" for="konfirmasi">Konfirmasi Password</label>
+            <label class="label" for="konfirmasi">Konfirmasi Kata Sandi</label>
             <div class="input-wrapper">
               <input
                 class="input input--icon"
                 id="konfirmasi"
                 name="confirm_password"
                 type="password"
-                placeholder="Ulangi password"
+                placeholder="Ulangi kata sandi"
                 required
               />
               <button
@@ -201,7 +201,7 @@
           </button>
 
           <div class="divider">
-            <span class="divider__text">ATAU</span>
+            <span class="divider-text">ATAU</span>
           </div>
 
           <button class="btn-google" type="button" id="btn-google">
@@ -234,9 +234,51 @@
 
           <p class="login-link">
             Sudah punya akun?
-            <a class="login-link__anchor" href="/masuk">Masuk</a>
+            <a class="login-link-anchor" href="/masuk">Masuk</a>
           </p>
         </form>
+      </div>
+    </div>
+
+    <!-- ──── Toast — Akun Berhasil Dibuat ──── -->
+    <div
+      class="success-modal-overlay"
+      id="success-modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="success-modal-title"
+    >
+      <div class="success-modal-card">
+        <div class="success-modal-card-brand">LAPAK</div>
+        <div class="success-modal-card-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M5 13l4 4L19 7"
+              stroke="#0d5c47"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+        <h2 class="success-modal-card-title" id="success-modal-title">
+          Akun Berhasil Dibuat
+        </h2>
+        <p class="success-modal-card-message">
+          Selamat datang di LAPAK. Akun Anda siap digunakan untuk mulai
+          mengelola bisnis Anda.
+        </p>
+        <button
+          class="success-modal-card-btn"
+          type="button"
+          id="success-modal-btn"
+        >
+          Mulai Sekarang
+        </button>
       </div>
     </div>
   </body>

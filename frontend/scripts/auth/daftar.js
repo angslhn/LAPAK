@@ -4,6 +4,20 @@ const btnText = document.getElementById('btn-text');
 const btnLoader = document.getElementById('btn-loader');
 const alertError = document.getElementById('alert-error');
 
+// ── Modal sukses daftar (Akun Berhasil Dibuat) ──
+const successModalOverlay = document.getElementById('success-modal-overlay');
+const successModalBtn = document.getElementById('success-modal-btn');
+
+function showSuccessModal() {
+  if (successModalOverlay) successModalOverlay.classList.add('is-visible');
+}
+
+function goToLogin() {
+  window.location.href = '/masuk?registered=1';
+}
+
+if (successModalBtn) successModalBtn.addEventListener('click', goToLogin);
+
 // ── Eye Toggle ──
 document.querySelectorAll('.eye-btn').forEach((btn) => {
   btn.addEventListener('click', () => {
@@ -167,13 +181,15 @@ form.addEventListener('submit', async (e) => {
       body: JSON.stringify(body),
     });
 
-    const json = await res.json();
+    const json = await res.json().catch(() => null);
 
-    if (!res.ok || !json.success) {
-      const msg = json.message || 'Pendaftaran gagal.';
+    if (!res.ok || !json || !json.success) {
+      const msg =
+        (json && json.message) || 'Pendaftaran gagal. Silakan coba lagi.';
+      const code = json && json.code;
 
       // Mapping error ke field spesifik
-      if (json.code === 'AUTH_EMAIL_ALREADY_EXISTS') {
+      if (code === 'AUTH_EMAIL_ALREADY_EXISTS') {
         showFieldError('email', msg);
       } else if (msg.toLowerCase().includes('email')) {
         showFieldError('email', msg);
@@ -203,8 +219,8 @@ form.addEventListener('submit', async (e) => {
       return;
     }
 
-    // Sukses → redirect ke halaman masuk dengan pesan
-    window.location.href = '/masuk?registered=1';
+    // Sukses → tampilkan modal sukses, redirect ke /masuk saat tombol diklik
+    showSuccessModal();
   } catch (err) {
     showAlert('Terjadi kesalahan jaringan. Silakan coba lagi.');
   } finally {

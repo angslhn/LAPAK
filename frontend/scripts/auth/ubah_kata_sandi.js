@@ -3,12 +3,23 @@ const ubahBtn = document.getElementById('ubah-btn');
 const btnText = document.getElementById('btn-text');
 const btnLoader = document.getElementById('btn-loader');
 const alertError = document.getElementById('alert-error');
-const alertSuccess = document.getElementById('alert-success');
-const successMessage = document.getElementById('success-message');
 
 // ── Ambil token dari URL ──
 const params = new URLSearchParams(window.location.search);
 const token = params.get('token');
+
+// ── Success Modal (Password Berhasil Diperbarui) ──
+const successModalOverlay = document.getElementById('success-modal-overlay');
+const successModalMessage = document.getElementById('success-modal-message');
+
+const REDIRECT_DELAY_MS = 10000;
+
+function showSuccessModal(message) {
+  if (successModalMessage && message) {
+    successModalMessage.textContent = message;
+  }
+  if (successModalOverlay) successModalOverlay.classList.add('is-visible');
+}
 
 // ── Eye Toggle ──
 document.querySelectorAll('.eye-btn').forEach((btn) => {
@@ -42,7 +53,6 @@ function clearAll() {
     alertError.style.display = 'none';
     alertError.textContent = '';
   }
-  if (alertSuccess) alertSuccess.style.display = 'none';
 }
 
 function showError(msg) {
@@ -50,11 +60,6 @@ function showError(msg) {
     alertError.textContent = msg;
     alertError.style.display = '';
   }
-}
-
-function showSuccess(msg) {
-  if (successMessage) successMessage.textContent = msg;
-  if (alertSuccess) alertSuccess.style.display = '';
 }
 
 // ── Loading ──
@@ -114,11 +119,12 @@ form.addEventListener('submit', async (e) => {
       body: JSON.stringify({ token, new_password: password }),
     });
 
-    const json = await res.json();
+    const json = await res.json().catch(() => null);
 
-    if (!res.ok || !json.success) {
-      const msg = json.message || 'Gagal mengubah kata sandi';
-      if (json.code === 'AUTH_INVALID_RESET_TOKEN') {
+    if (!res.ok || !json || !json.success) {
+      const msg = (json && json.message) || 'Gagal mengubah kata sandi';
+      const code = json && json.code;
+      if (code === 'AUTH_INVALID_RESET_TOKEN') {
         showError(
           'Token tidak valid atau sudah kadaluarsa. Silakan request ulang.'
         );
@@ -129,15 +135,17 @@ form.addEventListener('submit', async (e) => {
       return;
     }
 
-    // Sukses
-    showSuccess(json.message || 'Kata sandi berhasil diperbarui!');
+    const pesan =
+      json.message ||
+      'Password akun Anda telah berhasil diperbarui. Silakan login menggunakan password baru.';
+
+    showSuccessModal(pesan);
     document.getElementById('password').value = '';
     document.getElementById('konfirmasi').value = '';
 
-    // Redirect ke masuk setelah 2 detik
     setTimeout(() => {
       window.location.href = '/masuk?reset=1';
-    }, 2000);
+    }, REDIRECT_DELAY_MS);
   } catch (err) {
     showError('Terjadi kesalahan jaringan. Silakan coba lagi.');
   } finally {
