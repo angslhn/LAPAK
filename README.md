@@ -3,15 +3,27 @@
 LAPAK adalah aplikasi *Point of Sale* (POS) berbasis web yang dirancang khusus untuk operasional warung, toko kelontong, dan toko grosir kecil. Dibangun untuk menyederhanakan pencatatan penjualan harian, stok barang, dan keuangan toko — tanpa perlu keahlian akuntansi.
 
 ## ✨ Fitur Utama
-* **🔐 Autentikasi** — Login/register aman dengan JWT atau OAuth, dan lupa password via email
-* **🖼️ Upload Gambar** — Foto produk dan avatar toko via Cloudinary
-* **👥 Multi-user** — Role Owner & Kasir dengan hak akses berbeda
-* **🛒 Kasir (POS)** — Proses transaksi cepat dengan panel keranjang belanja real-time, mendukung pembayaran tunai, QRIS, transfer, dan hutang.
-* **📦 Manajemen Produk & Stok** — Pemantauan stok dengan indikator visual (Aman / Hampir Habis / Kritis) dan notifikasi otomatis.
-* **🚚 Pembelian & Supplier** — Pencatatan restock dari supplier, stok naik otomatis setelah pembelian dicatat.
-* **👛 Kas & Hutang Piutang** — Pelacakan arus kas harian, piutang pelanggan, dan hutang dagang ke supplier.
-* **📊 Laporan & Analitik** — Grafik omzet, laba kotor, produk terlaris, dan breakdown per kategori.
-* **📅 Rekap & Tutup Buku Harian** — Rekonsiliasi kas dan penguncian data harian untuk integritas pencatatan.
+
+* **🔐 Autentikasi** — Login/register aman dengan JWT, dan lupa password via email
+* **🖼️ Upload Gambar** — Foto produk, avatar toko, dan QRIS via Cloudinary
+* **🛒 Kasir (POS)** — Proses transaksi cepat dengan panel keranjang belanja real-time, mendukung pembayaran **tunai, QRIS, transfer bank, dan piutang**
+* **🏦 Rekening & QRIS** — Kelola nomor rekening dan upload gambar QRIS untuk pembayaran customer
+* **📦 Manajemen Produk & Stok** — Pemantauan stok dengan indikator visual (Aman / Menipis / Kritis) dan riwayat mutasi stok
+* **🚚 Pembelian & Supplier** — Pencatatan restock dari supplier, stok naik otomatis setelah pembelian dicatat
+* **👛 Kas & Hutang Piutang** — Pelacakan arus kas harian, piutang pelanggan, dan hutang dagang ke supplier dengan **cicilan/pembayaran parsial**
+* **📊 Laporan & Analitik** — Grafik omzet mingguan, laba bersih, produk terlaris, dan ringkasan performa bisnis
+* **📅 Rekap & Tutup Buku Harian** — Rekonsiliasi kas, penguncian data harian, dan **notifikasi laporan yang belum ditutup**
+* **🎨 UI/UX Modern** — Tampilan responsif, toast notification, modal konfirmasi, pagination, dan input style yang konsisten
+
+### 🔥 Highlight Teknis
+
+| Fitur | Detail |
+|-------|--------|
+| **Pagination** | Semua tabel otomatis paginate setiap 10 data |
+| **Bank & QRIS** | CRUD rekening + upload/hapus gambar QRIS |
+| **Partial Payment** | Bayar hutang & piutang secara cicilan |
+| **Banner Notifikasi** | Peringatan tutup buku di dashboard |
+| **Toast & Modal** | Konfirmasi untuk semua aksi berbahaya (hapus, tutup buku, logout) |
 
 ## 🛠️ Teknologi
 
