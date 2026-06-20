@@ -11,6 +11,19 @@ const fmtShort = (n) => {
   return String(n);
 };
 
+// Format tanggal lengkap Indonesia, contoh: "Senin, 17 Juni 2026"
+const fmtTanggalLengkap = (isoDate) => {
+  if (!isoDate) return '';
+  const d = new Date(isoDate + 'T00:00:00');
+  if (isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('id-ID', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+};
+
 const categoryBadge = (cat) => {
   const map = {
     Minuman: 'badge-minuman',
@@ -91,6 +104,10 @@ function renderOmzetChart(data) {
   const ctx = canvas.getContext('2d');
 
   const labels = (data.labels || []).map((l) => l.dayname || l.date || '');
+  // Tanggal ISO mentah per titik, indexnya paralel dengan `labels`.
+  // Dipakai khusus di tooltip (title callback) supaya tetap bisa
+  // menampilkan tanggal lengkap meski sumbu-X cuma nama hari singkat.
+  const isoDates = (data.labels || []).map((l) => l.date || '');
   const revenue = (data.revenue || []).map((r) => r.total || 0);
   const netProfit = (data.net_profit || []).map((p) => p.value || 0);
 
@@ -141,7 +158,7 @@ function renderOmzetChart(data) {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false, // Wajib false agar mengikuti tinggi .chart-wrap
+      maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { display: false },
@@ -153,6 +170,11 @@ function renderOmzetChart(data) {
           bodyColor: '#555',
           padding: 12,
           callbacks: {
+            title: (items) => {
+              if (!items.length) return '';
+              const iso = isoDates[items[0].dataIndex];
+              return fmtTanggalLengkap(iso) || items[0].label;
+            },
             label: (ctx) => ` ${ctx.dataset.label}: ${fmtRp(ctx.raw)}`,
           },
         },
@@ -186,7 +208,11 @@ function renderOmzetChart(data) {
 function renderTopProducts(products) {
   const tbody = document.getElementById('top-products-body');
   if (!products.length) {
-    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:32px;color:#aaa">Belum ada data produk terlaris</td></tr>`;
+    tbody.innerHTML = `<tr>
+    <td colspan="4" style="text-align:center;padding:60px 24px;color:#aaa;height:180px;vertical-align:middle">
+      Belum ada data produk terlaris
+    </td>
+  </tr>`;
     return;
   }
 
