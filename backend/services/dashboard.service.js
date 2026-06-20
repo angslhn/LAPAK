@@ -1,3 +1,4 @@
+const UserModel = require('../models/user.model');
 const CashLedgerModel = require('../models/cash_ledger.model');
 const ProductModel = require('../models/product.model');
 const TransactionModel = require('../models/transaction.model');
@@ -10,7 +11,7 @@ const {
   isDayName,
 } = require('../helpers/datetime');
 
-const getSummary = async () => {
+const getSummary = async (userId) => {
   const fromDate = getLocalPastDate(6);
   const yesterdayDate = getLocalPastDate(1);
   const todayDate = getLocalDate();
@@ -29,6 +30,7 @@ const getSummary = async () => {
       yesterdayTxCount,
       yesterdayProductsSold,
       yesterdayCashLedger,
+      user,
     ] = await Promise.all([
       TransactionItemModel.sumTodayHPP(),
       TransactionModel.sumTodayRevenue(),
@@ -42,6 +44,7 @@ const getSummary = async () => {
       TransactionModel.countByDate(yesterdayDate),
       TransactionItemModel.sumQuantityByDate(yesterdayDate),
       CashLedgerModel.sumByType(yesterdayDate),
+      UserModel.findById(userId),
     ]);
 
     const yesterdayExpenses = Number(
@@ -85,6 +88,7 @@ const getSummary = async () => {
     }
 
     return {
+      name: user.name || null,
       summary_metrics: {
         revenue: {
           value: revenue,
