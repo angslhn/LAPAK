@@ -47,6 +47,40 @@ async function fetchCustomers() {
   }
 }
 
+// ── FETCH BANK ACCOUNTS ──
+async function fetchBankAccounts() {
+  try {
+    const res = await fetch('/api/v1/bank-accounts', {
+      credentials: 'include',
+    });
+    const json = await res.json();
+    if (json.success && json.data) {
+      return json.data.filter((b) => b.is_active);
+    }
+    return [];
+  } catch (err) {
+    console.error('Gagal fetch bank:', err);
+    return [];
+  }
+}
+
+// ── FETCH QRIS ──
+async function fetchQRIS() {
+  try {
+    const res = await fetch('/api/v1/bank-accounts/qris', {
+      credentials: 'include',
+    });
+    const json = await res.json();
+    if (json.success && json.data) {
+      return json.data;
+    }
+    return null;
+  } catch (err) {
+    console.error('Gagal fetch QRIS:', err);
+    return null;
+  }
+}
+
 // ── TANGGAL SAAT INI ──
 function getLocalDate() {
   const now = new Date();
@@ -499,39 +533,61 @@ function renderModalBody() {
     // Auto focus ke input cash
     setTimeout(() => cashInput.focus(), 100);
   } else if (selectedPaymentMethod === 'qris') {
-    body.innerHTML = `
-      <div class="qris-section">
-        <p style="font-size:13px;color:#666;font-weight:600;">SCAN DISINI</p>
-        <div class="qris-placeholder"><span>QRIS PLACEHOLDER</span></div>
-        <p style="font-size:12px;color:#888;">Pastikan pembayaran berhasil sebelum menyelesaikan transaksi.</p>
-      </div>`;
+    fetchQRIS().then((qrisData) => {
+      if (qrisData && qrisData.image_url) {
+        body.innerHTML = `
+        <div class="qris-section">
+          <p style="font-size:13px;color:#666;font-weight:600;">SCAN QRIS</p>
+          <img src="${qrisData.image_url}" alt="QRIS" class="qris-image-modal" />
+          <p style="font-size:12px;color:#888;">${qrisData.note || 'Pastikan pembayaran berhasil sebelum menyelesaikan transaksi.'}</p>
+        </div>`;
+      } else {
+        body.innerHTML = `
+        <div class="qris-section">
+          <p style="font-size:13px;color:#666;font-weight:600;">SCAN QRIS</p>
+          <div class="qris-placeholder"><span>QRIS belum diatur</span></div>
+          <p style="font-size:12px;color:#888;">Silakan upload gambar QRIS di halaman Pengaturan</p>
+        </div>`;
+      }
+    });
   } else if (selectedPaymentMethod === 'transfer') {
-    body.innerHTML = `
+    fetchBankAccounts().then((banks) => {
+      if (!banks.length) {
+        body.innerHTML = `
       <div class="transfer-section">
-        <p>Silahkan Transfer Ke Rekening Dibawah Ini</p>
-        <div class="bank-list">
-          <div class="bank-item">
-            <div class="bank-info"><span class="bank-name">BCA</span><span class="bank-account">240160121013</span><span class="bank-owner">a.n Berkah Djaya</span></div>
-            <button class="copy-btn" data-copy="240160121013">Salin</button>
-          </div>
-          <div class="bank-item">
-            <div class="bank-info"><span class="bank-name">Mandiri</span><span class="bank-account">901465977432</span><span class="bank-owner">a.n Berkah Djaya</span></div>
-            <button class="copy-btn" data-copy="901465977432">Salin</button>
-          </div>
-          <div class="bank-item">
-            <div class="bank-info"><span class="bank-name">BRI</span><span class="bank-account">25080774537</span><span class="bank-owner">a.n CV Berkah Djaya</span></div>
-            <button class="copy-btn" data-copy="25080774537">Salin</button>
-          </div>
-        </div>
+      <p style="text-align:center;color:#aaa;padding:20px">Belum ada rekening terdaftar</p>
       </div>`;
+      } else {
+        body.innerHTML = `
+      <div class="transfer-section">
+      <p>Silahkan Transfer Ke Rekening Dibawah Ini</p>
+        <div class="bank-list">
+        ${banks
+          .map(
+            (bank) => `
+              <div class="bank-item">
+              <div class="bank-info">
+              <span class="bank-name">${bank.bank_name}</span>
+              <span class="bank-account">${bank.account_number}</span>
+              <span class="bank-owner">${bank.account_owner}</span>
+              </div>
+              <button class="copy-btn" data-copy="${bank.account_number}">Salin</button>
+              </div>
+          `
+          )
+          .join('')}
+            </div>
+            </div>`;
 
-    body.querySelectorAll('.copy-btn').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        navigator.clipboard.writeText(btn.dataset.copy);
-        btn.textContent = 'Tersalin!';
-        setTimeout(() => (btn.textContent = 'Salin'), 2000);
-      });
+        body.querySelectorAll('.copy-btn').forEach((btn) => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navigator.clipboard.writeText(btn.dataset.copy);
+            btn.textContent = 'Tersalin!';
+            setTimeout(() => (btn.textContent = 'Salin'), 2000);
+          });
+        });
+      }
     });
   } else if (selectedPaymentMethod === 'credit') {
     const today = new Date().toISOString().split('T')[0];

@@ -220,6 +220,7 @@ async function fetchAllDailyReports() {
 }
 
 function renderLaporanTable(reports) {
+  const infoHeader = document.getElementById('laporan-info-header');
   const tbody = document.getElementById('laporan-table-body');
 
   if (!reports || !reports.length) {
@@ -359,8 +360,6 @@ async function openDetailLaporan(id) {
       rupiahFormatter(data.opening_balance || 0);
     document.getElementById('detailClosingBalance').textContent =
       rupiahFormatter(data.closing_balance || 0);
-
-    console.log(data);
 
     const closedInfo = document.getElementById('detailClosedInfo');
     if (data.closed_by && data.status === 'closed') {

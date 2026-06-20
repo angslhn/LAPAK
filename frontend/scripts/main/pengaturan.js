@@ -1,5 +1,5 @@
 const DEFAULT_AVATAR =
-  'https://t4.ftcdn.net/jpg/04/31/64/75/360_F_431647519_usrbQ8Z983hTYe8zgA7t1XVc5fEtqcpa.jpg';
+  'https://res.cloudinary.com/lapak-resources/image/upload/v1781936456/blank.jpg';
 
 // ── Fetch User Profile ──
 async function fetchProfile() {
@@ -91,12 +91,16 @@ document
   });
 
 // ── Navigasi ──
+document.getElementById('btn-edit-profil').addEventListener('click', () => {
+  window.location.href = '/pengaturan/edit-profil';
+});
+
 document.getElementById('btn-ubah-password').addEventListener('click', () => {
   window.location.href = '/pengaturan/ubah-kata-sandi';
 });
 
-document.getElementById('btn-edit-profil').addEventListener('click', () => {
-  window.location.href = '/pengaturan/edit-profil';
+document.getElementById('btn-bank-qris').addEventListener('click', () => {
+  window.location.href = '/pengaturan/bank-qris';
 });
 
 // ── Sign Out ──

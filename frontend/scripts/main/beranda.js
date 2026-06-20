@@ -227,7 +227,13 @@ function renderTopSelling(top_selling_products) {
   if (!tableProductElement || !top_selling_products) return;
 
   if (!top_selling_products.length) {
-    tableProductElement.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:24px;color:#aaa">Belum ada data produk terlaris hari ini</td></tr>`;
+    tableProductElement.innerHTML = `
+    <tr>
+      <td colspan="4" style="text-align:center;padding:100px 24px;color:#aaa;height:120px;vertical-align:middle">
+        Belum ada data produk terlaris hari ini
+      </td>
+    </tr>`;
+
     return;
   }
 
@@ -334,6 +340,28 @@ function renderClosureBanner(daily_closure) {
   };
 }
 
+// ── RENDER SAMBUTAN ──
+function greeting(name) {
+  let time;
+
+  const now = new Date().getHours();
+
+  if (now >= 0 && now <= 3) {
+    time = 'Malam';
+  } else if (now >= 4 && now <= 10) {
+    time = 'Pagi';
+  } else if (now >= 11 && now <= 15) {
+    time = 'Siang';
+  } else if (now >= 16 && now <= 18) {
+    time = 'Sore';
+  } else {
+    time = 'Malam';
+  }
+
+  const firstName = name ? name.split(' ')[0] : 'Admin';
+  return `Selamat ${time}, ${firstName}!`;
+}
+
 // ── RENDER TODAY STATUS ──
 async function renderTodayStatus() {
   const statusEl = document.getElementById('ringkasanStatus');
@@ -360,6 +388,7 @@ async function setValues() {
   if (!data) return;
 
   const {
+    name,
     summary_metrics,
     daily_summary,
     chart_weekly_revenue,
@@ -382,6 +411,7 @@ async function setValues() {
     if (el) el.textContent = val;
   };
 
+  setText('greeting', greeting(name));
   setText('revenue', rupiahFormatter(summary_metrics.revenue.value));
   set(
     'revenue-percentage',

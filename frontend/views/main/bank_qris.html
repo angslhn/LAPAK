@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/styles/global.css" />
-    <link rel="stylesheet" href="/styles/main/pengaturan.css" />
+    <link rel="stylesheet" href="/styles/main/bank_qris.css" />
     <script src="/scripts/global.js" defer></script>
-    <script src="/scripts/main/pengaturan.js" defer></script>
-    <title>LAPAK — Pengaturan Profil</title>
+    <script src="/scripts/main/bank_qris.js" defer></script>
+    <title>LAPAK — Bank & QRIS</title>
   </head>
   <body>
     <div class="shell">
@@ -265,155 +265,170 @@
       <!-- ══ MAIN ══ -->
       <div class="main">
         <div class="topbar">
-          <div class="topbar-title">Pengaturan Profil</div>
+          <div class="breadcrumb">
+            <span>Pengaturan</span>
+            <span class="breadcrumb-separator">›</span>
+            <span class="breadcrumb-active">Bank & QRIS</span>
+          </div>
         </div>
-
-        <div class="page-body">
-          <div class="profile-card">
-            <!-- Avatar & Info -->
-            <div class="profile-header">
-              <div class="avatar-wrap">
-                <div class="avatar-circle">
-                  <img class="avatar-img" id="avatar-img" src="" alt="Avatar" />
-                </div>
-                <button class="avatar-edit-btn" id="avatar-edit-btn">
+        <div class="page-body-settings">
+          <div class="bank-qris-container">
+            <!-- ═══ SECTION: QRIS ═══ -->
+            <div class="section-card">
+              <div class="section-header">
+                <h2 class="section-title">
                   <svg
-                    width="17"
-                    height="15"
-                    viewBox="0 0 17 15"
-                    fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M8.33333 12.0833C9.375 12.0833 10.2604 11.7188 10.9896 10.9896C11.7188 10.2604 12.0833 9.375 12.0833 8.33333C12.0833 7.29167 11.7188 6.40625 10.9896 5.67708C10.2604 4.94792 9.375 4.58333 8.33333 4.58333C7.29167 4.58333 6.40625 4.94792 5.67708 5.67708C4.94792 6.40625 4.58333 7.29167 4.58333 8.33333C4.58333 9.375 4.94792 10.2604 5.67708 10.9896C6.40625 11.7188 7.29167 12.0833 8.33333 12.0833ZM8.33333 10.4167C7.75 10.4167 7.25694 10.2153 6.85417 9.8125C6.45139 9.40972 6.25 8.91667 6.25 8.33333C6.25 7.75 6.45139 7.25694 6.85417 6.85417C7.25694 6.45139 7.75 6.25 8.33333 6.25C8.91667 6.25 9.40972 6.45139 9.8125 6.85417C10.2153 7.25694 10.4167 7.75 10.4167 8.33333C10.4167 8.91667 10.2153 9.40972 9.8125 9.8125C9.40972 10.2153 8.91667 10.4167 8.33333 10.4167ZM1.66667 15C1.20833 15 0.815972 14.8368 0.489583 14.5104C0.163194 14.184 0 13.7917 0 13.3333V3.33333C0 2.875 0.163194 2.48264 0.489583 2.15625C0.815972 1.82986 1.20833 1.66667 1.66667 1.66667H4.29167L5.83333 0H10.8333L12.375 1.66667H15C15.4583 1.66667 15.8507 1.82986 16.1771 2.15625C16.5035 2.48264 16.6667 2.875 16.6667 3.33333V13.3333C16.6667 13.7917 16.5035 14.184 16.1771 14.5104C15.8507 14.8368 15.4583 15 15 15H1.66667ZM1.66667 13.3333H15V3.33333H11.625L10.1042 1.66667H6.5625L5.04167 3.33333H1.66667V13.3333Z"
-                      fill="white"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div class="profile-name" id="profile-name">Memuat...</div>
-              <div class="profile-status">
-                <div class="status-bar"></div>
-                <div class="status-dot"></div>
-                <span class="status-label">AKTIF</span>
-              </div>
-              <p class="profile-desc" id="profile-desc">Memuat...</p>
-            </div>
-
-            <!-- Action Grid -->
-            <div class="action-grid">
-              <div class="action-card" id="btn-edit-profil">
-                <div class="action-icon">
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 18 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M2 16H3.425L13.2 6.225L11.775 4.8L2 14.575V16ZM0 18V13.75L13.2 0.575C13.4 0.391667 13.6208 0.25 13.8625 0.15C14.1042 0.05 14.3583 0 14.625 0C14.8917 0 15.15 0.05 15.4 0.15C15.65 0.25 15.8667 0.4 16.05 0.6L17.425 2C17.625 2.18333 17.7708 2.4 17.8625 2.65C17.9542 2.9 18 3.15 18 3.4C18 3.66667 17.9542 3.92083 17.8625 4.1625C17.7708 4.40417 17.625 4.625 17.425 4.825L4.25 18H0ZM16 3.4L14.6 2L16 3.4ZM12.475 5.525L11.775 4.8L13.2 6.225L12.475 5.525Z"
-                      fill="#006049"
-                    />
-                  </svg>
-                </div>
-                <div class="action-title">Edit Profil</div>
-                <div class="action-sub">Update data diri Anda</div>
-              </div>
-              <div class="action-card" id="btn-ganti-foto">
-                <div class="action-icon">
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 18 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M2 18C1.45 18 0.979167 17.8042 0.5875 17.4125C0.195833 17.0208 0 16.55 0 16V2C0 1.45 0.195833 0.979167 0.5875 0.5875C0.979167 0.195833 1.45 0 2 0H16C16.55 0 17.0208 0.195833 17.4125 0.5875C17.8042 0.979167 18 1.45 18 2V16C18 16.55 17.8042 17.0208 17.4125 17.4125C17.0208 17.8042 16.55 18 16 18H2ZM2 16H16V2H2V16ZM3 14H15L11.25 9L8.25 13L6 10L3 14ZM2 16V2V16Z"
-                      fill="#006049"
-                    />
-                  </svg>
-                </div>
-                <div class="action-title">Ganti Foto</div>
-                <div class="action-sub">Ubah avatar pengguna</div>
-              </div>
-              <div class="action-card" id="btn-ubah-password">
-                <div class="action-icon">
-                  <svg
                     width="20"
                     height="20"
                     viewBox="0 0 20 20"
                     fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M10 20C8.61667 20 7.31667 19.7375 6.1 19.2125C4.88333 18.6875 3.825 17.975 2.925 17.075C2.025 16.175 1.3125 15.1167 0.7875 13.9C0.2625 12.6833 0 11.3833 0 10H2C2 11.1 2.20833 12.1375 2.625 13.1125C3.04167 14.0875 3.6125 14.9375 4.3375 15.6625C5.0625 16.3875 5.9125 16.9625 6.8875 17.3875C7.8625 17.8125 8.9 18.025 10 18.025C12.2333 18.025 14.125 17.25 15.675 15.7C17.225 14.15 18 12.2583 18 10.025C18 7.79167 17.225 5.9 15.675 4.35C14.125 2.8 12.2333 2.025 10 2.025C8.51667 2.025 7.17083 2.3875 5.9625 3.1125C4.75417 3.8375 3.8 4.8 3.1 6H6V8H0V2H2V4C2.91667 2.78333 4.06667 1.8125 5.45 1.0875C6.83333 0.3625 8.35 0 10 0C11.3833 0 12.6833 0.2625 13.9 0.7875C15.1167 1.3125 16.175 2.025 17.075 2.925C17.975 3.825 18.6875 4.88333 19.2125 6.1C19.7375 7.31667 20 8.61667 20 10C20 11.3833 19.7375 12.6833 19.2125 13.9C18.6875 15.1167 17.975 16.175 17.075 17.075C16.175 17.975 15.1167 18.6875 13.9 19.2125C12.6833 19.7375 11.3833 20 10 20ZM8 14C7.71667 14 7.47917 13.9042 7.2875 13.7125C7.09583 13.5208 7 13.2833 7 13V10C7 9.71667 7.09583 9.47917 7.2875 9.2875C7.47917 9.09583 7.71667 9 8 9V8C8 7.45 8.19583 6.97917 8.5875 6.5875C8.97917 6.19583 9.45 6 10 6C10.55 6 11.0208 6.19583 11.4125 6.5875C11.8042 6.97917 12 7.45 12 8V9C12.2833 9 12.5208 9.09583 12.7125 9.2875C12.9042 9.47917 13 9.71667 13 10V13C13 13.2833 12.9042 13.5208 12.7125 13.7125C12.5208 13.9042 12.2833 14 12 14H8ZM9 9H11V8C11 7.71667 10.9042 7.47917 10.7125 7.2875C10.5208 7.09583 10.2833 7 10 7C9.71667 7 9.47917 7.09583 9.2875 7.2875C9.09583 7.47917 9 7.71667 9 8V9Z"
+                      d="M0 5V0H5V2H2V5H0ZM0 20V15H2V18H5V20H0ZM15 20V18H18V15H20V20H15ZM18 5V2H15V0H20V5H18ZM15.5 15.5H17V17H15.5V15.5ZM15.5 12.5H17V14H15.5V12.5ZM14 14H15.5V15.5H14V14ZM12.5 15.5H14V17H12.5V15.5ZM11 14H12.5V15.5H11V14ZM14 11H15.5V12.5H14V11ZM12.5 12.5H14V14H12.5V12.5ZM11 11H12.5V12.5H11V11ZM17 3V9H11V3H17ZM9 11V17H3V11H9ZM9 3V9H3V3H9ZM7.5 15.5V12.5H4.5V15.5H7.5ZM7.5 7.5V4.5H4.5V7.5H7.5ZM15.5 7.5V4.5H12.5V7.5H15.5Z"
                       fill="#006049"
-                    />
+                    ></path>
                   </svg>
+                  QRIS Pembayaran
+                </h2>
+                <div style="display: flex; gap: 8px">
+                  <button
+                    class="btn-danger-outline"
+                    id="btnDeleteQRIS"
+                    style="display: none"
+                  >
+                    <svg width="14" height="15" viewBox="0 0 14 15" fill="none">
+                      <path
+                        d="M2.5 15C2.04167 15 1.64931 14.8368 1.32292 14.5104C0.996528 14.184 0.833333 13.7917 0.833333 13.3333V2.5H0V0.833333H4.16667V0H9.16667V0.833333H13.3333V2.5H12.5V13.3333C12.5 13.7917 12.3368 14.184 12.0104 14.5104C11.684 14.8368 11.2917 15 10.8333 15H2.5ZM10.8333 2.5H2.5V13.3333H10.8333V2.5ZM4.16667 11.6667H5.83333V4.16667H4.16667V11.6667ZM7.5 11.6667H9.16667V4.16667H7.5V11.6667Z"
+                        fill="#BA1A1A"
+                      />
+                    </svg>
+                    Hapus QRIS
+                  </button>
+                  <button class="btn-primary" id="btnUploadQRIS">
+                    ＋ Upload QRIS
+                  </button>
                 </div>
-                <div class="action-title">Ubah Password</div>
-                <div class="action-sub">Keamanan akun berkala</div>
               </div>
-              <div class="action-card" id="btn-bank-qris">
-                <div class="action-icon">
+              <div class="qris-preview" id="qrisPreview">
+                <div class="qris-placeholder-large">
                   <svg
-                    width="19"
-                    height="18"
-                    viewBox="0 0 19 18"
-                    fill="none"
                     xmlns="http://www.w3.org/2000/svg"
+                    width="40"
+                    height="40"
+                    viewBox="0 0 20 20"
+                    fill="none"
                   >
                     <path
-                      d="M2 16V2C2 2 2 2.37083 2 3.1125C2 3.85417 2 4.81667 2 6V12C2 13.1833 2 14.1458 2 14.8875C2 15.6292 2 16 2 16ZM2 18C1.45 18 0.979167 17.8042 0.5875 17.4125C0.195833 17.0208 0 16.55 0 16V2C0 1.45 0.195833 0.979167 0.5875 0.5875C0.979167 0.195833 1.45 0 2 0H16C16.55 0 17.0208 0.195833 17.4125 0.5875C17.8042 0.979167 18 1.45 18 2V4.5H16V2H2V16H16V13.5H18V16C18 16.55 17.8042 17.0208 17.4125 17.4125C17.0208 17.8042 16.55 18 16 18H2ZM10 14C9.45 14 8.97917 13.8042 8.5875 13.4125C8.19583 13.0208 8 12.55 8 12V6C8 5.45 8.19583 4.97917 8.5875 4.5875C8.97917 4.19583 9.45 4 10 4H17C17.55 4 18.0208 4.19583 18.4125 4.5875C18.8042 4.97917 19 5.45 19 6V12C19 12.55 18.8042 13.0208 18.4125 13.4125C18.0208 13.8042 17.55 14 17 14H10ZM17 12V6H10V12H17ZM13 10.5C13.4167 10.5 13.7708 10.3542 14.0625 10.0625C14.3542 9.77083 14.5 9.41667 14.5 9C14.5 8.58333 14.3542 8.22917 14.0625 7.9375C13.7708 7.64583 13.4167 7.5 13 7.5C12.5833 7.5 12.2292 7.64583 11.9375 7.9375C11.6458 8.22917 11.5 8.58333 11.5 9C11.5 9.41667 11.6458 9.77083 11.9375 10.0625C12.2292 10.3542 12.5833 10.5 13 10.5Z"
+                      d="M0 5V0H5V2H2V5H0ZM0 20V15H2V18H5V20H0ZM15 20V18H18V15H20V20H15ZM18 5V2H15V0H20V5H18ZM15.5 15.5H17V17H15.5V15.5ZM15.5 12.5H17V14H15.5V12.5ZM14 14H15.5V15.5H14V14ZM12.5 15.5H14V17H12.5V15.5ZM11 14H12.5V15.5H11V14ZM14 11H15.5V12.5H14V11ZM12.5 12.5H14V14H12.5V12.5ZM11 11H12.5V12.5H11V11ZM17 3V9H11V3H17ZM9 11V17H3V11H9ZM9 3V9H3V3H9ZM7.5 15.5V12.5H4.5V15.5H7.5ZM7.5 7.5V4.5H4.5V7.5H7.5ZM15.5 7.5V4.5H12.5V7.5H15.5Z"
+                      fill="#ccc"
+                    ></path>
+                  </svg>
+                  <p>Belum ada QRIS</p>
+                </div>
+              </div>
+              <input
+                type="file"
+                id="qrisInput"
+                accept="image/*"
+                style="display: none"
+              />
+            </div>
+            <!-- ═══ SECTION: BANK ACCOUNTS ═══ -->
+            <div class="section-card">
+              <div class="section-header">
+                <h2 class="section-title">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path
+                      d="M3 16V9H5V16H3ZM9 16V9H11V16H9ZM0 20V18H20V20H0ZM15 16V9H17V16H15ZM0 7V5L10 0L20 5V7H0ZM4.45 5H10H15.55H4.45ZM4.45 5H15.55L10 2.25L4.45 5Z"
                       fill="#006049"
                     />
                   </svg>
-                </div>
-                <div class="action-title">Bank & QRIS</div>
-                <div class="action-sub">Rekening & pembayaran</div>
+                  Rekening Bank
+                </h2>
+                <button class="btn-primary" id="btnTambahBank">
+                  ＋ Tambah Rekening
+                </button>
+              </div>
+              <div class="bank-table-wrapper">
+                <table class="bank-table">
+                  <thead>
+                    <tr>
+                      <th class="center">Nama Bank</th>
+                      <th class="center">Nomor Rekening</th>
+                      <th class="center">Pemilik</th>
+                      <th class="center">Status</th>
+                      <th class="center">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bankTableBody">
+                    <tr>
+                      <td
+                        colspan="5"
+                        style="text-align: center; padding: 32px; color: #aaa"
+                      >
+                        Memuat...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
-
-            <!-- Footer -->
-            <div class="profile-footer">
-              <div class="footer-info" id="footer-login">
-                Terakhir login: Memuat...
-              </div>
-              <button class="signout-btn" id="btn-signout">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="17"
-                  fill="#e05252"
-                  viewBox="0 0 512 512"
-                >
-                  <path
-                    d="M160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0zM502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128z"
-                  />
-                </svg>
-                Sign out
-              </button>
-            </div>
-          </div>
-
-          <div class="verified-badge" id="verified-badge">
-            Akun Terverifikasi
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Hidden file input for avatar -->
-    <input
-      type="file"
-      id="avatar-input"
-      accept="image/*"
-      style="display: none"
-    />
+    <!-- ═══ MODAL BANK ═══ -->
+    <div class="modal-overlay" id="bankModal" style="display: none">
+      <div class="modal-content-cash">
+        <div class="modal-header-modern">
+          <div><h2 id="bankModalTitle">Tambah Rekening</h2></div>
+          <button class="modal-close-btn" data-close="bankModal">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body-modern">
+          <div class="form-group">
+            <label class="form-label-uppercase">NAMA BANK</label>
+            <input
+              type="text"
+              id="bankName"
+              class="form-input-modern"
+              placeholder="BCA / Mandiri / BRI"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label-uppercase">NOMOR REKENING</label>
+            <input
+              type="text"
+              id="bankNumber"
+              class="form-input-modern"
+              placeholder="Nomor rekening"
+              inputmode="numeric"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label-uppercase">ATAS NAMA</label>
+            <input
+              type="text"
+              id="bankOwner"
+              class="form-input-modern"
+              placeholder="a.n ..."
+            />
+          </div>
+        </div>
+        <div class="modal-footer-modern">
+          <button class="btn-secondary-outline" data-close="bankModal">
+            Batal
+          </button>
+          <button class="btn-primary-solid" id="btnSubmitBank">Simpan</button>
+        </div>
+      </div>
+    </div>
 
-    <!-- ═══ MODAL KONFIRMASI SIGN OUT ═══ -->
-    <div class="modal-overlay" id="signoutModal" style="display: none">
+    <!-- ═══ MODAL KONFIRMASI HAPUS ═══ -->
+    <div class="modal-overlay" id="deleteBankModal" style="display: none">
       <div class="modal-content-delete">
         <div class="delete-icon-wrapper">
           <svg
@@ -428,17 +443,48 @@
             />
           </svg>
         </div>
-        <h3 class="delete-title">Keluar dari Akun?</h3>
-        <p class="delete-description">
-          Anda akan keluar dari sesi ini dan harus login kembali untuk mengakses
-          dashboard.
+        <h3 class="delete-title">Hapus Rekening?</h3>
+        <p class="delete-description" id="deleteBankMessage">
+          Rekening ini akan dihapus permanen.
         </p>
         <div class="delete-actions">
-          <button class="btn-secondary-outline" data-close="signoutModal">
+          <button class="btn-secondary-outline" data-close="deleteBankModal">
             Batal
           </button>
-          <button class="btn-danger-solid" id="btnConfirmSignout">
-            Ya, Keluar
+          <button class="btn-danger-solid" id="btnConfirmDeleteBank">
+            Hapus
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ MODAL KONFIRMASI HAPUS QRIS ═══ -->
+    <div class="modal-overlay" id="deleteQRISModal" style="display: none">
+      <div class="modal-content-delete">
+        <div class="delete-icon-wrapper">
+          <svg
+            width="32"
+            viewBox="0 0 37 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 31.6667L18.3333 0L36.6667 31.6667H0ZM18.3333 26.6667C18.8056 26.6667 19.2014 26.5069 19.5208 26.1875C19.8403 25.8681 20 25.4722 20 25C20 24.5278 19.8403 24.1319 19.5208 23.8125C19.2014 23.4931 18.8056 23.3333 18.3333 23.3333C17.8611 23.3333 17.4653 23.4931 17.1458 23.8125C16.8264 24.1319 16.6667 24.5278 16.6667 25C16.6667 25.4722 16.8264 25.8681 17.1458 26.1875C17.4653 26.5069 17.8611 26.6667 18.3333 26.6667ZM16.6667 21.6667H20V13.3333H16.6667V21.6667Z"
+              fill="#BA1A1A"
+            />
+          </svg>
+        </div>
+        <h3 class="delete-title">Hapus QRIS?</h3>
+        <p class="delete-description">
+          Gambar QRIS akan dihapus permanen. Pembayaran QRIS tidak akan tersedia
+          sampai Anda mengupload ulang.
+        </p>
+        <div class="delete-actions">
+          <button class="btn-secondary-outline" data-close="deleteQRISModal">
+            Batal
+          </button>
+          <button class="btn-danger-solid" id="btnConfirmDeleteQRIS">
+            Hapus
           </button>
         </div>
       </div>

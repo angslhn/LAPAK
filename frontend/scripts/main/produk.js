@@ -744,7 +744,6 @@ const init = async () => {
     allCategories = categories;
     renderProducts();
   } catch (err) {
-    console.error(err);
     showError(err.message || 'Terjadi kesalahan saat menghubungi server.');
   }
 };

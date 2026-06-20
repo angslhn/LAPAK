@@ -817,6 +817,16 @@ button {
   color: #aaa;
   font-weight: 600;
 }
+.qris-image-modal {
+  max-width: 200px;
+  max-height: 200px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #e0e3eb;
+}
 
 /* ── Transfer section ── */
 .transfer-section {
