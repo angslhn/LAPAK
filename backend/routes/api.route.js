@@ -4,6 +4,7 @@ const authenticate = require('../middleware/authenticate');
 
 const authRoutes = require('./auth.route');
 const userRoutes = require('./user.route');
+const bankAccountRoutes = require('./bank_account.route');
 const dashboardRoutes = require('./dashboard.route');
 const categoryRoutes = require('./category.route');
 const productRoutes = require('./product.route');
@@ -20,6 +21,7 @@ const supplierDebtRoutes = require('./supplier_debt.route');
 
 router.use('/auth', authRoutes);
 router.use('/users', authenticate, userRoutes);
+router.use('/bank-accounts', authenticate, bankAccountRoutes);
 router.use('/dashboard', authenticate, dashboardRoutes);
 router.use('/categories', authenticate, categoryRoutes);
 router.use('/products', authenticate, productRoutes);
