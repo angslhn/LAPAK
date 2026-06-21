@@ -28,10 +28,10 @@ const getRevenue = async (data) => {
         now.getMonth(),
         1
       ).toLocaleDateString('sv-SE', { timeZone: 'Asia/Jakarta' });
-
       toDate = getLocalDate();
     } else if (period === 'year') {
       const now = new Date();
+
       fromDate = new Date(now.getFullYear(), 0, 1).toLocaleDateString('sv-SE', {
         timeZone: 'Asia/Jakarta',
       });
@@ -43,6 +43,14 @@ const getRevenue = async (data) => {
       fromDate = getLocalPastDate(6);
       toDate = getLocalDate();
     }
+
+    if (!fromDate || !toDate) {
+      fromDate = getLocalPastDate(6);
+      toDate = getLocalDate();
+    }
+
+    const formattedFrom = fromDate.split('T')[0];
+    const formattedTo = toDate.split('T')[0];
 
     const [revenue, hpp, expenses] = await Promise.all([
       TransactionModel.sumRevenueByRange(fromDate, toDate),
@@ -71,13 +79,22 @@ const getRevenue = async (data) => {
     }));
 
     const revenueMap = {};
-    revenue.forEach((r) => (revenueMap[r.date] = r.total));
+    revenue.forEach((r) => {
+      const dateStr = new Date(r.date).toISOString().split('T')[0];
+      revenueMap[dateStr] = r.total;
+    });
 
     const hppMap = {};
-    hpp.forEach((h) => (hppMap[h.date] = h.total));
+    hpp.forEach((h) => {
+      const dateStr = new Date(h.date).toISOString().split('T')[0];
+      hppMap[dateStr] = h.total;
+    });
 
     const expensesMap = {};
-    expenses.forEach((e) => (expensesMap[e.date] = e.total));
+    expenses.forEach((e) => {
+      const dateStr = new Date(e.date).toISOString().split('T')[0];
+      expensesMap[dateStr] = e.total;
+    });
 
     const revenueFormatted = dateRange.map((date) => ({
       date,
