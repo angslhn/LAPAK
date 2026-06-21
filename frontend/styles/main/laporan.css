@@ -277,23 +277,10 @@ body {
   padding: 20px 24px 14px;
   border-bottom: 1px solid #f0f0f5;
 }
-
 .produk-title {
   font-size: 16px;
   font-weight: 700;
   color: #1a1a2e;
-}
-
-.lihat-semua {
-  font-size: 13px;
-  font-weight: 600;
-  color: #2d9e6b;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.lihat-semua:hover {
-  text-decoration: underline;
 }
 
 table {
