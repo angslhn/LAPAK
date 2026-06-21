@@ -155,9 +155,14 @@ button {
   flex: 1;
   overflow-y: auto;
   padding: 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+}
+
+.page-body > * {
+  margin-bottom: 18px;
+}
+
+.page-body > *:last-child {
+  margin-bottom: 0;
 }
 
 .stat-grid {

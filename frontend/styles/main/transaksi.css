@@ -183,9 +183,6 @@ body {
   flex: 1;
   overflow-y: auto;
   padding: 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
 }
 
 /* ─── Table Card ─── */

@@ -225,7 +225,7 @@ button {
   color: #e05252;
 }
 
-/* Table Card - Bisa scroll */
+/* Table Card - jangan max-height, biarin fleksibel mengikuti viewport */
 .table-card {
   background: #fff;
   border: 1px solid #eaedf2;
@@ -233,8 +233,10 @@ button {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  max-height: 400px;
+  flex: 1;
+  min-height: 0;
 }
+
 .tab-bar {
   display: flex;
   border-bottom: 1px solid #eaedf2;
@@ -261,25 +263,6 @@ button {
   color: #555;
 }
 
-/* 🔥 Table Card - jangan max-height, biarin fleksibel */
-.table-card {
-  background: #fff;
-  border: 1px solid #eaedf2;
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  flex: 1; /* 🔥 Biar ngisi sisa ruang */
-  min-height: 0; /* 🔥 Penting buat flex child */
-}
-
-.tab-bar {
-  display: flex;
-  border-bottom: 1px solid #eaedf2;
-  padding: 0 24px;
-  flex-shrink: 0;
-}
-
 .table-inner {
   padding: 20px 24px;
   overflow: hidden;
@@ -295,10 +278,15 @@ button {
   margin-bottom: 18px;
   flex-shrink: 0;
 }
+
 table {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 thead {
   display: table;
@@ -327,6 +315,7 @@ tbody {
   overflow-y: auto;
   width: 100%;
   flex: 1;
+  min-height: 0;
 }
 tbody tr {
   display: table;

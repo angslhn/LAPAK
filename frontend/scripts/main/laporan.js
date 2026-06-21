@@ -51,7 +51,7 @@ async function fetchRevenue() {
 // ── Fetch Top Products ──
 async function fetchTopProducts() {
   try {
-    const params = new URLSearchParams({ limit: '5', period: currentPeriod });
+    const params = new URLSearchParams({ limit: '10', period: currentPeriod });
     const res = await fetch(`/api/v1/reports/top-products?${params}`, {
       credentials: 'include',
     });
