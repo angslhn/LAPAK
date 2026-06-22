@@ -441,7 +441,7 @@ async function cetakLaporanPDF() {
 
     // Download
     const today = new Date().toISOString().slice(0, 10);
-    pdf.save(`LAPAK-Rekap-Harian-${today}.pdf`);
+    pdf.save(`LAPAK-Rekap-Harian.pdf`);
 
     showToast('Laporan PDF berhasil diunduh!', 'success');
   } catch (err) {

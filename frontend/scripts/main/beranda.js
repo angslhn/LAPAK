@@ -433,8 +433,7 @@ async function cetakLaporanPDF() {
     pdf.addImage(stokImg, 'PNG', 33.5, 188.5, 70, 60);
 
     // Download
-    const today = new Date().toISOString().slice(0, 10);
-    pdf.save(`LAPAK-Laporan-Harian-${today}.pdf`);
+    pdf.save('LAPAK-Ringkasan-Harian.pdf');
 
     showToast('Laporan PDF berhasil diunduh!', 'success');
   } catch (err) {
