@@ -274,6 +274,16 @@ function renderDailySummary(daily_summary) {
   set('gross-revenue-daily', rupiahFormatter(daily_summary.gross_revenue));
   set('total-expenses-daily', rupiahFormatter(daily_summary.total_expenses));
   set('net-profit-daily', rupiahFormatter(daily_summary.net_profit));
+
+  const netProfiEl = document.getElementById('net-profit-daily');
+
+  netProfiEl.style.fontWeight = 800;
+
+  if (daily_summary.net_profit > 0) {
+    netProfiEl.style.color = '#48c78e';
+  } else {
+    netProfiEl.style.color = '#e05252';
+  }
 }
 
 // ── RENDER CLOSURE BANNER ──
