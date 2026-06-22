@@ -378,6 +378,7 @@ async function openDetailLaporan(id) {
         .getElementById('detailNetProfit')
         .classList.replace('red', 'green');
     }
+
     document.getElementById('detailOpeningBalance').textContent =
       rupiahFormatter(data.opening_balance || 0);
     document.getElementById('detailClosingBalance').textContent =
