@@ -62,13 +62,15 @@ const create = async (data) => {
 const update = async (data) => {
   const { id, ...newData } = data;
 
-  const fields = Object.keys(newData).filter((field) =>
+  const cleanData = sanitize(newData);
+
+  const fields = Object.keys(cleanData).filter((field) =>
     ALLOWED_FIELDS.includes(field)
   );
 
   if (fields.length === 0) throw new Error('No valid fields provided');
 
-  const values = fields.map((field) => newData[field]);
+  const values = fields.map((field) => cleanData[field]);
 
   const placeholder = fields.map((field) => `${field} = ?`).join(', ');
 
