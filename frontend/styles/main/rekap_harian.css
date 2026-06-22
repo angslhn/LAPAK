@@ -613,6 +613,9 @@ tbody td.left {
 .detail-val.green {
   color: #006049;
 }
+.detail-val.red {
+  color: #e05252;
+}
 
 .detail-section-full {
   padding: 0 24px 20px;

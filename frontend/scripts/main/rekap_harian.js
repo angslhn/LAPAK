@@ -368,6 +368,15 @@ async function openDetailLaporan(id) {
     document.getElementById('detailNetProfit').textContent = rupiahFormatter(
       data.net_profit || 0
     );
+    if (data.net_profit > 0) {
+      document
+        .getElementById('detailNetProfit')
+        .classList.replace('red', 'green');
+    } else if (data.net_profit < 0) {
+      document
+        .getElementById('detailNetProfit')
+        .classList.replace('green', 'red');
+    }
     document.getElementById('detailOpeningBalance').textContent =
       rupiahFormatter(data.opening_balance || 0);
     document.getElementById('detailClosingBalance').textContent =
