@@ -106,6 +106,18 @@ function renderStats(data) {
   document.getElementById('stat-laba').textContent = rupiahFormatter(
     data.net_profit || 0
   );
+
+  if (data.net_profit > 0) {
+    document.getElementById('laba').classList.add('highlight-green');
+    document.getElementById('label-laba').classList.add('green');
+    document.getElementById('icon-laba').classList.add('green');
+    document.getElementById('stat-laba').classList.add('green');
+  } else {
+    document.getElementById('laba').classList.add('highlight-red');
+    document.getElementById('label-laba').classList.add('red');
+    document.getElementById('icon-laba').classList.add('red');
+    document.getElementById('stat-laba').classList.add('red');
+  }
 }
 
 // ── Fetch Cash ──
@@ -378,6 +390,67 @@ async function openDetailLaporan(id) {
   }
 }
 
+// ── CETAK LAPORAN PDF ──
+async function cetakLaporanPDF() {
+  const btn = document.getElementById('btn-cetak');
+  btn.disabled = true;
+
+  const SCALE = 0.2;
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+
+    // 1. Screenshot title
+    const title = document.querySelector('.section-title span');
+    const titleCanvas = await html2canvas(title, { scale: 2, useCORS: true });
+    const titleImg = titleCanvas.toDataURL('image/png');
+    pdf.addImage(titleImg, 'PNG', 73, 15, 60, 6.3);
+
+    // 2. Screenshot stat
+    const statGrid = document.querySelector('.stat-grid');
+
+    const statGridCanvas = await html2canvas(statGrid, {
+      scale: 2,
+      useCORS: true,
+    });
+    const statGridImg = statGridCanvas.toDataURL('image/png');
+    pdf.addImage(statGridImg, 'PNG', 30, 25, 151.5, 62);
+
+    // 3. Screenshot daftar pengeluaran harian
+    const expenseList = document.querySelector('.table-card');
+
+    let height = expenseList.clientHeight * SCALE;
+
+    const expenseCanvas = await html2canvas(expenseList, {
+      scale: 2,
+      useCORS: true,
+    });
+    const expenseImg = expenseCanvas.toDataURL('image/png');
+    pdf.addImage(expenseImg, 'PNG', 8, 96, 121, height);
+
+    // 4. Screenshot ringkasan kas
+    const ringkasan = document.querySelector('.panel-card');
+
+    const ringkasanCanvas = await html2canvas(ringkasan, {
+      scale: 2,
+      useCORS: true,
+    });
+    const ringkasanImg = ringkasanCanvas.toDataURL('image/png');
+    pdf.addImage(ringkasanImg, 'PNG', 135, 96, 67.8, 77.60000000000001);
+
+    // Download
+    const today = new Date().toISOString().slice(0, 10);
+    pdf.save(`LAPAK-Rekap-Harian-${today}.pdf`);
+
+    showToast('Laporan PDF berhasil diunduh!', 'success');
+  } catch (err) {
+    showToast('Gagal membuat laporan PDF', 'error');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
 // ── Tutup Buku (Hari Ini) ──
 document.getElementById('btn-tutup-buku').addEventListener('click', () => {
   document.getElementById('tutupBukuModal').style.display = 'flex';
@@ -441,6 +514,9 @@ document
       }
     );
   });
+
+// ── Event Listener ──
+document.getElementById('btn-cetak').addEventListener('click', cetakLaporanPDF);
 
 // ── Auto-close modal ──
 document.querySelectorAll('[data-close]').forEach((el) => {

@@ -75,9 +75,9 @@ function neutral() {
   return `<span class="badge neutral">— 0%</span>`;
 }
 
-function checkTrendPercentage(value) {
-  if (value > 0) return profit(value);
-  if (value < 0) return loss(Math.abs(value));
+function checkTrendPercentage(nominal, percent) {
+  if (nominal > 0) return profit(percent);
+  if (nominal < 0) return loss(Math.abs(percent));
   return neutral();
 }
 
@@ -191,7 +191,7 @@ function renderLowStock(low_stock_products) {
   if (!stockListElement || !low_stock_products) return;
 
   if (!low_stock_products.length) {
-    stockListElement.innerHTML = `<p style="font-size:12px;color:#aaa;text-align:center;padding:16px 0">Tidak ada produk stok kritis</p>`;
+    stockListElement.innerHTML = `<p style="margin-top:35px;font-size:12px;font-weight:600;color:#aaa;text-align:center;padding:16px 0">Tidak ada produk stok kritis</p>`;
     return;
   }
 
@@ -382,6 +382,68 @@ async function renderTodayStatus() {
   }
 }
 
+// ── CETAK LAPORAN PDF ──
+async function cetakLaporanPDF() {
+  const btn = document.querySelector('.btn-cetak');
+  btn.disabled = true;
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+
+    // 1. Screenshot stat cards
+    const statGrid = document.querySelector('.stat-grid');
+    const statCanvas = await html2canvas(statGrid, { scale: 2, useCORS: true });
+    const statImg = statCanvas.toDataURL('image/png');
+    pdf.addImage(statImg, 'PNG', 10, 20, 190, 27);
+
+    // 2. Screenshot chart
+    const chart = document.querySelector('.card');
+    const chartCanvas = await html2canvas(chart, { scale: 2, useCORS: true });
+    const chartImg = chartCanvas.toDataURL('image/png');
+    pdf.addImage(chartImg, 'PNG', 32.7, 50, 145, 60);
+
+    // 3. Screenshot produk terlaris
+    const topProduct = document.querySelector(
+      '.two-col-bottom .card:first-child'
+    );
+    const topCanvas = await html2canvas(topProduct, {
+      scale: 2,
+      useCORS: true,
+    });
+    const topImg = topCanvas.toDataURL('image/png');
+    pdf.addImage(topImg, 'PNG', 37.5, 113, 135, 72);
+
+    // 4. Screenshot ringkasan harian
+    const ringkasan = document.querySelector('.ringkasan-card');
+    const ringkasanCanvas = await html2canvas(ringkasan, {
+      scale: 2,
+      useCORS: true,
+    });
+    const ringkasanImg = ringkasanCanvas.toDataURL('image/png');
+    pdf.addImage(ringkasanImg, 'PNG', 107.5, 188.5, 70, 88);
+
+    // 5. Screenshot stok kritis
+    const stokKritis = document.querySelector('.two-col .card:last-child');
+    const stokCanvas = await html2canvas(stokKritis, {
+      scale: 2,
+      useCORS: true,
+    });
+    const stokImg = stokCanvas.toDataURL('image/png');
+    pdf.addImage(stokImg, 'PNG', 33.5, 188.5, 70, 60);
+
+    // Download
+    const today = new Date().toISOString().slice(0, 10);
+    pdf.save(`LAPAK-Laporan-Harian-${today}.pdf`);
+
+    showToast('Laporan PDF berhasil diunduh!', 'success');
+  } catch (err) {
+    showToast('Gagal membuat laporan PDF', 'error');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
 // ── RENDER SEMUA ──
 async function setValues() {
   const data = await fetchData('/api/v1/dashboard');
@@ -415,25 +477,37 @@ async function setValues() {
   setText('revenue', rupiahFormatter(summary_metrics.revenue.value));
   set(
     'revenue-percentage',
-    checkTrendPercentage(summary_metrics.revenue.trend_percentage)
+    checkTrendPercentage(
+      summary_metrics.revenue.value,
+      summary_metrics.revenue.trend_percentage
+    )
   );
 
   setText('transaction-total', summary_metrics.transaction_count.value);
   set(
     'transaction-total-percentage',
-    checkTrendPercentage(summary_metrics.transaction_count.trend_percentage)
+    checkTrendPercentage(
+      summary_metrics.transaction_count.value,
+      summary_metrics.transaction_count.trend_percentage
+    )
   );
 
   setText('net-profit', rupiahFormatter(summary_metrics.net_profit.value));
   set(
     'net-profit-percentage',
-    checkTrendPercentage(summary_metrics.net_profit.trend_percentage)
+    checkTrendPercentage(
+      summary_metrics.net_profit.value,
+      summary_metrics.net_profit.trend_percentage
+    )
   );
 
   setText('products-sold', summary_metrics.products_sold.value);
   set(
     'products-sold-percentage',
-    checkTrendPercentage(summary_metrics.products_sold.trend_percentage)
+    checkTrendPercentage(
+      summary_metrics.products_sold.value,
+      summary_metrics.products_sold.trend_percentage
+    )
   );
 
   // Chart
@@ -448,6 +522,8 @@ async function setValues() {
   await renderTodayStatus();
 }
 
+// Event listener
+document.querySelector('.btn-cetak').addEventListener('click', cetakLaporanPDF);
 document.querySelector('.btn-restok').addEventListener('click', () => {
   window.location.href = '/stok-barang';
 });

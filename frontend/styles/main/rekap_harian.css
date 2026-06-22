@@ -234,8 +234,11 @@ body {
   gap: 14px;
 }
 
-.stat-card.highlight {
+.stat-card.highlight-green {
   border-left: 4px solid #00604a;
+}
+.stat-card.highlight-red {
+  border-left: 4px solid #e05252;
 }
 
 .stat-card-top {
@@ -363,7 +366,6 @@ tbody td.left {
 }
 
 .waktu-val {
-  font-family: 'Courier New', monospace;
   font-size: 13px;
   font-weight: 600;
   color: #555;

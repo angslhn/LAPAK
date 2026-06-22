@@ -18,6 +18,15 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"
       defer
     ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+      defer
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+      defer
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="/scripts/main/laporan.js" defer></script>
   </head>
   <body>
@@ -284,7 +293,7 @@
             <button class="filter-select" id="period-btn">
               Mingguan <span>▾</span>
             </button>
-            <button class="btn-outline">
+            <button class="btn-outline" id="btn-cetak">
               <svg
                 width="17"
                 height="17"
@@ -299,7 +308,7 @@
               </svg>
               Export PDF
             </button>
-            <button class="btn-primary">
+            <button class="btn-primary" id="btn-excel">
               <svg
                 width="17"
                 height="17"
@@ -393,7 +402,7 @@
           <!-- Bottom Grid -->
           <div class="bottom-grid">
             <!-- Produk Terlaris -->
-            <div class="card">
+            <div class="card top-selling-product">
               <div class="produk-header">
                 <span class="produk-title">Produk Terlaris</span>
               </div>

@@ -427,6 +427,174 @@ function toggleDataset(index) {
   }
 }
 
+// ── Cetak PDF ──
+async function cetakLaporanPDF() {
+  const btn = document.getElementById('btn-cetak');
+  btn.disabled = true;
+
+  const SCALE = 0.18;
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+
+    // 0. Title
+    const title = document.querySelector('.topbar-left');
+    const titleCanvas = await html2canvas(title, { scale: 2, useCORS: true });
+    const titleImg = titleCanvas.toDataURL('image/png');
+    pdf.addImage(titleImg, 'PNG', 18, 13, 90, 15);
+
+    // 1. Grafik omzet & laba
+    const chartGrid = document.querySelector('.chart-card');
+    const chartCanvas = await html2canvas(chartGrid, {
+      scale: 2,
+      useCORS: true,
+    });
+    const chartImg = chartCanvas.toDataURL('image/png');
+    pdf.addImage(chartImg, 'PNG', 18, 35, 173.88, 70.2);
+
+    // 2. Produk terlaris
+    const topProductSellingGrid = document.querySelector(
+      '.top-selling-product'
+    );
+
+    const topProductSellingCanvas = await html2canvas(topProductSellingGrid, {
+      scale: 2,
+      useCORS: true,
+    });
+    const topProductSellingImg = topProductSellingCanvas.toDataURL('image/png');
+    pdf.addImage(topProductSellingImg, 'PNG', 18, 112, 109, 138.24);
+
+    // 3. Distribusi kategori
+    const distribusiCategory = document.querySelector('.distribusi-card');
+
+    const distribusiCategoryCanvas = await html2canvas(distribusiCategory, {
+      scale: 2,
+      useCORS: true,
+    });
+    const distribusiCategoryImg =
+      distribusiCategoryCanvas.toDataURL('image/png');
+    pdf.addImage(distribusiCategoryImg, 'PNG', 131, 112, 61.197, 138.24);
+
+    const today = new Date().toISOString().slice(0, 10);
+    pdf.save(`LAPAK-Laporan-Bisnis.pdf`);
+
+    showToast('Laporan PDF berhasil diunduh!', 'success');
+  } catch (err) {
+    showToast('Gagal membuat laporan PDF', 'error');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ── Cetak Excel ──
+async function cetakLaporanExcel() {
+  const btn = document.getElementById('btn-excel');
+  btn.disabled = true;
+  btn.innerHTML = `<span style="animation:spin 0.8s linear infinite;display:inline-block">⟳</span> Menyiapkan...`;
+
+  try {
+    // Ambil data dari API langsung (sesuai period)
+    const params = new URLSearchParams({ period: currentPeriod });
+
+    const [revenueRes, topRes, catRevRes, catQtyRes] = await Promise.all([
+      fetch(`/api/v1/reports/revenue?${params}`, {
+        credentials: 'include',
+      }).then((r) => r.json()),
+      fetch(`/api/v1/reports/top-products?limit=10&${params}`, {
+        credentials: 'include',
+      }).then((r) => r.json()),
+      fetch('/api/v1/reports/categories/revenue', {
+        credentials: 'include',
+      }).then((r) => r.json()),
+      fetch('/api/v1/reports/categories/quantity', {
+        credentials: 'include',
+      }).then((r) => r.json()),
+    ]);
+
+    const wb = XLSX.utils.book_new();
+
+    // ── Sheet 1: Omzet & Laba ──
+    if (revenueRes.success && revenueRes.data) {
+      const d = revenueRes.data;
+      const rows = (d.labels || []).map((l, i) => ({
+        Tanggal: l.date || '',
+        'Omzet Kotor': d.revenue?.[i]?.total || 0,
+        'Laba Bersih': d.net_profit?.[i]?.value || 0,
+      }));
+      const ws1 = XLSX.utils.json_to_sheet(rows);
+      ws1['!cols'] = [{ wch: 15 }, { wch: 18 }, { wch: 18 }];
+      XLSX.utils.book_append_sheet(wb, ws1, 'Omzet & Laba');
+    }
+
+    // ── Sheet 2: Produk Terlaris ──
+    if (topRes.success && topRes.data) {
+      const rows = topRes.data.map((p, i) => ({
+        No: i + 1,
+        'Nama Produk': p.name || '',
+        SKU: p.sku || '—',
+        Kategori: p.category || '—',
+        Terjual: p.qty_sold || 0,
+        Pendapatan: p.total_revenue || 0,
+      }));
+      const ws2 = XLSX.utils.json_to_sheet(rows);
+      ws2['!cols'] = [
+        { wch: 5 },
+        { wch: 25 },
+        { wch: 12 },
+        { wch: 12 },
+        { wch: 12 },
+        { wch: 18 },
+      ];
+      XLSX.utils.book_append_sheet(wb, ws2, 'Produk Terlaris');
+    }
+
+    // ── Sheet 3: Distribusi Kategori ──
+    if (
+      catRevRes.success &&
+      catRevRes.data &&
+      catQtyRes.success &&
+      catQtyRes.data
+    ) {
+      const revData = catRevRes.data;
+      const qtyData = catQtyRes.data;
+      const totalRev = revData.reduce((s, c) => s + (c.total || 0), 0) || 1;
+      const totalQty =
+        qtyData.reduce((s, c) => s + (c.total_quantity || 0), 0) || 1;
+
+      const rows = revData.map((c, i) => {
+        const qty = qtyData.find((q) => q.category_name === c.category_name);
+        const qtyTotal = qty?.total_quantity || 0;
+        return {
+          Kategori: c.category_name || '',
+          'Total Revenue': c.total || 0,
+          '% Revenue dari Kemarin': `${Math.round((c.total / totalRev) * 100)}%`,
+          'Total Quantity': qtyTotal,
+          '% Quantity dari Kemarin': `${Math.round((qtyTotal / totalQty) * 100)}%`,
+        };
+      });
+      const ws3 = XLSX.utils.json_to_sheet(rows);
+      ws3['!cols'] = [
+        { wch: 15 },
+        { wch: 18 },
+        { wch: 12 },
+        { wch: 15 },
+        { wch: 12 },
+      ];
+      XLSX.utils.book_append_sheet(wb, ws3, 'Distribusi Kategori');
+    }
+
+    XLSX.writeFile(wb, 'LAPAK-Laporan-Bisnis.xlsx');
+    showToast('Laporan Excel berhasil diunduh!', 'success');
+  } catch (err) {
+    showToast('Gagal membuat laporan Excel', 'error');
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 16.6667C4.54167 16.6667 4.14931 16.5035 3.82292 16.1771C3.49653 15.8507 3.33333 15.4583 3.33333 15V5C3.33333 4.54167 3.49653 4.14931 3.82292 3.82292C4.14931 3.49653 4.54167 3.33333 5 3.33333H15C15.4583 3.33333 15.8507 3.49653 16.1771 3.82292C16.5035 4.14931 16.6667 4.54167 16.6667 5V15C16.6667 15.4583 16.5035 15.8507 16.1771 16.1771C15.8507 16.5035 15.4583 16.6667 15 16.6667H5ZM5 15H9.16667V12.5H5V15ZM10.8333 15H15V12.5H10.8333V15ZM0 13.3333V1.66667C0 1.20833 0.163194 0.815972 0.489583 0.489583C0.815972 0.163194 1.20833 0 1.66667 0H13.3333V1.66667H1.66667V13.3333H0ZM5 10.8333H9.16667V8.33333H5V10.8333ZM10.8333 10.8333H15V8.33333H10.8333V10.8333ZM5 6.66667H15V5H5V6.66667Z" fill="white"/></svg> Export Excel`;
+  }
+}
+
 // ── Legend Click ──
 document
   .getElementById('legend-omzet')
@@ -434,6 +602,12 @@ document
 document
   .getElementById('legend-laba')
   ?.addEventListener('click', () => toggleDataset(1));
+
+// Event listener
+document.getElementById('btn-cetak').addEventListener('click', cetakLaporanPDF);
+document
+  .getElementById('btn-excel')
+  .addEventListener('click', cetakLaporanExcel);
 
 // ── Init ──
 fetchRevenue();
