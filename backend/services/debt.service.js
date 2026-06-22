@@ -90,7 +90,7 @@ const paySupplierDebt = async (data) => {
         amount: payment_amount,
         reference_id: debt.purchase_id || id,
         reference_type: debt.purchase_id ? 'purchase' : 'manual',
-        note: `Pembayaran hutang ${debt.receipt_number} (Rp ${payment_amount.toLocaleString('id-ID')})`,
+        note: `Pembayaran hutang ${debt.receipt_number}`,
       },
       connection
     );

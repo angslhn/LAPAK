@@ -50,7 +50,8 @@ const getToday = async () => {
         return acc;
       }, 0);
 
-      const net_profit = revenue - hpp - expense;
+      const net_profit = revenue - expense;
+
       const opening_balance = yesterdayReport?.closing_balance || 0;
       const closing_balance = opening_balance + revenue - expense;
 
@@ -214,7 +215,10 @@ const closeReportByDate = async (date, userId) => {
         ]);
 
       const expense = cashLedger.reduce((acc, cash) => {
-        if (cash.type === 'expense') acc += cash.total || 0;
+        if (cash.type === 'expense' && cash.category !== 'purchase') {
+          acc += cash.total || 0;
+        }
+
         return acc;
       }, 0);
 
@@ -270,7 +274,10 @@ const closeReport = async (data) => {
         ]);
 
       const expense = cashLedger.reduce((acc, cash) => {
-        if (cash.type === 'expense') acc += cash.total || 0;
+        if (cash.type === 'expense' && cash.category !== 'purchase') {
+          acc += cash.total || 0;
+        }
+
         return acc;
       }, 0);
 

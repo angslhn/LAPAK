@@ -20,13 +20,14 @@ const getByDate = async (data) => {
     const targetDate = date || getLocalDate();
     const yesterdayDate = getLocalPastDate(1);
 
-    const [cashLedger, currentSummary, yesterdaySummary, openingBalance] =
-      await Promise.all([
-        CashLedgerModel.findByDate(targetDate),
-        CashLedgerModel.getDailySummary(targetDate),
-        CashLedgerModel.getDailySummaryByDate(yesterdayDate),
-        CashLedgerModel.getClosingBalanceByDate(targetDate),
-      ]);
+    const yesterdayReport = await DailyReportModel.findByDate(yesterdayDate);
+    const openingBalance = yesterdayReport?.closing_balance || 0;
+
+    const [cashLedger, currentSummary, yesterdaySummary] = await Promise.all([
+      CashLedgerModel.findByDate(targetDate),
+      CashLedgerModel.getDailySummary(targetDate),
+      CashLedgerModel.getDailySummaryByDate(yesterdayDate),
+    ]);
 
     const closingBalance =
       openingBalance + currentSummary.income - currentSummary.expense;
