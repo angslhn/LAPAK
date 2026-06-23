@@ -20,6 +20,264 @@ const elDiskon = document.querySelector('.sum-row:nth-child(2) .sum-val');
 const elPajak = document.querySelector('.sum-row:nth-child(3) .sum-val');
 const elTotal = document.querySelector('.total-val');
 
+// ── BARCODE SCANNER TOGGLE ──
+let barcodeBuffer = '';
+let barcodeTimeout = null;
+let isScannerActive = false;
+let isScannerEnabled = false;
+let scannerCheckDone = false;
+
+// ── CEK SCANNER USB ──
+function checkScannerAvailability() {
+  return new Promise((resolve) => {
+    let keyCount = 0;
+    let lastKeyTime = 0;
+    let checkTimeout = null;
+    let isResolved = false;
+
+    const handler = (e) => {
+      // Abaikan kalo lagi ngetik di input
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        return;
+      }
+
+      // Abaikan tombol modifier
+      if (
+        ['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab'].includes(e.key)
+      ) {
+        return;
+      }
+
+      const now = Date.now();
+      if (now - lastKeyTime < 50) {
+        keyCount++;
+        if (keyCount > 3 && !isResolved) {
+          isResolved = true;
+          clearTimeout(checkTimeout);
+          document.removeEventListener('keydown', handler);
+          resolve(true);
+        }
+      } else {
+        keyCount = 0;
+      }
+      lastKeyTime = now;
+    };
+
+    document.addEventListener('keydown', handler);
+
+    // Timeout 3 detik
+    checkTimeout = setTimeout(() => {
+      if (!isResolved) {
+        isResolved = true;
+        document.removeEventListener('keydown', handler);
+        resolve(false);
+      }
+    }, 3000);
+  });
+}
+
+// ── SCANNER USB ──
+function initUSBScanner() {
+  document.addEventListener('keydown', (e) => {
+    // Kalo scanner dimatiin, skip
+    if (!isScannerEnabled) return;
+
+    // Abaikan kalo lagi ngetik di input
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+      return;
+    }
+
+    // Abaikan tombol modifier
+    if (
+      ['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab'].includes(e.key)
+    ) {
+      return;
+    }
+
+    // Kalo Enter, proses barcode
+    if (e.key === 'Enter') {
+      if (barcodeBuffer.length > 0) {
+        e.preventDefault();
+        e.stopPropagation();
+        const barcode = barcodeBuffer.trim();
+        processBarcode(barcode);
+        barcodeBuffer = '';
+
+        if (!isScannerActive) {
+          isScannerActive = true;
+          showToast('Barcode siap digunakan', 'success');
+        }
+      }
+      return;
+    }
+
+    // Kumpulin karakter
+    const validChars = /^[a-zA-Z0-9\-_\.\/\:\s]$/;
+    if (validChars.test(e.key) && e.key.length === 1) {
+      e.preventDefault();
+      e.stopPropagation();
+      barcodeBuffer += e.key;
+
+      if (barcodeTimeout) clearTimeout(barcodeTimeout);
+      barcodeTimeout = setTimeout(() => {
+        if (barcodeBuffer.length >= 2) {
+          processBarcode(barcodeBuffer.trim());
+        }
+        barcodeBuffer = '';
+        barcodeTimeout = null;
+      }, 400);
+    }
+  });
+}
+
+// ── PROCESS BARCODE ──
+function processBarcode(barcode) {
+  if (!allProducts || allProducts.length === 0) {
+    showToast('Data produk belum dimuat', 'error');
+    return;
+  }
+
+  // Cari produk
+  const product = allProducts.find((p) => {
+    const skuMatch = p.sku && p.sku.toLowerCase() === barcode.toLowerCase();
+    const barcodeMatch =
+      p.barcode && p.barcode.toLowerCase() === barcode.toLowerCase();
+    return skuMatch || barcodeMatch;
+  });
+
+  if (!product) {
+    showToast(`Barcode "${barcode}" tidak ditemukan`, 'error');
+    return;
+  }
+
+  if (product.stock <= 0) {
+    showToast(`Stok ${product.name} habis!`, 'error');
+    return;
+  }
+
+  // Tambah ke cart
+  addToCart(product.id);
+  showToast(`${product.name} berhasil ditambahkan`, 'success');
+
+  // Reset buffer
+  barcodeBuffer = '';
+  if (barcodeTimeout) {
+    clearTimeout(barcodeTimeout);
+    barcodeTimeout = null;
+  }
+}
+
+// ── TOGGLE SCANNER ──
+async function toggleScanner() {
+  // Kalo udah aktif, matikan
+  if (isScannerEnabled) {
+    isScannerEnabled = false;
+    isScannerActive = false;
+    const barcodeBtn = document.querySelector('.barcode-btn');
+    if (barcodeBtn) {
+      barcodeBtn.classList.remove('active');
+      barcodeBtn.title = 'Klik untuk mengaktifkan scanner';
+    }
+    showToast('Scanner dinonaktifkan', 'success');
+    return;
+  }
+
+  // Aktifkan scanner
+  isScannerEnabled = true;
+  const barcodeBtn = document.querySelector('.barcode-btn');
+
+  // Cek scanner tersedia
+  const hasScanner = await checkScannerAvailability();
+
+  if (hasScanner) {
+    // Scanner terdeteksi
+    isScannerActive = true;
+    if (barcodeBtn) {
+      barcodeBtn.classList.add('active');
+      barcodeBtn.title = 'Klik untuk nonaktifkan scanner';
+    }
+    showToast('Barcode siap digunakan', 'success');
+  } else {
+    // Scanner tidak terdeteksi
+    isScannerEnabled = false;
+    isScannerActive = false;
+    if (barcodeBtn) {
+      barcodeBtn.classList.remove('active');
+      barcodeBtn.title = 'Klik untuk mengaktifkan scanner';
+    }
+    showToast('Pasang scanner barcode terlebih dahulu', 'error');
+  }
+}
+
+// ── TOMBOL BARCODE ──
+function initBarcodeButton() {
+  const barcodeBtn = document.querySelector('.barcode-btn');
+  if (!barcodeBtn) return;
+
+  // Hapus event listener lama
+  const newBtn = barcodeBtn.cloneNode(true);
+  barcodeBtn.parentNode.replaceChild(newBtn, barcodeBtn);
+
+  // Tambah event click untuk toggle
+  newBtn.addEventListener('click', toggleScanner);
+
+  // Set initial state
+  newBtn.title = 'Klik untuk mengaktifkan scanner';
+  newBtn.classList.remove('active');
+}
+
+// ── STYLES ──
+const styles = document.createElement('style');
+styles.textContent = `
+  .barcode-btn {
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  
+  .barcode-btn.active {
+    border-color: #006049;
+    background: #00604a2c;
+    box-shadow: 0 0 0 3px rgba(0, 96, 73, 0.2);
+  }
+  
+  .barcode-btn.active::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 12px;
+    height: 12px;
+    background: #00c853;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    animation: pulse-dot 1.5s ease-in-out infinite;
+  }
+  
+  @keyframes pulse-dot {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.3);
+      opacity: 0.7;
+    }
+  }
+`;
+
+document.head.appendChild(styles);
+
+// ── INIT ──
+let initialized = false;
+
+function initBarcodeSystem() {
+  if (initialized) return;
+  initialized = true;
+
+  initUSBScanner();
+  initBarcodeButton();
+}
+
 // ── FETCH PRODUK ──
 async function fetchProducts() {
   try {
@@ -27,10 +285,13 @@ async function fetchProducts() {
     const json = await res.json();
     if (!json.success) throw new Error(json.message);
     allProducts = json.data;
+
     buildCategoryPills();
     filterAndRender();
+    initBarcodeSystem();
   } catch (err) {
     prodGrid.innerHTML = `<p style="color:#e05252;grid-column:1/-1;padding:12px">Gagal memuat produk: ${err.message}</p>`;
+    showToast('Gagal memuat data produk', 'error');
   }
 }
 
