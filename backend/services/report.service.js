@@ -55,7 +55,7 @@ const getRevenue = async (data) => {
     const [revenue, hpp, expenses] = await Promise.all([
       TransactionModel.sumRevenueByRange(fromDate, toDate),
       TransactionItemModel.sumHPPByRange(fromDate, toDate),
-      CashLedgerModel.sumExpensesByRange(fromDate, toDate),
+      CashLedgerModel.sumExpensesByRangeExcludeWithdrawal(fromDate, toDate),
     ]);
 
     const dateRange = [];
