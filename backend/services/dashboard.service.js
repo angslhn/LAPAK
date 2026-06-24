@@ -17,6 +17,11 @@ const getSummary = async (userId) => {
   const todayDate = getLocalDate();
 
   try {
+    const [cashLedgerToday, cashLedgerYesterday] = await Promise.all([
+      CashLedgerModel.findByDate(todayDate),
+      CashLedgerModel.findByDate(yesterdayDate),
+    ]);
+
     const [
       hpp,
       revenue,
@@ -24,12 +29,10 @@ const getSummary = async (userId) => {
       products_sold,
       top_selling_products,
       weeklyRevenue,
-      cashLedgerToday,
       lowStock,
       yesterdayRevenue,
       yesterdayTxCount,
       yesterdayProductsSold,
-      yesterdayCashLedger,
       user,
     ] = await Promise.all([
       TransactionItemModel.sumTodayHPP(),
@@ -38,34 +41,36 @@ const getSummary = async (userId) => {
       TransactionItemModel.sumTodayQuantity(),
       TransactionItemModel.findTopProductsToday(5),
       TransactionModel.sumRevenueByRange(fromDate, todayDate),
-      CashLedgerModel.sumByType(todayDate),
       ProductModel.findLowStock(),
       TransactionModel.sumRevenueByDate(yesterdayDate),
       TransactionModel.countByDate(yesterdayDate),
       TransactionItemModel.sumQuantityByDate(yesterdayDate),
-      CashLedgerModel.sumByType(yesterdayDate),
       UserModel.findById(userId),
     ]);
 
     const yesterdayExpenses = Number(
-      yesterdayCashLedger.find((cash) => cash.type === 'expense')?.total || 0
+      cashLedgerYesterday.find(
+        (cash) => cash.type === 'expense' && cash.category !== 'withdrawal'
+      )?.amount || 0
     );
     const yesterdayNetProfit = yesterdayRevenue - yesterdayExpenses;
 
-    const total_expenses = Number(
-      cashLedgerToday.find((cash) => cash.type === 'expense')?.total || 0
-    );
+    const total_expenses = cashLedgerToday.reduce((acc, cash) => {
+      if (cash.type === 'expense' && cash.category !== 'withdrawal') {
+        acc += cash.amount || 0;
+      }
+      return acc;
+    }, 0);
+
     const net_profit = revenue - total_expenses;
 
     const low_stock_products = lowStock.map(
-      ({ id, name, selling_price, stock }) => {
-        return {
-          id,
-          name,
-          price: selling_price,
-          stock,
-        };
-      }
+      ({ id, name, selling_price, stock }) => ({
+        id,
+        name,
+        price: selling_price,
+        stock,
+      })
     );
 
     const chart_weekly_revenue = [];
@@ -113,7 +118,11 @@ const getSummary = async (userId) => {
       daily_summary: {
         transaction_count,
         gross_revenue: revenue,
-        total_expenses,
+        total_expenses: Number(
+          cashLedgerToday.find(
+            (cash) => cash.type === 'expense' && cash.category !== 'withdrawal'
+          )?.amount || 0
+        ),
         net_profit,
       },
       chart_weekly_revenue,
