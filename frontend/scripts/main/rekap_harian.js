@@ -190,10 +190,10 @@ function renderExpenseTable(mutations) {
       const catLabel = catLabels[cat] || cat;
       return `
       <tr>
-        <td><span class="waktu-val">${fmtTime(e.created_at || e.date)}</span></td>
-        <td><span class="ket-val">${e.note || '—'}</span></td>
-        <td><span class="badge-kategori ${catClass}">${catLabel}</span></td>
-        <td class="right"><span class="nominal-val">${rupiahFormatter(e.amount)}</span></td>
+        <td class="center"><span class="waktu-val">${fmtTime(e.created_at || e.date)}</span></td>
+        <td class="left"><span class="ket-val">${e.note || '—'}</span></td>
+        <td class="center"><span class="badge-kategori ${catClass}">${catLabel}</span></td>
+        <td class="left"><span class="nominal-val">${rupiahFormatter(e.amount)}</span></td>
       </tr>`;
     })
     .join('');
@@ -312,6 +312,22 @@ function renderLaporanTable(reports) {
   );
 }
 
+// ── Format Currency Input ──
+function formatCurrencyInput(input) {
+  let value = input.value.replace(/[^0-9]/g, '');
+  input.value = value ? Number(value).toLocaleString('id-ID') : '';
+}
+function parseFormattedCurrency(str) {
+  return parseInt(String(str).replace(/\./g, ''), 10) || 0;
+}
+
+// ── Modal: Tarik Keuangan ──
+function openWithdrawModal() {
+  document.getElementById('withdrawAmount').value = '';
+  document.getElementById('withdrawNote').value = '';
+  document.getElementById('withdrawModal').style.display = 'flex';
+}
+
 // ── Tutup Buku Per Tanggal ──
 async function tutupBukuPerTanggal(date) {
   showConfirm(
@@ -329,7 +345,7 @@ async function tutupBukuPerTanggal(date) {
         fetchAllDailyReports();
         fetchCash();
       } catch (err) {
-        showToast('Gagal menutup buku: ' + err.message, 'error');
+        showToast(err.message, 'error');
       }
     }
   );
@@ -487,7 +503,7 @@ document
       fetchCash();
       fetchAllDailyReports();
     } catch (err) {
-      showToast('Gagal menutup buku: ' + err.message, 'error');
+      showToast(err.message, 'error');
     } finally {
       btn.disabled = false;
       btn.textContent = 'Ya, Tutup Buku';
@@ -517,7 +533,7 @@ document
           fetchAllDailyReports();
           fetchCash();
         } catch (err) {
-          showToast('Gagal menutup semua: ' + err.message, 'error');
+          showToast(err.message, 'error');
         } finally {
           btn.disabled = false;
           btn.innerHTML = `<svg width="10" height="13" viewBox="0 0 10 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.16667 12.25C0.845833 12.25 0.571181 12.1358 0.342708 11.9073C0.114236 11.6788 0 11.4042 0 11.0833V5.25C0 4.92917 0.114236 4.65451 0.342708 4.42604C0.571181 4.19757 0.845833 4.08333 1.16667 4.08333H1.75V2.91667C1.75 2.10972 2.03438 1.42188 2.60313 0.853125C3.17188 0.284375 3.85972 0 4.66667 0C5.47361 0 6.16146 0.284375 6.73021 0.853125C7.29896 1.42188 7.58333 2.10972 7.58333 2.91667V4.08333H8.16667C8.4875 4.08333 8.76215 4.19757 8.99063 4.42604C9.2191 4.65451 9.33333 4.92917 9.33333 5.25V11.0833C9.33333 11.4042 9.2191 11.6788 8.99063 11.9073C8.76215 12.1358 8.4875 12.25 8.16667 12.25H1.16667ZM1.16667 11.0833H8.16667V5.25H1.16667V11.0833ZM4.66667 9.33333C4.9875 9.33333 5.26215 9.2191 5.49062 8.99063C5.7191 8.76215 5.83333 8.4875 5.83333 8.16667C5.83333 7.84583 5.7191 7.57118 5.49062 7.34271C5.26215 7.11424 4.9875 7 4.66667 7C4.34583 7 4.07118 7.11424 3.84271 7.34271C3.61424 7.57118 3.5 7.84583 3.5 8.16667C3.5 8.4875 3.61424 8.76215 3.84271 8.99063C4.07118 9.2191 4.34583 9.33333 4.66667 9.33333ZM2.91667 4.08333H6.41667V2.91667C6.41667 2.43056 6.24653 2.01736 5.90625 1.67708C5.56597 1.33681 5.15278 1.16667 4.66667 1.16667C4.18056 1.16667 3.76736 1.33681 3.42708 1.67708C3.08681 2.01736 2.91667 2.43056 2.91667 2.91667V4.08333ZM1.16667 11.0833V5.25V11.0833Z" fill="white"/></svg>Tutup Semua yang Terlewat`;
@@ -528,6 +544,37 @@ document
 
 // ── Event Listener ──
 document.getElementById('btn-cetak').addEventListener('click', cetakLaporanPDF);
+document
+  .getElementById('withdrawAmount')
+  ?.addEventListener('input', (e) => formatCurrencyInput(e.target));
+document
+  .getElementById('btn-withdraw')
+  ?.addEventListener('click', openWithdrawModal);
+document
+  .getElementById('btnSubmitWithdraw')
+  ?.addEventListener('click', async () => {
+    const amount = parseFormattedCurrency(
+      document.getElementById('withdrawAmount').value
+    );
+    const note = document.getElementById('withdrawNote').value.trim();
+    if (amount <= 0) return showToast('Nominal harus lebih dari 0', 'error');
+    try {
+      const res = await fetch('/api/v1/cash/withdraw', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount, note: note || null }),
+      });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.message);
+      showToast('Penarikan keuangan berhasil', 'success');
+      document.getElementById('withdrawModal').style.display = 'none';
+      await fetchDailyReport();
+      await fetchCash();
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  });
 
 // ── Auto-close modal ──
 document.querySelectorAll('[data-close]').forEach((el) => {
