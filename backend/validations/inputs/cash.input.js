@@ -35,7 +35,13 @@ function note(value) {
 function category(value) {
   if (!value) return 'Kategori tidak boleh kosong';
 
-  const allowed = ['sale', 'purchase', 'operational', 'credit_payment'];
+  const allowed = [
+    'sale',
+    'purchase',
+    'operational',
+    'credit_payment',
+    'withdrawal',
+  ];
 
   if (!allowed.includes(value)) {
     return `Kategori harus salah satu dari: ${allowed.join(', ')}`;

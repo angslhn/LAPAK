@@ -29,4 +29,14 @@ const update = (data) => {
   if (checkNote) throw new Error(checkNote);
 };
 
-module.exports = { create, update };
+const withdraw = (data) => {
+  const { amount, note } = data;
+
+  const checkAmount = CashInput.amount(amount);
+  if (checkAmount) throw new Error(checkAmount);
+
+  const checkNote = CashInput.note(note);
+  if (checkNote) throw new Error(checkNote);
+};
+
+module.exports = { create, update, withdraw };
