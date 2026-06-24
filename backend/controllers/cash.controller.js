@@ -135,6 +135,33 @@ const deleteCashHandler = async (req, res) => {
   }
 };
 
+const withdrawHandler = async (req, res) => {
+  try {
+    const { id: user_id, role } = req.user;
+
+    const { amount, note } = req.body;
+
+    const result = await CashService.withdraw({
+      amount,
+      note,
+      user_id,
+    });
+
+    return ok(res, result, 'Penarikan keuangan berhasil');
+  } catch (err) {
+    let code = err.message;
+
+    if (!ERROR_MESSAGES[code]) {
+      code = 'INTERNAL_SERVER_ERROR';
+    }
+
+    const message = ERROR_MESSAGES[code] || err.message;
+    const httpStatus = ERROR_STATUS[code] || 500;
+
+    return error(res, code, message, httpStatus);
+  }
+};
+
 module.exports = {
   getAllHandler,
   getByDateHandler,
@@ -142,4 +169,5 @@ module.exports = {
   createExpenseHandler,
   updateCashHandler,
   deleteCashHandler,
+  withdrawHandler,
 };
