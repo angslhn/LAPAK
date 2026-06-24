@@ -1,5 +1,6 @@
 const router = require('express').Router();
 
+const authorizeOwner = require('../middleware/authorization').authorizeOwner;
 const validation = require('../middleware/validation');
 const checkDailyReport = require('../middleware/check_daily_report');
 
@@ -12,6 +13,7 @@ const {
   createExpenseHandler,
   updateCashHandler,
   deleteCashHandler,
+  withdrawHandler,
 } = require('../controllers/cash.controller');
 
 router.get('/', getByDateHandler);
@@ -42,7 +44,19 @@ router.post(
   ),
   createExpenseHandler
 );
-
+router.post(
+  '/withdraw',
+  authorizeOwner,
+  checkDailyReport,
+  validation(
+    [
+      ['amount', 'number'],
+      ['note', 'string'],
+    ],
+    CashValidation.withdraw
+  ),
+  withdrawHandler
+);
 router.put(
   '/:id',
   checkDailyReport,
@@ -57,7 +71,6 @@ router.put(
   ),
   updateCashHandler
 );
-
 router.delete('/:id', checkDailyReport, deleteCashHandler);
 
 module.exports = router;
