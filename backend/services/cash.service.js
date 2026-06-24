@@ -4,7 +4,12 @@ const DailyReportModel = require('../models/daily_report.model');
 const calculateTrend = require('../helpers/calculate_trend');
 
 const { getLocalPastDate, getLocalDate } = require('../helpers/datetime');
-const { VALIDATION_ERROR, NOT_FOUND } = require('../helpers/error_codes');
+const {
+  VALIDATION_ERROR,
+  NOT_FOUND,
+  WITHDRAW_AMOUNT_INVALID,
+  WITHDRAW_INSUFFICIENT_BALANCE,
+} = require('../helpers/error_codes');
 
 const getAll = async () => {
   try {
@@ -29,21 +34,33 @@ const getByDate = async (data) => {
       CashLedgerModel.getDailySummaryByDate(yesterdayDate),
     ]);
 
+    const expense = cashLedger.reduce((acc, cash) => {
+      if (cash.type === 'expense' && cash.category !== 'withdrawal') {
+        acc += cash.amount || 0;
+      }
+      return acc;
+    }, 0);
+
+    const withdrawal = cashLedger.reduce((acc, cash) => {
+      if (cash.type === 'expense' && cash.category === 'withdrawal') {
+        acc += cash.amount || 0;
+      }
+      return acc;
+    }, 0);
+
     const closingBalance =
-      openingBalance + currentSummary.income - currentSummary.expense;
+      openingBalance + currentSummary.income - expense - withdrawal;
+
     const incomeTrend = calculateTrend(
       currentSummary.income,
       yesterdaySummary.income
     );
-    const expenseTrend = calculateTrend(
-      currentSummary.expense,
-      yesterdaySummary.expense
-    );
+    const expenseTrend = calculateTrend(expense, yesterdaySummary.expense);
 
     const formattedSummary = {
       opening_balance: openingBalance,
       income: currentSummary.income,
-      expense: currentSummary.expense,
+      expense: expense,
       closing_balance: closingBalance,
       income_trend_percentage: incomeTrend,
       expense_trend_percentage: expenseTrend,
@@ -135,6 +152,45 @@ const deleteCashTransaction = async (id) => {
   }
 };
 
+const withdraw = async (data) => {
+  try {
+    const { amount, note, user_id } = data;
+
+    if (amount <= 0) throw new Error(WITHDRAW_AMOUNT_INVALID);
+
+    const today = getLocalDate();
+    const yesterday = getLocalPastDate(1);
+
+    const yesterdayReport = await DailyReportModel.findByDate(yesterday);
+    const openingBalance = yesterdayReport?.closing_balance || 0;
+
+    const currentSummary = await CashLedgerModel.getDailySummary(today);
+    const currentBalance =
+      openingBalance + currentSummary.income - currentSummary.expense;
+
+    if (amount > currentBalance) throw new Error(WITHDRAW_INSUFFICIENT_BALANCE);
+
+    const cashLedgerId = await CashLedgerModel.create({
+      date: today,
+      type: 'expense',
+      category: 'withdrawal',
+      note: note || `Penarikan keuangan dari kas oleh pemilik`,
+      amount: amount,
+      reference_id: null,
+      reference_type: 'manual',
+    });
+
+    return {
+      id: cashLedgerId,
+      withdrawn: amount,
+      remaining_balance: currentBalance - amount,
+      note: note || 'Penarikan berhasil',
+    };
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
+
 module.exports = {
   getAll,
   getByDate,
@@ -142,4 +198,5 @@ module.exports = {
   createIncome,
   updateCashTransaction,
   deleteCashTransaction,
+  withdraw,
 };
