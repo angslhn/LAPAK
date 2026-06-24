@@ -37,7 +37,7 @@ const getAll = async () => {
       summary_metrics: {
         total_product: stockItems.length,
         low_stock: stockItems.filter((item) => item.status === 'low').length,
-        critical_stock: stockItems.filter((item) => item.status === 'critical')
+        critical_stock: stockItems.filter((item) => item.status === 'out' || item.status === 'critical')
           .length,
       },
       stock_items: stockItems,
