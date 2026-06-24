@@ -173,6 +173,29 @@ const sumExpensesByRange = async (from, to) => {
   }
 };
 
+const sumExpensesByRangeExcludeWithdrawal = async (from, to) => {
+  try {
+    const sql = `
+                SELECT
+                  DATE(date) AS date,
+                  SUM(amount) AS total
+                FROM cash_ledger
+                WHERE date >= ? 
+                  AND date < DATE_ADD(?, INTERVAL 1 DAY)
+                  AND type = 'expense'
+                  AND category != 'withdrawal'
+                GROUP BY DATE(date)
+                ORDER BY DATE(date) ASC
+               `;
+
+    const [rows] = await pool.execute(sql, [from, to]);
+
+    return rows;
+  } catch (err) {
+    throw new Error(`[DATABASE] ${err.message}`);
+  }
+};
+
 const updateById = async (id, data, conn = null) => {
   const db = conn || pool;
 
@@ -222,4 +245,5 @@ module.exports = {
   deleteById,
   sumByType,
   sumExpensesByRange,
+  sumExpensesByRangeExcludeWithdrawal,
 };
