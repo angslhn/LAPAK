@@ -8,7 +8,7 @@ const TransactionItemModel = require('../models/transaction_item.model');
 const {
   getLocalPastDate,
   getLocalDate,
-  getLocalDateTime,
+  getPastDateFromDate,
 } = require('../helpers/datetime');
 
 const {
@@ -29,43 +29,85 @@ const getToday = async () => {
   try {
     let report = await DailyReportModel.findToday();
 
-    if (!report) {
+    if (report) {
       const today = getLocalDate();
-      const yesterday = getLocalPastDate(1);
-
-      const [revenue, hpp, transaction_count, cashLedger, yesterdayReport] =
-        await Promise.all([
-          TransactionModel.sumTodayRevenue(),
-          TransactionItemModel.sumTodayHPP(),
-          TransactionModel.countToday(),
-          CashLedgerModel.sumByType(today),
-          DailyReportModel.findByDate(yesterday),
-        ]);
+      const cashLedger = await CashLedgerModel.findByDate(today);
 
       const expense = cashLedger.reduce((acc, cash) => {
-        if (cash.type === 'expense') {
-          acc += cash.total || 0;
+        if (cash.type === 'expense' && cash.category !== 'withdrawal') {
+          acc += cash.amount || 0;
         }
-
         return acc;
       }, 0);
 
+      const withdrawal = cashLedger.reduce((acc, cash) => {
+        if (cash.type === 'expense' && cash.category === 'withdrawal') {
+          acc += cash.amount || 0;
+        }
+        return acc;
+      }, 0);
+
+      const revenue = report.total_revenue;
+      const opening_balance = report.opening_balance;
       const net_profit = revenue - expense;
+      const closing_balance = opening_balance + revenue - expense - withdrawal;
 
-      const opening_balance = yesterdayReport?.closing_balance || 0;
-      const closing_balance = opening_balance + revenue - expense;
+      if (
+        report.total_expense !== expense ||
+        report.closing_balance !== closing_balance
+      ) {
+        await DailyReportModel.update(report.id, {
+          total_expense: expense,
+          net_profit: net_profit,
+          closing_balance: closing_balance,
+        });
 
-      report = {
-        date: today,
-        total_revenue: revenue,
-        total_expense: expense,
-        transaction_count,
-        net_profit,
-        opening_balance,
-        closing_balance,
-        status: 'open',
-      };
+        report = await DailyReportModel.findToday();
+      }
+
+      return report;
     }
+
+    const today = getLocalDate();
+    const yesterday = getPastDateFromDate(today, 1);
+
+    const [revenue, hpp, transaction_count, cashLedger, yesterdayReport] =
+      await Promise.all([
+        TransactionModel.sumTodayRevenue(),
+        TransactionItemModel.sumTodayHPP(),
+        TransactionModel.countToday(),
+        CashLedgerModel.findByDate(today),
+        DailyReportModel.findByDate(yesterday),
+      ]);
+
+    const expense = cashLedger.reduce((acc, cash) => {
+      if (cash.type === 'expense' && cash.category !== 'withdrawal') {
+        acc += cash.amount || 0;
+      }
+      return acc;
+    }, 0);
+
+    const withdrawal = cashLedger.reduce((acc, cash) => {
+      if (cash.type === 'expense' && cash.category === 'withdrawal') {
+        acc += cash.amount || 0;
+      }
+      return acc;
+    }, 0);
+
+    const net_profit = revenue - expense;
+    const opening_balance = yesterdayReport?.closing_balance || 0;
+    const closing_balance = opening_balance + revenue - expense - withdrawal;
+
+    report = {
+      date: today,
+      total_revenue: revenue,
+      total_expense: expense,
+      transaction_count,
+      net_profit,
+      opening_balance,
+      closing_balance,
+      status: 'open',
+    };
 
     return report;
   } catch (err) {
@@ -93,39 +135,48 @@ const getClosureStatus = async () => {
   try {
     const pending = await DailyReportModel.getPendingClosures();
 
-    const filteredMissingDates = [];
+    const sortedMissingDates = [...pending.missingDates];
 
-    for (const missingDate of pending.missingDates) {
+    for (const missingDate of sortedMissingDates) {
       const existingReport = await DailyReportModel.findByDate(missingDate);
 
-      if (existingReport && existingReport.status === 'closed') {
-        continue;
-      }
+      if (existingReport) continue;
 
-      if (!existingReport || existingReport.status === 'open') {
-        const [transactions] = await pool.execute(
-          'SELECT COUNT(*) as total FROM cash_ledger WHERE DATE(date) = ?',
-          [missingDate]
-        );
+      const [cashTx] = await pool.execute(
+        'SELECT COUNT(*) as total FROM cash_ledger WHERE DATE(date) = ?',
+        [missingDate]
+      );
 
-        if (Number(transactions[0]?.total || 0) === 0) {
-          const prevReport = await DailyReportModel.findByDate(
-            getLocalPastDate(1, missingDate)
-          );
+      const transactionCount = await TransactionModel.countByDate(missingDate);
 
-          await DailyReportModel.create({
-            date: missingDate,
-            total_revenue: 0,
-            total_expense: 0,
-            transaction_count: 0,
-            net_profit: 0,
-            opening_balance: prevReport?.closing_balance || 0,
-            closing_balance: prevReport?.closing_balance || 0,
-            status: 'closed',
-          });
-        } else {
-          filteredMissingDates.push(missingDate);
+      if (
+        Number(cashTx[0]?.total || 0) === 0 &&
+        Number(transactionCount) === 0
+      ) {
+        let prevReport = null;
+        let checkDate = new Date(missingDate);
+        checkDate.setDate(checkDate.getDate() - 1);
+
+        while (!prevReport) {
+          const dateStr = checkDate.toISOString().split('T')[0];
+          prevReport = await DailyReportModel.findByDate(dateStr);
+          if (prevReport) break;
+          checkDate.setDate(checkDate.getDate() - 1);
+          if (checkDate < new Date('2026-01-01')) break;
         }
+
+        const lastBalance = prevReport?.closing_balance || 0;
+
+        await DailyReportModel.create({
+          date: missingDate,
+          total_revenue: 0,
+          total_expense: 0,
+          transaction_count: 0,
+          net_profit: 0,
+          opening_balance: lastBalance,
+          closing_balance: lastBalance,
+          status: 'closed',
+        });
       }
     }
 
@@ -173,6 +224,18 @@ const closeAllPending = async (data) => {
       ...pending.missingDates,
     ].sort();
 
+    const yesterday = getPastDateFromDate(getLocalDate(), 1);
+    if (!allDates.includes(yesterday)) {
+      allDates.push(yesterday);
+    }
+
+    const twoDaysAgo = getPastDateFromDate(getLocalDate(), 2);
+    if (!allDates.includes(twoDaysAgo)) {
+      allDates.push(twoDaysAgo);
+    }
+
+    allDates.sort();
+
     const filteredDates = [];
     for (const date of allDates) {
       const existing = await DailyReportModel.findByDate(date);
@@ -205,26 +268,34 @@ const closeReportByDate = async (date, userId) => {
     let report = await DailyReportModel.findByDate(date);
 
     if (!report) {
+      const prevDateStr = getPastDateFromDate(date, 1);
+
       const [revenue, hpp, transaction_count, cashLedger, previousReport] =
         await Promise.all([
           TransactionModel.sumRevenueByDate(date),
           TransactionItemModel.sumHPPByDate(date),
           TransactionModel.countByDate(date),
-          CashLedgerModel.sumByType(date),
-          DailyReportModel.findByDate(getLocalPastDate(1, date)),
+          CashLedgerModel.findByDate(date),
+          DailyReportModel.findByDate(prevDateStr),
         ]);
 
       const expense = cashLedger.reduce((acc, cash) => {
-        if (cash.type === 'expense' && cash.category !== 'purchase') {
-          acc += cash.total || 0;
+        if (cash.type === 'expense' && cash.category !== 'withdrawal') {
+          acc += cash.amount || 0;
         }
-
         return acc;
       }, 0);
 
-      const net_profit = revenue - hpp - expense;
+      const withdrawal = cashLedger.reduce((acc, cash) => {
+        if (cash.type === 'expense' && cash.category === 'withdrawal') {
+          acc += cash.amount || 0;
+        }
+        return acc;
+      }, 0);
+
+      const net_profit = revenue - expense;
       const opening_balance = previousReport?.closing_balance || 0;
-      const closing_balance = opening_balance + revenue - expense;
+      const closing_balance = opening_balance + revenue - expense - withdrawal;
 
       const reportId = await DailyReportModel.create({
         date: date,
@@ -262,28 +333,34 @@ const closeReport = async (data) => {
 
     if (!report) {
       const today = getLocalDate();
-      const yesterday = getLocalPastDate(1);
+      const yesterday = getPastDateFromDate(today, 1);
 
       const [revenue, hpp, transaction_count, cashLedger, yesterdayReport] =
         await Promise.all([
           TransactionModel.sumTodayRevenue(),
           TransactionItemModel.sumTodayHPP(),
           TransactionModel.countToday(),
-          CashLedgerModel.sumByType(today),
+          CashLedgerModel.findByDate(today),
           DailyReportModel.findByDate(yesterday),
         ]);
 
       const expense = cashLedger.reduce((acc, cash) => {
-        if (cash.type === 'expense' && cash.category !== 'purchase') {
-          acc += cash.total || 0;
+        if (cash.type === 'expense' && cash.category !== 'withdrawal') {
+          acc += cash.amount || 0;
         }
-
         return acc;
       }, 0);
 
-      const net_profit = revenue - hpp - expense;
+      const withdrawal = cashLedger.reduce((acc, cash) => {
+        if (cash.type === 'expense' && cash.category === 'withdrawal') {
+          acc += cash.amount || 0;
+        }
+        return acc;
+      }, 0);
+
+      const net_profit = revenue - expense;
       const opening_balance = yesterdayReport?.closing_balance || 0;
-      const closing_balance = opening_balance + revenue - expense;
+      const closing_balance = opening_balance + revenue - expense - withdrawal;
 
       const reportId = await DailyReportModel.create({
         date: today,
