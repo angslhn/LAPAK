@@ -10,6 +10,14 @@ const getLocalPastDate = (day = 0) => {
   });
 };
 
+const getPastDateFromDate = (date, day = 1) => {
+  const d = new Date(date);
+  d.setDate(d.getDate() - day);
+  return d.toLocaleDateString('sv-SE', {
+    timeZone: 'Asia/Jakarta',
+  });
+};
+
 const getLocalTime = () => {
   return new Date().toLocaleTimeString('sv-SE', { timeZone: 'Asia/Jakarta' });
 };
@@ -36,6 +44,7 @@ const isDayName = (date) => {
 module.exports = {
   getLocalDate,
   getLocalPastDate,
+  getPastDateFromDate,
   getLocalTime,
   getLocalDateTime,
   isDayName,
