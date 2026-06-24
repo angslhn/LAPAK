@@ -33,6 +33,12 @@ const ERROR_MESSAGES = {
   PRODUCT_UPDATE_FAILED: 'Gagal memperbarui detail produk',
   PRODUCT_DELETE_FAILED: 'Gagal menghapus produk',
 
+  // Cash
+  WITHDRAW_AMOUNT_INVALID: 'Jumlah penarikan harus lebih dari 0',
+  WITHDRAW_INSUFFICIENT_BALANCE:
+    'Saldo tidak mencukupi untuk melakukan penarikan',
+  WITHDRAW_FORBIDDEN: 'Hanya owner yang dapat melakukan penarikan',
+
   // Category
   CATEGORY_ALREADY_EXISTS: 'Kategori sudah tersedia',
   CATEGORY_NOT_FOUND: 'Kategori tidak ditemukan',
