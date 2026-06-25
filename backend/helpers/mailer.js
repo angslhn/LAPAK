@@ -15,7 +15,7 @@ const sendResetPasswordEmail = async (email, token) => {
         <tr>
           <td style="background-color: #0d5740; padding: 24px 20px; text-align: center; border-radius: 12px 12px 0 0;">
             <h2 style="color: #d4af37; margin: 0; font-size: 24px; letter-spacing: 1px;">LAPAK</h2>
-            <p style="color: rgba(255,255,255,0.7); margin: 6px 0 0; font-size: 13px;">Business Management</p>
+            <p style="color: rgba(255,255,255,0.7); margin: 6px 0 0; font-size: 13px;">Manajemen Bisnis</p>
           </td>
         </tr>
         <!-- Body -->
